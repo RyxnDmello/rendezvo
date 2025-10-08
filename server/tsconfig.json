@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "exactOptionalPropertyTypes": true,
+    "allowImportingTsExtensions": true,
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
+    "allowArbitraryExtensions": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noEmitOnError": true,
+    "alwaysStrict": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "target": "esnext",
+
+    "rootDir": "./src",
+    "outDir": "./dist"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}
