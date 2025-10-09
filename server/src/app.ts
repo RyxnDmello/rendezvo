@@ -1,11 +1,13 @@
-import { Hono, Context } from "hono";
+import { Hono } from "hono";
+
+import connectMongoDB from "@services/mongodb.service";
+
+import organizerRoutes from "@routes/organizer.routes";
 
 const app = new Hono();
 
-app.get("/", (ctx: Context) => {
-  return ctx.json({
-    message: "Welcome To Rendezvo",
-  });
-});
+connectMongoDB();
+
+app.route("/api/organizer", organizerRoutes);
 
 export default app;

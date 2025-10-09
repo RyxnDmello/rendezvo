@@ -1,28 +1,40 @@
 {
   "compilerOptions": {
     "forceConsistentCasingInFileNames": true,
-    "exactOptionalPropertyTypes": true,
     "allowImportingTsExtensions": true,
-    "resolvePackageJsonExports": true,
-    "resolvePackageJsonImports": true,
-    "allowArbitraryExtensions": true,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "noEmitOnError": true,
+
     "alwaysStrict": true,
     "skipLibCheck": true,
-    "sourceMap": true,
     "strict": true,
+    "noEmit": true,
 
     "moduleResolution": "bundler",
-    "module": "esnext",
     "target": "esnext",
+    "module": "esnext",
 
-    "rootDir": "./src",
-    "outDir": "./dist"
+    "lib": ["ESNext", "DOM"],
+    "types": ["bun-types"],
+
+    "paths": {
+      "@controllers/*": ["./src/controllers/*"],
+      "@schemas/*": ["./src/models/schemas/*"],
+      "@validators/*": ["./src/validators/*"],
+      "@database/*": ["./src/database/*"],
+      "@services/*": ["./src/services/*"],
+      "@routes/*": ["./src/routes/*"],
+      "@models/*": ["./src/models/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist"]

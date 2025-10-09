@@ -2,7 +2,7 @@ import { serve } from "bun";
 
 import app from "./app";
 
-const port = process.env.PORT || process.env.DEVELOPMENT_PORT;
+const port = process.env.PORT || process.env.DEVELOPMENT_PORT!;
 
 console.log(`ACTIVE | ${port}`);
 
