@@ -10,6 +10,7 @@ import {
 } from "@controllers/organizer.controller";
 
 import loginValidator from "@validators/organizer/login.validator";
+import updateValidator from "@validators/organizer/update.validator";
 import registerValidator from "@validators/organizer/register.validator";
 
 const router = new Hono();
@@ -20,7 +21,7 @@ router.post("/register", registerValidator, _registerOrganizer);
 router
   .basePath("/:id")
   .get(_fetchOrganizer)
-  .patch(_updateOrganizer)
+  .patch(updateValidator, _updateOrganizer)
   .delete(_removeOrganizer);
 
 export default router;

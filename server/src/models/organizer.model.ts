@@ -44,8 +44,8 @@ const organizerSchema = new Schema<Organizer>(
     email: {
       type: Schema.Types.String,
       required: [true, "Email Must Be Provided"],
+      unique: [true, "Email Address Must Be Unique"],
       lowercase: true,
-      unique: true,
       index: true,
       trim: true,
       minLength: [10, "Email Must Be A Minimum Of 10 Characters"],
@@ -54,6 +54,7 @@ const organizerSchema = new Schema<Organizer>(
     mobile: {
       type: Schema.Types.Number,
       required: false,
+      unique: [true, "Mobile Number Must Be Unique"],
       validate: {
         validator: (value: number) => {
           return ["6", "7", "8", "9"].includes(value.toString()[0]!);
@@ -67,25 +68,20 @@ const organizerSchema = new Schema<Organizer>(
     password: {
       type: Schema.Types.String,
       required: false,
-      minLength: [8, "Password Must Be A Minimum Of 8 Characters"],
-      maxLength: [50, "Password Must Be A Maximum Of 50 Characters"],
-      match: [
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,50}$/,
-        "Password Must Contain At Least 1 Lowercase, 1 Uppercase, 1 Digit, And 1 Special Character",
-      ],
+      trim: true,
       default: null,
     },
     profile: {
       _id: false,
       type: profileSchema,
       required: false,
-      default: null,
+      default: {},
     },
     billing: {
       _id: false,
       type: billingSchema,
       required: false,
-      default: null,
+      default: {},
     },
   },
   {

@@ -28,6 +28,7 @@
 
     "paths": {
       "@controllers/*": ["./src/controllers/*"],
+      "@middlewares/*": ["./src/middlewares/*"],
       "@schemas/*": ["./src/models/schemas/*"],
       "@validators/*": ["./src/validators/*"],
       "@database/*": ["./src/database/*"],
