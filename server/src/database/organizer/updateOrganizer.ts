@@ -2,6 +2,10 @@ import OrganizerModel from "@models/organizer.model";
 
 import { UpdateSchema } from "@validators/organizer/update.validator";
 
+import MongooseError, { isMongooseError } from "@utils/MongooseError";
+
+import ApiError from "@utils/ApiError";
+
 const updateOrganizer = async (id: string, data: UpdateSchema) => {
   try {
     const dbOrganizer = await OrganizerModel.findOne(
@@ -18,7 +22,7 @@ const updateOrganizer = async (id: string, data: UpdateSchema) => {
     });
 
     if (!dbOrganizer) {
-      throw new Error("User With Given ID Does Not Exist");
+      throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
     if (data.mobile && data.mobile !== dbOrganizer.mobile) {
@@ -27,7 +31,10 @@ const updateOrganizer = async (id: string, data: UpdateSchema) => {
       });
 
       if (dbOrganizerWithMobile) {
-        throw new Error("User With Given Mobile Number Already Exists");
+        throw new ApiError(
+          "User With Given Mobile Number Already Exists",
+          "BAD_REQUEST"
+        );
       }
     }
 
@@ -39,18 +46,28 @@ const updateOrganizer = async (id: string, data: UpdateSchema) => {
     );
 
     if (!acknowledged || modifiedCount !== 1) {
-      throw new Error("Unable To Update User Due To Server");
+      throw new ApiError(
+        "Unable To Update User Due To Server",
+        "INTERNAL_SERVER_ERROR"
+      );
     }
 
     return {
       success: true,
     };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
+    if (error instanceof ApiError) {
+      throw error;
     }
 
-    throw new Error("Unable To Update User Due To Server");
+    if (isMongooseError(error)) {
+      throw new MongooseError(error);
+    }
+
+    throw new ApiError(
+      "Unable To Update User Due To Server",
+      "INTERNAL_SERVER_ERROR"
+    );
   }
 };
 

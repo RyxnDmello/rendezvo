@@ -4,6 +4,10 @@ import OrganizerModel from "@models/organizer.model";
 
 import { RegisterSchema } from "@validators/organizer/register.validator";
 
+import MongooseError, { isMongooseError } from "@utils/MongooseError";
+
+import ApiError from "@utils/ApiError";
+
 const registerOrganizer = async (data: RegisterSchema) => {
   try {
     const [dbOrganizerWithEmail, dbOrganizerWithMobile] = await Promise.all([
@@ -16,11 +20,17 @@ const registerOrganizer = async (data: RegisterSchema) => {
     ]);
 
     if (dbOrganizerWithEmail) {
-      throw new Error("User With Given Email Address Already Exists");
+      throw new ApiError(
+        "User With Given Email Address Already Exists",
+        "BAD_REQUEST"
+      );
     }
 
     if (dbOrganizerWithMobile) {
-      throw new Error("User With Given Mobile Number Already Exists");
+      throw new ApiError(
+        "User With Given Mobile Number Already Exists",
+        "BAD_REQUEST"
+      );
     }
 
     const encrypted = await password.hash(data.password!, {
@@ -43,11 +53,18 @@ const registerOrganizer = async (data: RegisterSchema) => {
       verified: newOrganizer.verified,
     };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
+    if (error instanceof ApiError) {
+      throw error;
     }
 
-    throw new Error("Unable To Create Account Due To Server Error");
+    if (isMongooseError(error)) {
+      throw new MongooseError(error);
+    }
+
+    throw new ApiError(
+      "Unable To Create Account Due To Server Error",
+      "INTERNAL_SERVER_ERROR"
+    );
   }
 };
 

@@ -4,6 +4,8 @@ import { Context, Next, ValidationTargets } from "hono";
 
 import { zValidator } from "@hono/zod-validator";
 
+import { ApiErrorCustomResponse } from "@utils/ApiError";
+
 type Targets = keyof ValidationTargets;
 
 const validator = <Target extends Targets, Schema extends z.ZodType>(
@@ -30,22 +32,22 @@ const validator = <Target extends Targets, Schema extends z.ZodType>(
 
       const message = result.error.issues[0]?.message;
 
-      return ctx.json(
-        { error: message ?? "Unable To Proceed Due To A Validation Error" },
-        400
-      );
+      return ApiErrorCustomResponse(ctx, {
+        error: message ?? "Unable To Proceed Due To A Validation Error",
+        code: "VALIDATION_ERROR",
+      });
     };
   }
 
   return zValidator(target, schema, (result, ctx) => {
     if (result.success) return;
 
-    const error = result.error.issues[0]?.message;
+    const message = result.error.issues[0]?.message;
 
-    return ctx.json(
-      { error: error ?? "Unable To Proceed Due To A Validation Error" },
-      400
-    );
+    return ApiErrorCustomResponse(ctx, {
+      error: message ?? "Unable To Proceed Due To A Validation Error",
+      code: "VALIDATION_ERROR",
+    });
   });
 };
 

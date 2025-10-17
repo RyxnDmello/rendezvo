@@ -12,6 +12,8 @@ import { LoginSchema } from "@validators/organizer/login.validator";
 import { UpdateSchema } from "@validators/organizer/update.validator";
 import { RegisterSchema } from "@validators/organizer/register.validator";
 
+import { ApiErrorResponse } from "@utils/ApiError";
+
 export const _fetchOrganizer = async (ctx: Context) => {
   const id = ctx.req.param("id");
 
@@ -19,12 +21,7 @@ export const _fetchOrganizer = async (ctx: Context) => {
     const organizer = await fetchOrganizer(id);
     return ctx.json(organizer, 200);
   } catch (error) {
-    return ctx.json(
-      {
-        error: error instanceof Error && error.message,
-      },
-      402
-    );
+    return ApiErrorResponse(ctx, error);
   }
 };
 
@@ -46,12 +43,7 @@ export const _fetchOrganizers = async (ctx: Context) => {
 
     return ctx.json(organizers, 200);
   } catch (error) {
-    return ctx.json(
-      {
-        error: error instanceof Error && error.message,
-      },
-      402
-    );
+    return ApiErrorResponse(ctx, error);
   }
 };
 
@@ -62,12 +54,7 @@ export const _loginOrganizer = async (ctx: any) => {
     const organizer = await loginOrganizer(data);
     return ctx.json(organizer, 200);
   } catch (error) {
-    return ctx.json(
-      {
-        error: error instanceof Error && error.message,
-      },
-      402
-    );
+    return ApiErrorResponse(ctx, error);
   }
 };
 
@@ -78,12 +65,7 @@ export const _registerOrganizer = async (ctx: any) => {
     const organizer = await registerOrganizer(data);
     return ctx.json(organizer, 200);
   } catch (error) {
-    return ctx.json(
-      {
-        error: error instanceof Error && error.message,
-      },
-      402
-    );
+    return ApiErrorResponse(ctx, error);
   }
 };
 
@@ -96,12 +78,7 @@ export const _updateOrganizer = async (ctx: any) => {
     const result = await updateOrganizer(id, data);
     return ctx.json(result, 200);
   } catch (error) {
-    return ctx.json(
-      {
-        error: error instanceof Error && error.message,
-      },
-      402
-    );
+    return ApiErrorResponse(ctx, error);
   }
 };
 

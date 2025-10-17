@@ -1,5 +1,9 @@
 import OrganizerModel from "@models/organizer.model";
 
+import MongooseError, { isMongooseError } from "@utils/MongooseError";
+
+import ApiError from "@utils/ApiError";
+
 const fetchOrganizer = async (id: string) => {
   try {
     const dbOrganizer = await OrganizerModel.findOne(
@@ -16,7 +20,7 @@ const fetchOrganizer = async (id: string) => {
     });
 
     if (!dbOrganizer) {
-      throw new Error("User With Given ID Does Not Exist");
+      throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
     const { _id, ...data } = dbOrganizer;
@@ -26,11 +30,18 @@ const fetchOrganizer = async (id: string) => {
       ...data,
     };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
+    if (error instanceof ApiError) {
+      throw error;
     }
 
-    throw new Error("Unable To Retrieve User Due To Server Error");
+    if (isMongooseError(error)) {
+      throw new MongooseError(error);
+    }
+
+    throw new ApiError(
+      "Unable To Retrieve User Due To Server Error",
+      "INTERNAL_SERVER_ERROR"
+    );
   }
 };
 

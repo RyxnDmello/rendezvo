@@ -1,5 +1,9 @@
 import OrganizerModel from "@models/organizer.model";
 
+import MongooseError, { isMongooseError } from "@utils/MongooseError";
+
+import ApiError from "@utils/ApiError";
+
 type Query = {
   name?: {
     $regex: string;
@@ -52,11 +56,18 @@ const fetchOrganizers = async (
       };
     });
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
+    if (error instanceof ApiError) {
+      throw error;
     }
 
-    throw new Error("Unable To Retrieve Users Due To Server Error");
+    if (isMongooseError(error)) {
+      throw new MongooseError(error);
+    }
+
+    throw new ApiError(
+      "Unable To Retrieve Users Due To Server Error",
+      "INTERNAL_SERVER_ERROR"
+    );
   }
 };
 

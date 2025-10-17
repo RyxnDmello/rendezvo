@@ -4,6 +4,10 @@ import OrganizerModel from "@models/organizer.model";
 
 import { LoginSchema } from "@validators/organizer/login.validator";
 
+import MongooseError, { isMongooseError } from "@utils/MongooseError";
+
+import ApiError from "@utils/ApiError";
+
 const loginOrganizer = async (data: LoginSchema) => {
   try {
     const dbOrganizer = await OrganizerModel.findOne(
@@ -22,11 +26,17 @@ const loginOrganizer = async (data: LoginSchema) => {
     });
 
     if (!dbOrganizer) {
-      throw new Error("User With Given Email Address Does Not Exist");
+      throw new ApiError(
+        "User With Given Email Address Does Not Exist",
+        "BAD_REQUEST"
+      );
     }
 
     if (!dbOrganizer.password) {
-      throw new Error("Please Try A Different Method To Login");
+      throw new ApiError(
+        "Please Try A Different Method To Login",
+        "INVALID_CREDENTIALS"
+      );
     }
 
     const verified = await password.verify(
@@ -36,7 +46,7 @@ const loginOrganizer = async (data: LoginSchema) => {
     );
 
     if (!verified) {
-      throw new Error("Invalid Password");
+      throw new ApiError("Invalid Password", "INVALID_CREDENTIALS");
     }
 
     return {
@@ -47,11 +57,18 @@ const loginOrganizer = async (data: LoginSchema) => {
       verified: dbOrganizer.verified,
     };
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
+    if (error instanceof ApiError) {
+      throw error;
     }
 
-    throw new Error("Unable To Login Due To Server Error");
+    if (isMongooseError(error)) {
+      throw new MongooseError(error);
+    }
+
+    throw new ApiError(
+      "Unable To Login Due To Server Error",
+      "INTERNAL_SERVER_ERROR"
+    );
   }
 };
 
