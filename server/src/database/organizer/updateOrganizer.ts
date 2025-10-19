@@ -1,21 +1,23 @@
 import OrganizerModel from "@models/organizer.model";
 
-import { UpdateSchema } from "@validators/organizer/update.validator";
+import { UpdateOrganizerValidatorSchema } from "@validators/organizer/updateOrganizer.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 
 import ApiError from "@utils/ApiError";
 
-const updateOrganizer = async (id: string, data: UpdateSchema) => {
+const updateOrganizer = async (
+  id: string,
+  data: UpdateOrganizerValidatorSchema
+) => {
   try {
     const dbOrganizer = await OrganizerModel.findOne(
       {
         _id: id,
       },
       {
-        password: 0,
-        createdAt: 0,
-        updatedAt: 0,
+        mobile: 1,
+        verified: 1,
       }
     ).lean({
       versionKey: false,
@@ -23,6 +25,13 @@ const updateOrganizer = async (id: string, data: UpdateSchema) => {
 
     if (!dbOrganizer) {
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (!dbOrganizer.verified) {
+      throw new ApiError(
+        "Unable To Proceed Since Account Has Not Been Verified",
+        "ACCOUNT_LOCKED"
+      );
     }
 
     if (data.mobile && data.mobile !== dbOrganizer.mobile) {

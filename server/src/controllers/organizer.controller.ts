@@ -8,9 +8,9 @@ import registerOrganizer from "@database/organizer/registerOrganizer";
 
 import updateOrganizer from "@database/organizer/updateOrganizer";
 
-import { LoginSchema } from "@validators/organizer/login.validator";
-import { UpdateSchema } from "@validators/organizer/update.validator";
-import { RegisterSchema } from "@validators/organizer/register.validator";
+import { LoginOrganizerValidatorSchema } from "@validators/organizer/loginOrganizer.validator";
+import { UpdateOrganizerValidatorSchema } from "@validators/organizer/updateOrganizer.validator";
+import { RegisterOrganizerValidatorSchema } from "@validators/organizer/registerOrganizer.validator";
 
 import { ApiErrorResponse } from "@utils/ApiError";
 
@@ -48,7 +48,7 @@ export const _fetchOrganizers = async (ctx: Context) => {
 };
 
 export const _loginOrganizer = async (ctx: any) => {
-  const data = ctx.req.valid("json") as LoginSchema;
+  const data = ctx.req.valid("json") as LoginOrganizerValidatorSchema;
 
   try {
     const organizer = await loginOrganizer(data);
@@ -59,7 +59,7 @@ export const _loginOrganizer = async (ctx: any) => {
 };
 
 export const _registerOrganizer = async (ctx: any) => {
-  const data = ctx.req.valid("json") as RegisterSchema;
+  const data = ctx.req.valid("json") as RegisterOrganizerValidatorSchema;
 
   try {
     const organizer = await registerOrganizer(data);
@@ -72,7 +72,7 @@ export const _registerOrganizer = async (ctx: any) => {
 export const _updateOrganizer = async (ctx: any) => {
   const id = ctx.req.param("id");
 
-  const data = ctx.req.valid("json") as UpdateSchema;
+  const data = ctx.req.valid("json") as UpdateOrganizerValidatorSchema;
 
   try {
     const result = await updateOrganizer(id, data);

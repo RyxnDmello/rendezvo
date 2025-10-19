@@ -2,7 +2,7 @@ import * as z from "zod";
 
 import validator from "@middlewares/validator.middleware";
 
-export const loginSchema = z.strictObject(
+export const loginOrganizerValidatorSchema = z.strictObject(
   {
     email: z
       .email("Email Must Be A Valid Email Address")
@@ -23,8 +23,13 @@ export const loginSchema = z.strictObject(
   "Only Email And Password Must Be Provided"
 );
 
-const loginValidator = validator("json", loginSchema);
+const loginOrganizerValidator = validator(
+  "json",
+  loginOrganizerValidatorSchema
+);
 
-export type LoginSchema = z.infer<typeof loginSchema>;
+export type LoginOrganizerValidatorSchema = z.infer<
+  typeof loginOrganizerValidatorSchema
+>;
 
-export default loginValidator;
+export default loginOrganizerValidator;

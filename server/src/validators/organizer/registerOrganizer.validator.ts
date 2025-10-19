@@ -2,7 +2,7 @@ import * as z from "zod";
 
 import validator from "@middlewares/validator.middleware";
 
-export const registerSchema = z.strictObject(
+export const registerOrganizerValidatorSchema = z.strictObject(
   {
     name: z
       .string("Name Must Be A Valid First, Middle, And Last Name")
@@ -38,8 +38,13 @@ export const registerSchema = z.strictObject(
   "Only Name, Email, Mobile, And Password Must Be Provided"
 );
 
-const registerValidator = validator("json", registerSchema);
+const registerOrganizerValidator = validator(
+  "json",
+  registerOrganizerValidatorSchema
+);
 
-export type RegisterSchema = z.infer<typeof registerSchema>;
+export type RegisterOrganizerValidatorSchema = z.infer<
+  typeof registerOrganizerValidatorSchema
+>;
 
-export default registerValidator;
+export default registerOrganizerValidator;

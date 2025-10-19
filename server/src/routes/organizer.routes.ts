@@ -9,19 +9,19 @@ import {
   _removeOrganizer,
 } from "@controllers/organizer.controller";
 
-import loginValidator from "@validators/organizer/login.validator";
-import updateValidator from "@validators/organizer/update.validator";
-import registerValidator from "@validators/organizer/register.validator";
+import loginOrganizerValidator from "@validators/organizer/loginOrganizer.validator";
+import updateOrganizerValidator from "@validators/organizer/updateOrganizer.validator";
+import registerOrganizerValidator from "@validators/organizer/registerOrganizer.validator";
 
 const router = new Hono();
 
 router.basePath("/").get(_fetchOrganizers);
-router.post("/login", loginValidator, _loginOrganizer);
-router.post("/register", registerValidator, _registerOrganizer);
+router.post("/login", loginOrganizerValidator, _loginOrganizer);
+router.post("/register", registerOrganizerValidator, _registerOrganizer);
 router
   .basePath("/:id")
   .get(_fetchOrganizer)
-  .patch(updateValidator, _updateOrganizer)
+  .patch(updateOrganizerValidator, _updateOrganizer)
   .delete(_removeOrganizer);
 
 export default router;

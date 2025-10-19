@@ -23,6 +23,13 @@ const fetchOrganizer = async (id: string) => {
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
+    if (!dbOrganizer.verified) {
+      throw new ApiError(
+        "Unable To Proceed Since Account Has Not Been Verified",
+        "ACCOUNT_LOCKED"
+      );
+    }
+
     const { _id, ...data } = dbOrganizer;
 
     return {

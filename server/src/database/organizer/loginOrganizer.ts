@@ -1,14 +1,14 @@
-import { password } from "bun";
-
 import OrganizerModel from "@models/organizer.model";
 
-import { LoginSchema } from "@validators/organizer/login.validator";
+import { LoginOrganizerValidatorSchema } from "@validators/organizer/loginOrganizer.validator";
+
+import { verifyPassword } from "@helpers/password";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 
 import ApiError from "@utils/ApiError";
 
-const loginOrganizer = async (data: LoginSchema) => {
+const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
   try {
     const dbOrganizer = await OrganizerModel.findOne(
       {
@@ -35,18 +35,21 @@ const loginOrganizer = async (data: LoginSchema) => {
     if (!dbOrganizer.password) {
       throw new ApiError(
         "Please Try A Different Method To Login",
-        "INVALID_CREDENTIALS"
+        "BAD_REQUEST"
       );
     }
 
-    const verified = await password.verify(
-      data.password,
-      dbOrganizer.password,
-      "bcrypt"
-    );
+    const valid = await verifyPassword(data.password, dbOrganizer.password);
 
-    if (!verified) {
+    if (!valid) {
       throw new ApiError("Invalid Password", "INVALID_CREDENTIALS");
+    }
+
+    if (!dbOrganizer.verified) {
+      return {
+        email: dbOrganizer.email,
+        verified: dbOrganizer.verified,
+      };
     }
 
     return {

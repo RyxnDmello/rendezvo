@@ -1,14 +1,14 @@
-import { password } from "bun";
-
 import OrganizerModel from "@models/organizer.model";
 
-import { RegisterSchema } from "@validators/organizer/register.validator";
+import { RegisterOrganizerValidatorSchema } from "@validators/organizer/registerOrganizer.validator";
+
+import { hashPassword } from "@helpers/password";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 
 import ApiError from "@utils/ApiError";
 
-const registerOrganizer = async (data: RegisterSchema) => {
+const registerOrganizer = async (data: RegisterOrganizerValidatorSchema) => {
   try {
     const [dbOrganizerWithEmail, dbOrganizerWithMobile] = await Promise.all([
       await OrganizerModel.exists({
@@ -33,10 +33,7 @@ const registerOrganizer = async (data: RegisterSchema) => {
       );
     }
 
-    const encrypted = await password.hash(data.password!, {
-      algorithm: "bcrypt",
-      cost: 12,
-    });
+    const encrypted = await hashPassword(data.password);
 
     const newOrganizer = new OrganizerModel({
       ...data,
@@ -46,10 +43,7 @@ const registerOrganizer = async (data: RegisterSchema) => {
     await newOrganizer.save();
 
     return {
-      id: newOrganizer.id,
-      name: newOrganizer.name,
       email: newOrganizer.email,
-      mobile: newOrganizer.mobile,
       verified: newOrganizer.verified,
     };
   } catch (error) {

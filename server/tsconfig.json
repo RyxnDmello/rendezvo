@@ -33,6 +33,7 @@
       "@validators/*": ["./src/validators/*"],
       "@database/*": ["./src/database/*"],
       "@services/*": ["./src/services/*"],
+      "@helpers/*": ["./src/helpers/*"],
       "@routes/*": ["./src/routes/*"],
       "@models/*": ["./src/models/*"],
       "@utils/*": ["./src/utils/*"]

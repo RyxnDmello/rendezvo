@@ -2,7 +2,7 @@ import * as z from "zod";
 
 import validator from "@middlewares/validator.middleware";
 
-const profileSchema = z.strictObject(
+const profileValidatorSchema = z.strictObject(
   {
     bio: z
       .string("Bio Must Be A String")
@@ -40,7 +40,7 @@ const profileSchema = z.strictObject(
   "Invalid Or Unsupported Profile Properties Provided"
 );
 
-const billingSchema = z.strictObject(
+const billingValidatorSchema = z.strictObject(
   {
     bankName: z
       .string("Bank Name Must Be A String")
@@ -78,7 +78,7 @@ const billingSchema = z.strictObject(
   "Invalid Or Unsupported Billing Properties Provided"
 );
 
-export const updateSchema = z.strictObject(
+export const updateOrganizerValidatorSchema = z.strictObject(
   {
     name: z
       .string("Name Must Be A Valid First, Middle, And Last Name")
@@ -97,14 +97,19 @@ export const updateSchema = z.strictObject(
       .min(6000000000, "Mobile Number Must Be 10 Digits")
       .max(9999999999, "Mobile Number Must Be 10 Digits")
       .optional(),
-    profile: profileSchema.optional(),
-    billing: billingSchema.optional(),
+    profile: profileValidatorSchema.optional(),
+    billing: billingValidatorSchema.optional(),
   },
   "Invalid Or Unsupported Properties Provided"
 );
 
-const updateValidator = validator("json", updateSchema);
+const updateOrganizerValidator = validator(
+  "json",
+  updateOrganizerValidatorSchema
+);
 
-export type UpdateSchema = z.infer<typeof updateSchema>;
+export type UpdateOrganizerValidatorSchema = z.infer<
+  typeof updateOrganizerValidatorSchema
+>;
 
-export default updateValidator;
+export default updateOrganizerValidator;

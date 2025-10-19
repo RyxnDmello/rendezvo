@@ -5,6 +5,7 @@ import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError from "@utils/ApiError";
 
 type Query = {
+  verified: true;
   name?: {
     $regex: string;
     $options: "i";
@@ -20,7 +21,9 @@ const fetchOrganizers = async (
   email?: string,
   limit: number = 0
 ) => {
-  const query: Query = {};
+  const query: Query = {
+    verified: true,
+  };
 
   if (name !== undefined) {
     query.name = {
