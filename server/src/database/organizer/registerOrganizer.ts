@@ -47,6 +47,8 @@ const registerOrganizer = async (data: RegisterOrganizerValidatorSchema) => {
       verified: newOrganizer.verified,
     };
   } catch (error) {
+    console.log(error);
+
     if (error instanceof ApiError) {
       throw error;
     }

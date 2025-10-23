@@ -1,4 +1,4 @@
-import { Context } from "hono";
+import { ZodContext } from "hono";
 
 import fetchOrganizer from "@database/organizer/fetchOrganizer";
 import fetchOrganizers from "@database/organizer/fetchOrganizers";
@@ -14,7 +14,7 @@ import { RegisterOrganizerValidatorSchema } from "@validators/organizer/register
 
 import { ApiErrorResponse } from "@utils/ApiError";
 
-export const _fetchOrganizer = async (ctx: Context) => {
+export const _fetchOrganizer = async (ctx: ZodContext) => {
   const id = ctx.req.param("id");
 
   try {
@@ -25,7 +25,7 @@ export const _fetchOrganizer = async (ctx: Context) => {
   }
 };
 
-export const _fetchOrganizers = async (ctx: Context) => {
+export const _fetchOrganizers = async (ctx: ZodContext) => {
   const limitQuery = ctx.req.query("limit");
 
   try {
@@ -47,8 +47,10 @@ export const _fetchOrganizers = async (ctx: Context) => {
   }
 };
 
-export const _loginOrganizer = async (ctx: any) => {
-  const data = ctx.req.valid("json") as LoginOrganizerValidatorSchema;
+export const _loginOrganizer = async (
+  ctx: ZodContext<LoginOrganizerValidatorSchema>
+) => {
+  const data = ctx.req.valid("json");
 
   try {
     const organizer = await loginOrganizer(data);
@@ -58,8 +60,10 @@ export const _loginOrganizer = async (ctx: any) => {
   }
 };
 
-export const _registerOrganizer = async (ctx: any) => {
-  const data = ctx.req.valid("json") as RegisterOrganizerValidatorSchema;
+export const _registerOrganizer = async (
+  ctx: ZodContext<RegisterOrganizerValidatorSchema>
+) => {
+  const data = ctx.req.valid("json");
 
   try {
     const organizer = await registerOrganizer(data);
@@ -69,10 +73,12 @@ export const _registerOrganizer = async (ctx: any) => {
   }
 };
 
-export const _updateOrganizer = async (ctx: any) => {
+export const _updateOrganizer = async (
+  ctx: ZodContext<UpdateOrganizerValidatorSchema>
+) => {
   const id = ctx.req.param("id");
 
-  const data = ctx.req.valid("json") as UpdateOrganizerValidatorSchema;
+  const data = ctx.req.valid("json");
 
   try {
     const result = await updateOrganizer(id, data);
@@ -82,6 +88,6 @@ export const _updateOrganizer = async (ctx: any) => {
   }
 };
 
-export const _removeOrganizer = (ctx: Context) => {
+export const _removeOrganizer = (ctx: ZodContext) => {
   return ctx.json({});
 };

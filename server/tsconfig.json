@@ -36,9 +36,10 @@
       "@helpers/*": ["./src/helpers/*"],
       "@routes/*": ["./src/routes/*"],
       "@models/*": ["./src/models/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@types/*": ["./src/types/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.d.ts"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,3 +1,5 @@
+import { ZodContext } from "hono";
+
 import createAuthVerification from "@database/verification/createAuthVerification";
 import createResetVerification from "@database/verification/createResetVerification";
 import createForgotVerification from "@database/verification/createForgotVerification";
@@ -16,10 +18,10 @@ import { VerifyForgotVerificationValidatorSchema } from "@validators/verificatio
 
 import { ApiErrorResponse } from "@utils/ApiError";
 
-export const _createAuthVerification = async (ctx: any) => {
-  const { email } = ctx.req.valid(
-    "json"
-  ) as CreateAuthVerificationValidatorSchema;
+export const _createAuthVerification = async (
+  ctx: ZodContext<CreateAuthVerificationValidatorSchema>
+) => {
+  const { email } = ctx.req.valid("json");
 
   try {
     const result = await createAuthVerification(email);
@@ -29,8 +31,10 @@ export const _createAuthVerification = async (ctx: any) => {
   }
 };
 
-export const _createResetVerification = async (ctx: any) => {
-  const data = ctx.req.valid("json") as CreateResetVerificationValidatorSchema;
+export const _createResetVerification = async (
+  ctx: ZodContext<CreateResetVerificationValidatorSchema>
+) => {
+  const data = ctx.req.valid("json");
 
   try {
     const result = await createResetVerification(data);
@@ -40,10 +44,10 @@ export const _createResetVerification = async (ctx: any) => {
   }
 };
 
-export const _createForgotVerification = async (ctx: any) => {
-  const { email } = ctx.req.valid(
-    "json"
-  ) as CreateForgotVerificationValidatorSchema;
+export const _createForgotVerification = async (
+  ctx: ZodContext<CreateForgotVerificationValidatorSchema>
+) => {
+  const { email } = ctx.req.valid("json");
 
   try {
     const result = await createForgotVerification(email);
@@ -53,8 +57,10 @@ export const _createForgotVerification = async (ctx: any) => {
   }
 };
 
-export const _verifyAuthVerification = async (ctx: any) => {
-  const data = ctx.req.valid("json") as VerifyAuthVerificationValidatorSchema;
+export const _verifyAuthVerification = async (
+  ctx: ZodContext<VerifyAuthVerificationValidatorSchema>
+) => {
+  const data = ctx.req.valid("json");
 
   try {
     const result = await verifyAuthVerification(data);
@@ -64,8 +70,10 @@ export const _verifyAuthVerification = async (ctx: any) => {
   }
 };
 
-export const _verifyResetVerification = async (ctx: any) => {
-  const data = ctx.req.valid("json") as VerifyResetVerificationValidatorSchema;
+export const _verifyResetVerification = async (
+  ctx: ZodContext<VerifyResetVerificationValidatorSchema>
+) => {
+  const data = ctx.req.valid("json");
 
   try {
     const result = await verifyResetVerification(data);
@@ -75,8 +83,10 @@ export const _verifyResetVerification = async (ctx: any) => {
   }
 };
 
-export const _verifyForgotVerification = async (ctx: any) => {
-  const data = ctx.req.valid("json") as VerifyForgotVerificationValidatorSchema;
+export const _verifyForgotVerification = async (
+  ctx: ZodContext<VerifyForgotVerificationValidatorSchema>
+) => {
+  const data = ctx.req.valid("json");
 
   try {
     const result = await verifyForgotVerification(data);
