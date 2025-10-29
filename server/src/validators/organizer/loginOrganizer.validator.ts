@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import validator from "@middlewares/validator.middleware";
+import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
 export const loginOrganizerValidatorSchema = z.strictObject(
   {
@@ -30,6 +30,10 @@ const loginOrganizerValidator = validator(
 
 export type LoginOrganizerValidatorSchema = z.infer<
   typeof loginOrganizerValidatorSchema
+>;
+
+export type LoginOrganizerContext = ValidatorContext<
+  typeof loginOrganizerValidator
 >;
 
 export default loginOrganizerValidator;

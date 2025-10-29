@@ -1,8 +1,10 @@
 import { serve } from "bun";
 
+import { env } from "@helpers/env";
+
 import app from "./app";
 
-const port = process.env.PORT || process.env.DEVELOPMENT_PORT!;
+const port = env.GLOBAL.PORT;
 
 console.log(`ACTIVE | ${port}`);
 

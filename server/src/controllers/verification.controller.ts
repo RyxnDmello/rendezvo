@@ -1,5 +1,3 @@
-import { ZodContext } from "hono";
-
 import createAuthVerification from "@database/verification/createAuthVerification";
 import createResetVerification from "@database/verification/createResetVerification";
 import createForgotVerification from "@database/verification/createForgotVerification";
@@ -8,18 +6,18 @@ import verifyAuthVerification from "@database/verification/verifyAuthVerificatio
 import verifyResetVerification from "@database/verification/verifyResetVerification";
 import verifyForgotVerification from "@database/verification/verifyForgotVerification";
 
-import { CreateAuthVerificationValidatorSchema } from "@validators/verification/createAuthVerification.validator";
-import { CreateResetVerificationValidatorSchema } from "@validators/verification/createResetVerification.validator";
-import { CreateForgotVerificationValidatorSchema } from "@validators/verification/createForgotVerification.validator";
+import { CreateAuthVerificationContext } from "@validators/verification/createAuthVerification.validator";
+import { CreateResetVerificationContext } from "@validators/verification/createResetVerification.validator";
+import { CreateForgotVerificationContext } from "@validators/verification/createForgotVerification.validator";
 
-import { VerifyAuthVerificationValidatorSchema } from "@validators/verification/verifyAuthVerification.validator";
-import { VerifyResetVerificationValidatorSchema } from "@validators/verification/verifyResetVerification.validator";
-import { VerifyForgotVerificationValidatorSchema } from "@validators/verification/verifyForgotVerification.validator";
+import { VerifyAuthVerificationContext } from "@validators/verification/verifyAuthVerification.validator";
+import { VerifyResetVerificationContext } from "@validators/verification/verifyResetVerification.validator";
+import { VerifyForgotVerificationContext } from "@validators/verification/verifyForgotVerification.validator";
 
 import { ApiErrorResponse } from "@utils/ApiError";
 
 export const _createAuthVerification = async (
-  ctx: ZodContext<CreateAuthVerificationValidatorSchema>
+  ctx: CreateAuthVerificationContext
 ) => {
   const { email } = ctx.req.valid("json");
 
@@ -32,7 +30,7 @@ export const _createAuthVerification = async (
 };
 
 export const _createResetVerification = async (
-  ctx: ZodContext<CreateResetVerificationValidatorSchema>
+  ctx: CreateResetVerificationContext
 ) => {
   const data = ctx.req.valid("json");
 
@@ -45,7 +43,7 @@ export const _createResetVerification = async (
 };
 
 export const _createForgotVerification = async (
-  ctx: ZodContext<CreateForgotVerificationValidatorSchema>
+  ctx: CreateForgotVerificationContext
 ) => {
   const { email } = ctx.req.valid("json");
 
@@ -58,7 +56,7 @@ export const _createForgotVerification = async (
 };
 
 export const _verifyAuthVerification = async (
-  ctx: ZodContext<VerifyAuthVerificationValidatorSchema>
+  ctx: VerifyAuthVerificationContext
 ) => {
   const data = ctx.req.valid("json");
 
@@ -71,7 +69,7 @@ export const _verifyAuthVerification = async (
 };
 
 export const _verifyResetVerification = async (
-  ctx: ZodContext<VerifyResetVerificationValidatorSchema>
+  ctx: VerifyResetVerificationContext
 ) => {
   const data = ctx.req.valid("json");
 
@@ -84,7 +82,7 @@ export const _verifyResetVerification = async (
 };
 
 export const _verifyForgotVerification = async (
-  ctx: ZodContext<VerifyForgotVerificationValidatorSchema>
+  ctx: VerifyForgotVerificationContext
 ) => {
   const data = ctx.req.valid("json");
 

@@ -1,5 +1,7 @@
 import mongoose, { connect, disconnect } from "mongoose";
 
+import { env } from "@helpers/env";
+
 const connectMongoDB = async () => {
   if (mongoose.connection.readyState === 1) {
     console.log("\n-------------------------------------");
@@ -10,9 +12,9 @@ const connectMongoDB = async () => {
   }
 
   try {
-    await connect(process.env.MONGODB_URI!, {
-      dbName: process.env.MONGODB_DB!,
-      appName: process.env.MONGODB_APP!,
+    await connect(env.MONGODB.MONGODB_URI, {
+      dbName: env.MONGODB.MONGODB_DB,
+      appName: env.MONGODB.MONGODB_APP,
       retryReads: true,
       retryWrites: true,
       serverApi: {

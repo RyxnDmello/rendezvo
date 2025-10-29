@@ -9,6 +9,8 @@ import {
   _verifyForgotVerification,
 } from "@controllers/verification.controller";
 
+import authorize from "@middlewares/authorize.middleware";
+
 import createAuthVerificationValidator from "@validators/verification/createAuthVerification.validator";
 import createResetVerificationValidator from "@validators/verification/createResetVerification.validator";
 import createForgotVerificationValidator from "@validators/verification/createForgotVerification.validator";
@@ -36,6 +38,7 @@ router.post(
 );
 router.post(
   "/reset/verify",
+  authorize,
   verifyResetVerificationValidator,
   _verifyResetVerification
 );

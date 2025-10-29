@@ -6,6 +6,8 @@ import {
   _createEvent,
 } from "@controllers/event.controller";
 
+import authorize from "@middlewares/authorize.middleware";
+
 import fetchEventsValidator from "@validators/event/fetchEvents.validator";
 import createEventValidator from "@validators/event/createEvent.validator";
 
@@ -13,8 +15,8 @@ const router = new Hono();
 
 router
   .basePath("/")
-  .get(fetchEventsValidator, _fetchEvents)
-  .post(createEventValidator, _createEvent);
-router.get("/:id", _fetchEvent);
+  .get(authorize, fetchEventsValidator, _fetchEvents)
+  .post(authorize, createEventValidator, _createEvent);
+router.basePath("/:id").get(authorize, _fetchEvent);
 
 export default router;

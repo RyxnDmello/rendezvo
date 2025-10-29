@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import validator from "@middlewares/validator.middleware";
+import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
 export const createAuthVerificationValidatorSchema = z.strictObject(
   {
@@ -21,6 +21,10 @@ const createAuthVerificationValidator = validator(
 
 export type CreateAuthVerificationValidatorSchema = z.infer<
   typeof createAuthVerificationValidatorSchema
+>;
+
+export type CreateAuthVerificationContext = ValidatorContext<
+  typeof createAuthVerificationValidator
 >;
 
 export default createAuthVerificationValidator;

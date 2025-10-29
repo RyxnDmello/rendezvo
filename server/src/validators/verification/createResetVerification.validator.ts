@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import validator from "@middlewares/validator.middleware";
+import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
 export const createResetVerificationValidatorSchema = z
   .strictObject(
@@ -43,6 +43,10 @@ const createResetVerificationValidator = validator(
 
 export type CreateResetVerificationValidatorSchema = z.infer<
   typeof createResetVerificationValidatorSchema
+>;
+
+export type CreateResetVerificationContext = ValidatorContext<
+  typeof createResetVerificationValidator
 >;
 
 export default createResetVerificationValidator;

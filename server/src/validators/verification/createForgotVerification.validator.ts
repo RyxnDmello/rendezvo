@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import validator from "@middlewares/validator.middleware";
+import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
 export const createForgotVerificationValidatorSchema = z.strictObject(
   {
@@ -21,6 +21,10 @@ const createForgotVerificationValidator = validator(
 
 export type CreateForgotVerificationValidatorSchema = z.infer<
   typeof createForgotVerificationValidatorSchema
+>;
+
+export type CreateForgotVerificationContext = ValidatorContext<
+  typeof createForgotVerificationValidator
 >;
 
 export default createForgotVerificationValidator;

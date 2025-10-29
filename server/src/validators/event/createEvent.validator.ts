@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import validator from "@middlewares/validator.middleware";
+import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
 const basicSchema = z.strictObject(
   {
@@ -371,5 +371,7 @@ const createEventValidator = validator("json", createEventValidatorSchema);
 export type CreateEventValidatorSchema = z.infer<
   typeof createEventValidatorSchema
 >;
+
+export type CreateEventContext = ValidatorContext<typeof createEventValidator>;
 
 export default createEventValidator;

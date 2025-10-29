@@ -4,6 +4,8 @@ import { LoginOrganizerValidatorSchema } from "@validators/organizer/loginOrgani
 
 import { verifyPassword } from "@helpers/password";
 
+import { createTokens } from "./helpers/token";
+
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 
 import ApiError from "@utils/ApiError";
@@ -52,12 +54,19 @@ const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
       };
     }
 
+    const { accessToken, refreshToken } = await createTokens(
+      dbOrganizer._id.toString(),
+      dbOrganizer.email
+    );
+
     return {
       id: dbOrganizer._id,
       name: dbOrganizer.name,
       email: dbOrganizer.email,
       mobile: dbOrganizer.mobile,
       verified: dbOrganizer.verified,
+      accessToken,
+      refreshToken,
     };
   } catch (error) {
     if (error instanceof ApiError) {

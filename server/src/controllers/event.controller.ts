@@ -1,16 +1,16 @@
-import { ZodContext } from "hono";
+import { Context } from "hono";
 
 import fetchEvent from "@database/event/fetchEvent";
 import fetchEvents from "@database/event/fetchEvents";
 
 import createEvent from "@database/event/createEvent";
 
-import { FetchEventsValidatorSchema } from "@validators/event/fetchEvents.validator";
-import { CreateEventValidatorSchema } from "@validators/event/createEvent.validator";
+import { FetchEventsContext } from "@validators/event/fetchEvents.validator";
+import { CreateEventContext } from "@validators/event/createEvent.validator";
 
 import { ApiErrorResponse } from "@utils/ApiError";
 
-export const _fetchEvent = async (ctx: ZodContext) => {
+export const _fetchEvent = async (ctx: Context) => {
   const id = ctx.req.param("id");
 
   try {
@@ -21,9 +21,7 @@ export const _fetchEvent = async (ctx: ZodContext) => {
   }
 };
 
-export const _fetchEvents = async (
-  ctx: ZodContext<FetchEventsValidatorSchema>
-) => {
+export const _fetchEvents = async (ctx: FetchEventsContext) => {
   const { ownerID, mode, status, visibility, attendance, approved, name } =
     ctx.req.valid("query");
 
@@ -44,9 +42,7 @@ export const _fetchEvents = async (
   }
 };
 
-export const _createEvent = async (
-  ctx: ZodContext<CreateEventValidatorSchema>
-) => {
+export const _createEvent = async (ctx: CreateEventContext) => {
   const data = ctx.req.valid("json");
 
   try {

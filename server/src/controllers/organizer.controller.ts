@@ -1,20 +1,21 @@
-import { ZodContext } from "hono";
+import { Context } from "hono";
 
 import fetchOrganizer from "@database/organizer/fetchOrganizer";
-import fetchOrganizers from "@database/organizer/fetchOrganizers";
 
 import loginOrganizer from "@database/organizer/loginOrganizer";
 import registerOrganizer from "@database/organizer/registerOrganizer";
 
 import updateOrganizer from "@database/organizer/updateOrganizer";
 
-import { LoginOrganizerValidatorSchema } from "@validators/organizer/loginOrganizer.validator";
-import { UpdateOrganizerValidatorSchema } from "@validators/organizer/updateOrganizer.validator";
-import { RegisterOrganizerValidatorSchema } from "@validators/organizer/registerOrganizer.validator";
+import { LoginOrganizerContext } from "@validators/organizer/loginOrganizer.validator";
+import { UpdateOrganizerContext } from "@validators/organizer/updateOrganizer.validator";
+import { RegisterOrganizerContext } from "@validators/organizer/registerOrganizer.validator";
 
-import { ApiErrorResponse } from "@utils/ApiError";
+import { setRefreshTokenCookie } from "@database/organizer/helpers/cookie";
 
-export const _fetchOrganizer = async (ctx: ZodContext) => {
+import { ApiErrorCustomResponse, ApiErrorResponse } from "@utils/ApiError";
+
+export const _fetchOrganizer = async (ctx: Context) => {
   const id = ctx.req.param("id");
 
   try {
@@ -25,44 +26,23 @@ export const _fetchOrganizer = async (ctx: ZodContext) => {
   }
 };
 
-export const _fetchOrganizers = async (ctx: ZodContext) => {
-  const limitQuery = ctx.req.query("limit");
-
-  try {
-    const limit = limitQuery ? Number(limitQuery) : 0;
-
-    if (Number.isNaN(limit) || limit < 0) {
-      throw new Error("Limit Must Be A Positive Number");
-    }
-
-    const organizers = await fetchOrganizers(
-      ctx.req.query("name"),
-      ctx.req.query("email"),
-      limit
-    );
-
-    return ctx.json(organizers, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
-  }
-};
-
-export const _loginOrganizer = async (
-  ctx: ZodContext<LoginOrganizerValidatorSchema>
-) => {
+export const _loginOrganizer = async (ctx: LoginOrganizerContext) => {
   const data = ctx.req.valid("json");
 
   try {
-    const organizer = await loginOrganizer(data);
+    const { refreshToken, ...organizer } = await loginOrganizer(data);
+
+    if (refreshToken) {
+      await setRefreshTokenCookie(ctx, refreshToken);
+    }
+
     return ctx.json(organizer, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
   }
 };
 
-export const _registerOrganizer = async (
-  ctx: ZodContext<RegisterOrganizerValidatorSchema>
-) => {
+export const _registerOrganizer = async (ctx: RegisterOrganizerContext) => {
   const data = ctx.req.valid("json");
 
   try {
@@ -73,14 +53,19 @@ export const _registerOrganizer = async (
   }
 };
 
-export const _updateOrganizer = async (
-  ctx: ZodContext<UpdateOrganizerValidatorSchema>
-) => {
+export const _updateOrganizer = async (ctx: UpdateOrganizerContext) => {
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("json");
 
   try {
+    if (!id) {
+      return ApiErrorCustomResponse(ctx, {
+        error: "User ID Must Be Provided",
+        code: "BAD_REQUEST",
+      });
+    }
+
     const result = await updateOrganizer(id, data);
     return ctx.json(result, 200);
   } catch (error) {
@@ -88,6 +73,6 @@ export const _updateOrganizer = async (
   }
 };
 
-export const _removeOrganizer = (ctx: ZodContext) => {
+export const _removeOrganizer = (ctx: Context) => {
   return ctx.json({});
 };
