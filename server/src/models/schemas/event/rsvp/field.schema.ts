@@ -97,7 +97,7 @@ const fieldSchema = new Schema<Field>({
     trim: true,
     minLength: [2, "Field Label Must Be A Minimum Of 2 Characters"],
     maxLength: [10, "Field Label Must Be A Maximum Of 10 Characters"],
-    match: [/^[A-Za-z\s]+$/, "Field Label Must Contain Only Letters"],
+    match: [/^[A-Za-z ]+$/, "Field Label Must Contain Only Letters"],
   },
   placeholder: {
     type: Schema.Types.String,
@@ -121,10 +121,11 @@ const fieldSchema = new Schema<Field>({
     index: true,
     validate: {
       validator: (options: string[]) => {
-        return options.length >= 1 && options.length <= 5;
+        return !options || (options.length >= 2 && options.length <= 5);
       },
-      message: "Dropdown Options Must Be Between 1 And 5",
+      message: "Dropdown Options Must Be Between 2 And 5 XXXXXXXXXXX",
     },
+    default: null,
   },
   validator: {
     _id: false,

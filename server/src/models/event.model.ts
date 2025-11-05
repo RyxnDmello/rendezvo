@@ -27,7 +27,7 @@ export interface Event {
   basic: Basic;
   address: Address;
   schedule: Schedule;
-  policy: Policy | null;
+  policy: Policy;
   rsvp: Rsvp | null;
   security: Security | null;
   tickets: Ticket[] | null;
@@ -120,9 +120,8 @@ const eventSchema = new Schema<Event>(
     policy: {
       _id: false,
       type: policySchema,
-      required: false,
+      required: [true, "Event Policy Details Must Be Provided"],
       index: true,
-      default: null,
     },
     rsvp: {
       _id: false,

@@ -10,6 +10,7 @@ export interface Rsvp {
 
 const rsvpSchema = new Schema<Rsvp>({
   fields: {
+    _id: false,
     type: [fieldSchema],
     required: [true, "Rsvp Fields Must Be Provided"],
     index: true,

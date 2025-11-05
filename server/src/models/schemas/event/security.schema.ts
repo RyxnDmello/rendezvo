@@ -10,6 +10,7 @@ export interface Security {
 
 const securitySchema = new Schema<Security>({
   codes: {
+    _id: false,
     type: [codeSchema],
     required: [true, "Security Codes Must Be Provided"],
     index: true,

@@ -43,9 +43,8 @@ const codeSchema = new Schema<Code>({
     required: [true, "Security Code Uses Must Be Provided"],
     index: true,
     trim: true,
-    minLength: [4, "Security Code Must Be A Minimum Of 4 Characters"],
-    maxLength: [10, "Security Code Must Be A Maximum Of 10 Characters"],
-    match: [/^[A-Za-z0-9]+$/, "Security Code Must Contain Letters And Numbers"],
+    min: [1, "Security Code Uses Must Be A Minimum Of 1"],
+    max: [500, "Security Code Uses Must Be A Maximum Of 500"],
   },
   expiry: {
     type: Schema.Types.Date,
