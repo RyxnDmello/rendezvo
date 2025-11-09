@@ -24,6 +24,10 @@ const verifyResetVerificationValidator = validator(
   verifyResetVerificationValidatorSchema
 );
 
+export type VerifyResetVerificationValidatorSchema = z.infer<
+  typeof verifyResetVerificationValidatorSchema
+>;
+
 export type VerifyResetVerificationContext = ValidatorContext<
   typeof verifyResetVerificationValidator
 >;

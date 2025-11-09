@@ -6,16 +6,11 @@ import ApiError from "@utils/ApiError";
 
 const fetchOrganizer = async (id: string) => {
   try {
-    const dbOrganizer = await OrganizerModel.findOne(
-      {
-        _id: id,
-      },
-      {
-        password: 0,
-        createdAt: 0,
-        updatedAt: 0,
-      }
-    ).lean({
+    const dbOrganizer = await OrganizerModel.findById(id, {
+      password: 0,
+      createdAt: 0,
+      updatedAt: 0,
+    }).lean({
       versionKey: false,
     });
 

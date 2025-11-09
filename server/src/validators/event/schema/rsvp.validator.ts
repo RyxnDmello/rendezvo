@@ -1,13 +1,10 @@
 import * as z from "zod";
 
-import validator, { ValidatorContext } from "@middlewares/validator.middleware";
-
 const validatorSchema = z.strictObject(
   {
     required: z
       .boolean("Required Validator Can Either Be True Or False")
-      .default(true)
-      .optional(),
+      .default(true),
     min: z
       .number("Minimum Number Validator Must Be A Valid Number")
       .min(-999999, "Minimum Number Validator Cannot Be Less Than -999999")
@@ -55,27 +52,32 @@ const fieldSchema = z
         ["text", "number", "date", "dropdown"],
         "Invalid Field Type Provided"
       ),
+      active: z.boolean("Field Must Be Enabled Or Disabled").default(true),
       name: z
         .string("Field Name Must Be A String")
         .uppercase("Field Name Must Be Uppercase")
         .min(2, "Field Name Must Be A Minimum Of 2 Characters")
         .max(10, "Field Name Must Be A Maximum Of 10 Characters")
-        .regex(/^[A-Za-z]+$/, "Field Name Must Contain Only Letters"),
+        .regex(/^[A-Za-z]+$/, "Field Name Must Contain Only Letters")
+        .trim(),
       label: z
         .string("Field Label Must Be A String")
         .min(2, "Field Label Must Be A Minimum Of 2 Characters")
         .max(10, "Field Label Must Be A Maximum Of 10 Characters")
-        .regex(/^[A-Za-z ]+$/, "Field Label Must Contain Only Letters"),
+        .regex(/^[A-Za-z ]+$/, "Field Label Must Contain Only Letters")
+        .trim(),
       placeholder: z
         .string("Field Placeholder Must Be A String")
         .min(4, "Field Placeholder Must Be A Minimum Of 4 Characters")
-        .max(50, "Field Placeholder Must Be A Maximum Of 50 Characters"),
+        .max(50, "Field Placeholder Must Be A Maximum Of 50 Characters")
+        .trim(),
       options: z
         .array(
           z
             .string("Dropdown Option Must Be A String")
             .min(1, "Dropdown Option Must Be A Minimum Of 1 Character")
-            .max(10, "Dropdown Option Must Be A Maximum Of 10 Character"),
+            .max(10, "Dropdown Option Must Be A Maximum Of 10 Character")
+            .trim(),
           "Dropdown Options Must Be A List Of Options"
         )
         .refine((options) => {
@@ -191,7 +193,7 @@ const fieldSchema = z
     }
   });
 
-const eventRsvpValidatorSchema = z.strictObject(
+export const eventRsvpValidatorSchema = z.strictObject(
   {
     fields: z
       .array(fieldSchema)
@@ -205,10 +207,4 @@ const eventRsvpValidatorSchema = z.strictObject(
   "Only Event RSVP Details Must Be Provided"
 );
 
-const eventRsvpValidator = validator("json", eventRsvpValidatorSchema);
-
 export type EventRsvpValidatorSchema = z.infer<typeof eventRsvpValidatorSchema>;
-
-export type EventRsvpContext = ValidatorContext<typeof eventRsvpValidator>;
-
-export default eventRsvpValidator;

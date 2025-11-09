@@ -22,6 +22,7 @@ const verifyForgotVerification = async (
       },
       {
         otp: 1,
+        expiredAt: 1,
       }
     ).lean({
       versionKey: false,
@@ -31,6 +32,13 @@ const verifyForgotVerification = async (
       throw new ApiError(
         "Verification For Given Email Address Does Not Exist",
         "BAD_REQUEST"
+      );
+    }
+
+    if (dbVerification.expiredAt < new Date()) {
+      throw new ApiError(
+        "Verification For Given Email Address Has Expired",
+        "SESSION_EXPIRED"
       );
     }
 

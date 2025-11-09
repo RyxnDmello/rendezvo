@@ -2,7 +2,7 @@ import { Context } from "hono";
 
 import refreshAccessToken from "@database/token/refreshAccessToken";
 
-import { getRefreshTokenCookie } from "@database/organizer/helpers/cookie";
+import { getSessionCookie } from "@database/organizer/helpers/cookie";
 
 import ApiError, { ApiErrorResponse } from "@utils/ApiError";
 
@@ -17,7 +17,7 @@ export const _refreshAccessToken = async (ctx: Context) => {
       );
     }
 
-    const token = await getRefreshTokenCookie(ctx);
+    const token = await getSessionCookie(ctx);
 
     const credentials = await refreshAccessToken(user, token);
     return ctx.json(credentials, 200);

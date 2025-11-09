@@ -1,8 +1,6 @@
 import * as z from "zod";
 
-import validator, { ValidatorContext } from "@middlewares/validator.middleware";
-
-const eventScheduleValidatorSchema = z
+export const eventScheduleValidatorSchema = z
   .strictObject(
     {
       type: z.enum(
@@ -279,14 +277,6 @@ const eventScheduleValidatorSchema = z
     }
   });
 
-const eventScheduleValidator = validator("json", eventScheduleValidatorSchema);
-
 export type EventScheduleValidatorSchema = z.infer<
   typeof eventScheduleValidatorSchema
 >;
-
-export type EventScheduleContext = ValidatorContext<
-  typeof eventScheduleValidator
->;
-
-export default eventScheduleValidator;

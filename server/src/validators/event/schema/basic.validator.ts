@@ -1,8 +1,6 @@
 import * as z from "zod";
 
-import validator, { ValidatorContext } from "@middlewares/validator.middleware";
-
-const eventBasicValidatorSchema = z.strictObject(
+export const eventBasicValidatorSchema = z.strictObject(
   {
     title: z
       .string("Event Title Must Be A String")
@@ -36,17 +34,13 @@ const eventBasicValidatorSchema = z.strictObject(
         const unique = new Set(tags);
         return unique.size === tags.length;
       }, "Duplicate Event Tags Are Not Allowed")
-      .min(1, "Event Tags Must Be A Minimum Of 1")
-      .max(10, "Event Tags Must Be A Maximum Of 10")
+      .min(1, "At Least 1 Event Tag Must Be Provided")
+      .max(10, "At Most 10 Event Tags Must Be Provided")
       .optional(),
   },
   "Only Event Basic Details Must Be Provided"
 );
 
-const eventBasicValidator = validator("json", eventBasicValidatorSchema);
-
-export type BasicValidatorSchema = z.infer<typeof eventBasicValidatorSchema>;
-
-export type EventBasicContext = ValidatorContext<typeof eventBasicValidator>;
-
-export default eventBasicValidator;
+export type EventBasicValidatorSchema = z.infer<
+  typeof eventBasicValidatorSchema
+>;

@@ -5,6 +5,8 @@ import VerificationModel from "@models/verification.model";
 
 import { VerifyAuthVerificationValidatorSchema } from "@validators/verification/verifyAuthVerification.validator";
 
+import { createTokens } from "@database/organizer/helpers/token";
+
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 
 import ApiError from "@utils/ApiError";
@@ -20,6 +22,7 @@ const verifyAuthVerification = async (
       },
       {
         otp: 1,
+        expiredAt: 1,
       }
     ).lean({
       versionKey: false,
@@ -29,6 +32,13 @@ const verifyAuthVerification = async (
       throw new ApiError(
         "Verification For Given Email Address Does Not Exist",
         "BAD_REQUEST"
+      );
+    }
+
+    if (dbVerification.expiredAt < new Date()) {
+      throw new ApiError(
+        "Verification For Given Email Address Has Expired",
+        "SESSION_EXPIRED"
       );
     }
 
@@ -80,12 +90,19 @@ const verifyAuthVerification = async (
 
       await session.commitTransaction();
 
+      const { accessToken, refreshToken } = await createTokens(
+        dbOrganizer._id.toString(),
+        dbOrganizer.email
+      );
+
       return {
         id: dbOrganizer._id,
         name: dbOrganizer.name,
         email: dbOrganizer.email,
         mobile: dbOrganizer.mobile,
         verified: dbOrganizer.verified,
+        accessToken,
+        refreshToken,
       };
     } catch (error) {
       await session.abortTransaction();

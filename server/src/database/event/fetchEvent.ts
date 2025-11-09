@@ -6,15 +6,10 @@ import ApiError from "@utils/ApiError";
 
 const fetchEvent = async (id: string) => {
   try {
-    const dbEvent = await EventModel.findOne(
-      {
-        _id: id,
-      },
-      {
-        createdAt: 0,
-        updatedAt: 0,
-      }
-    ).lean({
+    const dbEvent = await EventModel.findById(id, {
+      createdAt: 0,
+      updatedAt: 0,
+    }).lean({
       versionKey: false,
     });
 

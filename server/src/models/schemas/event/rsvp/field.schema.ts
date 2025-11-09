@@ -6,6 +6,7 @@ export interface Field {
   type: Type;
   name: string;
   label: string;
+  active: boolean;
   placeholder: string;
   options: string[] | null;
   validator: Validator;
@@ -79,6 +80,12 @@ const fieldSchema = new Schema<Field>({
       message: "Invalid Field Type Provided",
     },
     default: "text",
+  },
+  active: {
+    type: Schema.Types.Boolean,
+    required: true,
+    index: true,
+    default: true,
   },
   name: {
     type: Schema.Types.String,

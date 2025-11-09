@@ -1,7 +1,5 @@
 import * as z from "zod";
 
-import validator, { ValidatorContext } from "@middlewares/validator.middleware";
-
 const codeSchema = z
   .strictObject(
     {
@@ -9,7 +7,7 @@ const codeSchema = z
         .enum(["single", "multiple"], "Invalid Security Code Type")
         .default("multiple"),
       active: z
-        .boolean("Code Activation Must Be Either True Or False")
+        .boolean("Security Code Must Be Enabled Or Disabled")
         .default(true),
       code: z
         .string("Security Code Must Be A Valid String")
@@ -57,7 +55,7 @@ const codeSchema = z
     }
   });
 
-const eventSecurityValidatorSchema = z.strictObject(
+export const eventSecurityValidatorSchema = z.strictObject(
   {
     codes: z
       .array(codeSchema)
@@ -71,14 +69,6 @@ const eventSecurityValidatorSchema = z.strictObject(
   "Only Event Security Codes Must Be Provided"
 );
 
-const eventSecurityValidator = validator("json", eventSecurityValidatorSchema);
-
 export type EventSecurityValidatorSchema = z.infer<
   typeof eventSecurityValidatorSchema
 >;
-
-export type EventSecurityContext = ValidatorContext<
-  typeof eventSecurityValidator
->;
-
-export default eventSecurityValidator;

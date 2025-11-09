@@ -14,6 +14,8 @@ import { VerifyAuthVerificationContext } from "@validators/verification/verifyAu
 import { VerifyResetVerificationContext } from "@validators/verification/verifyResetVerification.validator";
 import { VerifyForgotVerificationContext } from "@validators/verification/verifyForgotVerification.validator";
 
+import { setSessionCookie } from "@database/organizer/helpers/cookie";
+
 import { ApiErrorResponse } from "@utils/ApiError";
 
 export const _createAuthVerification = async (
@@ -61,8 +63,13 @@ export const _verifyAuthVerification = async (
   const data = ctx.req.valid("json");
 
   try {
-    const result = await verifyAuthVerification(data);
-    return ctx.json(result, 200);
+    const { refreshToken, ...organizer } = await verifyAuthVerification(data);
+
+    if (refreshToken) {
+      await setSessionCookie(ctx, refreshToken);
+    }
+
+    return ctx.json(organizer, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
   }

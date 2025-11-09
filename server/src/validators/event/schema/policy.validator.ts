@@ -1,7 +1,5 @@
 import * as z from "zod";
 
-import validator, { ValidatorContext } from "@middlewares/validator.middleware";
-
 const termsSchema = z.strictObject(
   {
     title: z
@@ -39,7 +37,7 @@ const refundSchema = z.strictObject(
   "Event Refund Policy Details Must Be Provided"
 );
 
-const eventPolicyValidatorSchema = z.strictObject(
+export const eventPolicyValidatorSchema = z.strictObject(
   {
     terms: termsSchema,
     refund: refundSchema,
@@ -47,12 +45,6 @@ const eventPolicyValidatorSchema = z.strictObject(
   "Only Event Policy Details Must Be Provided"
 );
 
-const eventPolicyValidator = validator("json", eventPolicyValidatorSchema);
-
 export type EventPolicyValidatorSchema = z.infer<
   typeof eventPolicyValidatorSchema
 >;
-
-export type EventPolicyContext = ValidatorContext<typeof eventPolicyValidator>;
-
-export default eventPolicyValidator;

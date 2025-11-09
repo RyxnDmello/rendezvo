@@ -24,6 +24,10 @@ const verifyAuthVerificationValidator = validator(
   verifyAuthVerificationValidatorSchema
 );
 
+export type VerifyAuthVerificationValidatorSchema = z.infer<
+  typeof verifyAuthVerificationValidatorSchema
+>;
+
 export type VerifyAuthVerificationContext = ValidatorContext<
   typeof verifyAuthVerificationValidator
 >;

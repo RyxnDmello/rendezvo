@@ -11,7 +11,7 @@ import { LoginOrganizerContext } from "@validators/organizer/loginOrganizer.vali
 import { UpdateOrganizerContext } from "@validators/organizer/updateOrganizer.validator";
 import { RegisterOrganizerContext } from "@validators/organizer/registerOrganizer.validator";
 
-import { setRefreshTokenCookie } from "@database/organizer/helpers/cookie";
+import { setSessionCookie } from "@database/organizer/helpers/cookie";
 
 import { ApiErrorCustomResponse, ApiErrorResponse } from "@utils/ApiError";
 
@@ -33,7 +33,7 @@ export const _loginOrganizer = async (ctx: LoginOrganizerContext) => {
     const { refreshToken, ...organizer } = await loginOrganizer(data);
 
     if (refreshToken) {
-      await setRefreshTokenCookie(ctx, refreshToken);
+      await setSessionCookie(ctx, refreshToken);
     }
 
     return ctx.json(organizer, 200);
