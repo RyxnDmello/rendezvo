@@ -25,9 +25,15 @@ try {
       ORGANIZER_REFRESH_TOKEN_SECRET: variables.ORGANIZER_REFRESH_TOKEN_SECRET,
     },
     MONGODB: {
-      MONGODB_DB: variables.MONGODB_DB,
-      MONGODB_APP: variables.MONGODB_APP,
       MONGODB_URI: variables.MONGODB_URI,
+      MONGODB_APP: variables.MONGODB_APP,
+      MONGODB_DATABASE: variables.MONGODB_DATABASE,
+    },
+    APPWRITE: {
+      APPWRITE_ID: variables.APPWRITE_ID,
+      APPWRITE_API: variables.APPWRITE_API,
+      APPWRITE_API_KEY: variables.APPWRITE_API_KEY,
+      APPWRITE_STORAGE_ID: variables.APPWRITE_STORAGE_ID,
     },
   });
 } catch (error) {

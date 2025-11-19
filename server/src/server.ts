@@ -1,6 +1,6 @@
 import { serve } from "bun";
 
-import { env } from "@helpers/env";
+import { env } from "@constants/env";
 
 import app from "./app";
 

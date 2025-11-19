@@ -2,6 +2,7 @@ import { Context } from "hono";
 
 import { ContentfulStatusCode } from "hono/utils/http-status";
 
+import AppwriteError from "./AppwriteError";
 import MongooseError from "./MongooseError";
 
 interface CustomError {
@@ -38,15 +39,27 @@ export type DatabaseErrorCode =
   | "DUPLICATE_KEY_ERROR"
   | "DATABASE_SERVER_ERROR";
 
-export type ErrorCode = CommonErrorCode | AuthErrorCode | DatabaseErrorCode;
+export type StorageErrorCode =
+  | "FILE_NOT_FOUND"
+  | "INVALID_FILE_ID"
+  | "INVALID_FILE_TYPE"
+  | "INVALID_FILE_SIZE"
+  | "FILE_UPLOAD_FAILED"
+  | "FILE_ALREADY_EXISTS"
+  | "STORAGE_SERVER_ERROR";
+
+export type ErrorCode =
+  | AuthErrorCode
+  | CommonErrorCode
+  | StorageErrorCode
+  | DatabaseErrorCode;
 
 export const status: Record<ErrorCode, ContentfulStatusCode> = {
-  FORBIDDEN: 403,
-  UNAUTHORIZED: 401,
-
   CONFLICT: 409,
   NOT_FOUND: 404,
+  FORBIDDEN: 403,
   BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
   UNPROCESSABLE_ENTITY: 422,
   INTERNAL_SERVER_ERROR: 500,
 
@@ -64,11 +77,18 @@ export const status: Record<ErrorCode, ContentfulStatusCode> = {
   ACCESS_TOKEN_INVALID: 401,
   ACCESS_TOKEN_EXPIRED: 401,
   ACCESS_TOKEN_REVOKED: 401,
-
   REFRESH_TOKEN_MISSING: 401,
   REFRESH_TOKEN_INVALID: 401,
   REFRESH_TOKEN_EXPIRED: 401,
   REFRESH_TOKEN_REVOKED: 401,
+
+  FILE_NOT_FOUND: 404,
+  INVALID_FILE_ID: 400,
+  INVALID_FILE_TYPE: 400,
+  INVALID_FILE_SIZE: 400,
+  FILE_UPLOAD_FAILED: 400,
+  FILE_ALREADY_EXISTS: 409,
+  STORAGE_SERVER_ERROR: 500,
 };
 
 export default class ApiError extends Error {
@@ -91,6 +111,10 @@ export default class ApiError extends Error {
 
 export const ApiErrorResponse = (ctx: Context, error: unknown) => {
   if (error instanceof ApiError) {
+    return ctx.json(error.toJSON(), error.status);
+  }
+
+  if (error instanceof AppwriteError) {
     return ctx.json(error.toJSON(), error.status);
   }
 

@@ -14,9 +14,9 @@ const globalValidatorSchema = z.strictObject(
 const secretValidatorSchema = z.strictObject(
   {
     COOKIES_SECRET: z
-      .string("Cookie Secret Must Be A Valid String")
-      .min(32, "Cookie Secret Must Be A Minimum Of 32 Characters")
-      .max(64, "Cookie Secret Must Be A Maximum Of 64 Characters"),
+      .string("Cookies Secret Must Be A Valid Secret")
+      .min(32, "Cookies Secret Must Be A Minimum Of 32 Characters")
+      .max(64, "Cookies Secret Must Be A Maximum Of 64 Characters"),
     ATTENDEE_ACCESS_TOKEN_EXPIRY: z.coerce
       .number("Access Token Expiry Must Be Set In Minutes")
       .min(15, "Access Token Expiry Must Be At Least 15 Minutes")
@@ -26,11 +26,11 @@ const secretValidatorSchema = z.strictObject(
       .min(60 * 24 * 7, "Refresh Token Expiry Must Be At Least 7 Days")
       .max(60 * 24 * 14, "Refresh Token Expiry Must Be At Most 14 Days"),
     ATTENDEE_ACCESS_TOKEN_SECRET: z
-      .string("Access Token Secret Must Be A Valid String")
+      .string("Access Token Secret Must Be A Valid Secret")
       .min(32, "Access Token Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Access Token Secret Must Be A Maximum Of 64 Characters"),
     ATTENDEE_REFRESH_TOKEN_SECRET: z
-      .string("Refresh Token Secret Must Be A Valid String")
+      .string("Refresh Token Secret Must Be A Valid Secret")
       .min(32, "Refresh Token Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Refresh Token Secret Must Be A Maximum Of 64 Characters"),
     ORGANIZER_ACCESS_TOKEN_EXPIRY: z.coerce
@@ -42,11 +42,11 @@ const secretValidatorSchema = z.strictObject(
       .min(60 * 24 * 14, "Refresh Token Expiry Must Be At Least 14 Days")
       .max(60 * 24 * 28, "Refresh Token Expiry Must Be At Most 28 Days"),
     ORGANIZER_ACCESS_TOKEN_SECRET: z
-      .string("Access Token Secret Must Be A Valid String")
+      .string("Access Token Secret Must Be A Valid Secret")
       .min(32, "Access Token Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Access Token Secret Must Be A Maximum Of 64 Characters"),
     ORGANIZER_REFRESH_TOKEN_SECRET: z
-      .string("Refresh Token Secret Must Be A Valid String")
+      .string("Refresh Token Secret Must Be A Valid Secret")
       .min(32, "Refresh Token Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Refresh Token Secret Must Be A Maximum Of 64 Characters"),
   },
@@ -55,24 +55,19 @@ const secretValidatorSchema = z.strictObject(
 
 const mongodbValidatorSchema = z.strictObject(
   {
-    MONGODB_URI: z
-      .string("MongoDB URI Must Be A Valid String")
-      .regex(
-        /^mongodb(?:\+srv)?:\/\/[^:@\s]+:[^:@\s]+@[^:@\s]+(:\d+)?(\/\S*)?$/i,
-        "MongoDB URI Must Be A Valid MongoDB Connection URI"
-      ),
-    MONGODB_DB: z
-      .string("MongoDB Database Must Be A Valid String")
-      .regex(
-        /^[a-zA-Z0-9-_]+$/,
-        "MongoDB Database Must Contain Only Letters, Numbers, Dashes, Or Underscores"
-      ),
-    MONGODB_APP: z
-      .string("MongoDB App Must Be A Valid String")
-      .regex(
-        /^[a-zA-Z0-9-_]+$/,
-        "MongoDB App Must Contain Only Letters, Numbers, Dashes, Or Underscores"
-      ),
+    MONGODB_URI: z.string("MongoDB URI Must Be A Valid URI"),
+    MONGODB_APP: z.string("MongoDB App Must Be A Valid App"),
+    MONGODB_DATABASE: z.string("MongoDB Database Must Be A Valid Database"),
+  },
+  "MongoDB Environment Variables Are Missing"
+);
+
+const appwriteValidatorSchema = z.strictObject(
+  {
+    APPWRITE_ID: z.string("Appwrite ID Must Be A Valid ID"),
+    APPWRITE_API: z.string("Appwrite API Must Be A Valid API"),
+    APPWRITE_API_KEY: z.string("Appwrite API Key Must Be A Valid API Key"),
+    APPWRITE_STORAGE_ID: z.string("Appwrite Storage ID Must Be A Valid ID"),
   },
   "MongoDB Environment Variables Are Missing"
 );
@@ -83,6 +78,7 @@ const envValidatorSchema = z
       GLOBAL: globalValidatorSchema,
       SECRET: secretValidatorSchema,
       MONGODB: mongodbValidatorSchema,
+      APPWRITE: appwriteValidatorSchema,
     },
     "Environment Variables Are Missing"
   )

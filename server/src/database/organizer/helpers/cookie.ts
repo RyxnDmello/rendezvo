@@ -1,7 +1,8 @@
 import { Context } from "hono";
 
-import { env } from "@helpers/env";
 import { setCookie, getCookie, removeCookie } from "@helpers/cookie";
+
+import { env } from "@constants/env";
 
 const { ORGANIZER_REFRESH_TOKEN_EXPIRY } = env.SECRET;
 

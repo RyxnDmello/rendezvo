@@ -1,6 +1,6 @@
 import * as z from "zod";
 
-import { Context, Next, Env, MiddlewareHandler, ValidationTargets } from "hono";
+import { Context, Env, MiddlewareHandler, ValidationTargets } from "hono";
 
 import { zValidator } from "@hono/zod-validator";
 
@@ -37,39 +37,10 @@ export type ValidatorContext<T> = T extends (
   : never;
 
 const validator = <T extends Target, S extends z.ZodType>(t: T, s: S) => {
-  const handler = t === "form" ? formValidator(s) : dataValidator(t, s);
-  return handler as ValidatorMiddleware<T, S>;
-};
-
-const formValidator = <S extends z.ZodType>(schema: S) => {
-  return async (ctx: Context, next: Next) => {
-    const { data, ...files } = await ctx.req.parseBody();
-
-    const body = JSON.parse(data as string);
-    const result = schema.safeParse(body);
-
-    if (!result.success) {
-      const message = result.error.issues[0]?.message;
-
-      return ApiErrorCustomResponse(ctx, {
-        error: message ?? "Unable To Proceed Due To A Validation Error",
-        code: "VALIDATION_ERROR",
-      });
-    }
-
-    ctx.set("data", result.data);
-
-    for (const [key, value] of Object.entries(files)) {
-      ctx.set(key, value);
-    }
-
-    return await next();
-  };
-};
-
-const dataValidator = <T extends Target, S extends z.ZodType>(t: T, s: S) => {
-  return zValidator(t, s, (result, ctx) => {
+  const handler = zValidator(t, s, (result, ctx) => {
     if (result.success) return;
+
+    console.log(result.error);
 
     const message = result.error.issues[0]?.message;
 
@@ -78,6 +49,8 @@ const dataValidator = <T extends Target, S extends z.ZodType>(t: T, s: S) => {
       code: "VALIDATION_ERROR",
     });
   });
+
+  return handler as ValidatorMiddleware<T, S>;
 };
 
 export default validator;

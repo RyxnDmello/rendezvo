@@ -1,6 +1,6 @@
 import mongoose, { connect, disconnect } from "mongoose";
 
-import { env } from "@helpers/env";
+import { env } from "@constants/env";
 
 const connectMongoDB = async () => {
   if (mongoose.connection.readyState === 1) {
@@ -13,7 +13,7 @@ const connectMongoDB = async () => {
 
   try {
     await connect(env.MONGODB.MONGODB_URI, {
-      dbName: env.MONGODB.MONGODB_DB,
+      dbName: env.MONGODB.MONGODB_DATABASE,
       appName: env.MONGODB.MONGODB_APP,
       retryReads: true,
       retryWrites: true,

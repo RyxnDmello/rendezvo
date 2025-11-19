@@ -31,6 +31,7 @@
       "@middlewares/*": ["./src/middlewares/*"],
       "@schemas/*": ["./src/models/schemas/*"],
       "@validators/*": ["./src/validators/*"],
+      "@constants/*": ["./src/constants/*"],
       "@database/*": ["./src/database/*"],
       "@services/*": ["./src/services/*"],
       "@helpers/*": ["./src/helpers/*"],
