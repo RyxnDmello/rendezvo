@@ -23,12 +23,12 @@ export const getFiles = async (queries: string[]) => {
 };
 
 export const uploadFile = async (file: File, name: string) => {
-  const type = file.name.split(".")[1];
+  const custom = await createFile(file, name);
 
   const { $id } = await storage.createFile({
+    file: custom,
     fileId: name,
     bucketId: APPWRITE_STORAGE_ID,
-    file: buffer(file, `${name}.${type}`),
   });
 
   return $id;
@@ -44,4 +44,16 @@ export const deleteFile = async (id: string) => {
     fileId: id,
     bucketId: APPWRITE_STORAGE_ID,
   });
+};
+
+const createFile = async (file: File, name: string) => {
+  const blob = await file.arrayBuffer();
+
+  const extension = file.name.split(".")[1];
+
+  const custom = new File([blob], `${name}.${extension}`, {
+    type: file.type,
+  });
+
+  return buffer(custom, custom.name);
 };

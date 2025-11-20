@@ -40,8 +40,6 @@ const validator = <T extends Target, S extends z.ZodType>(t: T, s: S) => {
   const handler = zValidator(t, s, (result, ctx) => {
     if (result.success) return;
 
-    console.log(result.error);
-
     const message = result.error.issues[0]?.message;
 
     return ApiErrorCustomResponse(ctx, {

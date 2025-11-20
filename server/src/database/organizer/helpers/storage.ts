@@ -38,8 +38,6 @@ export const uploadProfile = async (id: string, file: File) => {
   try {
     return await uploadFile(file, `${id}_PROFILE`);
   } catch (error) {
-    console.log(error);
-
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
     }

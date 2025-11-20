@@ -6,12 +6,19 @@ import updateOrganizer from "@database/organizer/updateOrganizer";
 import registerOrganizer from "@database/organizer/registerOrganizer";
 
 import uploadOrganizerMedia from "@database/organizer/media/uploadOrganizerMedia";
+import uploadOrganizerBanner from "@database/organizer/media/uploadOrganizerBanner";
+import uploadOrganizerProfile from "@database/organizer/media/uploadOrganizerProfile";
+
 import deleteOrganizerMedia from "@database/organizer/media/deleteOrganizerMedia";
+import deleteOrganizerBanner from "@database/organizer/media/deleteOrganizerBanner";
+import deleteOrganizerProfile from "@database/organizer/media/deleteOrganizerProfile";
 
 import { LoginOrganizerContext } from "@validators/organizer/loginOrganizer.validator";
 import { UpdateOrganizerContext } from "@validators/organizer/updateOrganizer.validator";
 import { RegisterOrganizerContext } from "@validators/organizer/registerOrganizer.validator";
-import { UpdateOrganizerMediaContext } from "@validators/organizer/updateOrganizerMedia.validator";
+import { UploadOrganizerMediaContext } from "@validators/organizer/media/uploadOrganizerMedia.validator";
+import { UploadOrganizerBannerContext } from "@validators/organizer/media/uploadOrganizerBanner.validator";
+import { UploadOrganizerProfileContext } from "@validators/organizer/media/uploadOrganizerProfile.validator";
 
 import { setSessionCookie } from "@database/organizer/helpers/cookie";
 
@@ -76,7 +83,7 @@ export const _updateOrganizer = async (ctx: UpdateOrganizerContext) => {
 };
 
 export const _uploadOrganizerMedia = async (
-  ctx: UpdateOrganizerMediaContext
+  ctx: UploadOrganizerMediaContext
 ) => {
   const id = ctx.req.param("id");
 
@@ -97,6 +104,50 @@ export const _uploadOrganizerMedia = async (
   }
 };
 
+export const _uploadOrganizerBanner = async (
+  ctx: UploadOrganizerBannerContext
+) => {
+  const id = ctx.req.param("id");
+
+  const data = ctx.req.valid("form");
+
+  try {
+    if (!id) {
+      return ApiErrorCustomResponse(ctx, {
+        error: "User ID Must Be Provided",
+        code: "BAD_REQUEST",
+      });
+    }
+
+    const result = await uploadOrganizerBanner(id, data);
+    return ctx.json(result, 200);
+  } catch (error) {
+    return ApiErrorResponse(ctx, error);
+  }
+};
+
+export const _uploadOrganizerProfile = async (
+  ctx: UploadOrganizerProfileContext
+) => {
+  const id = ctx.req.param("id");
+
+  const data = ctx.req.valid("form");
+
+  try {
+    if (!id) {
+      return ApiErrorCustomResponse(ctx, {
+        error: "User ID Must Be Provided",
+        code: "BAD_REQUEST",
+      });
+    }
+
+    const result = await uploadOrganizerProfile(id, data);
+    return ctx.json(result, 200);
+  } catch (error) {
+    return ApiErrorResponse(ctx, error);
+  }
+};
+
 export const _deleteOrganizerMedia = async (ctx: Context) => {
   const id = ctx.req.param("id");
 
@@ -111,8 +162,42 @@ export const _deleteOrganizerMedia = async (ctx: Context) => {
     const result = await deleteOrganizerMedia(id);
     return ctx.json(result, 200);
   } catch (error) {
-    console.log(error);
+    return ApiErrorResponse(ctx, error);
+  }
+};
 
+export const _deleteOrganizerBanner = async (ctx: Context) => {
+  const id = ctx.req.param("id");
+
+  try {
+    if (!id) {
+      return ApiErrorCustomResponse(ctx, {
+        error: "User ID Must Be Provided",
+        code: "BAD_REQUEST",
+      });
+    }
+
+    const result = await deleteOrganizerBanner(id);
+    return ctx.json(result, 200);
+  } catch (error) {
+    return ApiErrorResponse(ctx, error);
+  }
+};
+
+export const _deleteOrganizerProfile = async (ctx: Context) => {
+  const id = ctx.req.param("id");
+
+  try {
+    if (!id) {
+      return ApiErrorCustomResponse(ctx, {
+        error: "User ID Must Be Provided",
+        code: "BAD_REQUEST",
+      });
+    }
+
+    const result = await deleteOrganizerProfile(id);
+    return ctx.json(result, 200);
+  } catch (error) {
     return ApiErrorResponse(ctx, error);
   }
 };

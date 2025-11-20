@@ -2,7 +2,7 @@ import * as z from "zod";
 
 import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
-const updateOrganizerMediaValidatorSchema = z.strictObject(
+const uploadOrganizerMediaValidatorSchema = z.strictObject(
   {
     profile: z
       .file("Profile Image Must Be A Valid Image Type")
@@ -20,17 +20,17 @@ const updateOrganizerMediaValidatorSchema = z.strictObject(
   "Only Organizer Media Must Be Provided"
 );
 
-const updateOrganizerMediaValidator = validator(
+const uploadOrganizerMediaValidator = validator(
   "form",
-  updateOrganizerMediaValidatorSchema
+  uploadOrganizerMediaValidatorSchema
 );
 
-export type UpdateOrganizerMediaValidatorSchema = z.infer<
-  typeof updateOrganizerMediaValidatorSchema
+export type UploadOrganizerMediaValidatorSchema = z.infer<
+  typeof uploadOrganizerMediaValidatorSchema
 >;
 
-export type UpdateOrganizerMediaContext = ValidatorContext<
-  typeof updateOrganizerMediaValidator
+export type UploadOrganizerMediaContext = ValidatorContext<
+  typeof uploadOrganizerMediaValidator
 >;
 
-export default updateOrganizerMediaValidator;
+export default uploadOrganizerMediaValidator;

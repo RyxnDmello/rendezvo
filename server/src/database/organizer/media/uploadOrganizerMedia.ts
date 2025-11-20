@@ -1,6 +1,6 @@
 import OrganizerModel from "@models/organizer.model";
 
-import { UpdateOrganizerMediaValidatorSchema } from "@validators/organizer/updateOrganizerMedia.validator";
+import { UploadOrganizerMediaValidatorSchema } from "@validators/organizer/media/uploadOrganizerMedia.validator";
 
 import {
   uploadBanner,
@@ -15,7 +15,7 @@ import ApiError from "@utils/ApiError";
 
 const uploadOrganizerMedia = async (
   id: string,
-  data: UpdateOrganizerMediaValidatorSchema
+  data: UploadOrganizerMediaValidatorSchema
 ) => {
   try {
     const dbOrganizer = await OrganizerModel.findById(id, {
