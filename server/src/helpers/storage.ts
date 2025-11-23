@@ -4,6 +4,38 @@ import { env } from "@constants/env";
 
 const { APPWRITE_STORAGE_ID } = env.APPWRITE;
 
+const EXTENSION: Record<string, string> = {
+  "image/png": "png",
+  "image/bmp": "bmp",
+  "image/jpg": "jpg",
+  "image/jpeg": "jpg",
+  "image/webp": "webp",
+  "image/avif": "avif",
+  "image/tiff": "tiff",
+  "image/heic": "heic",
+  "image/heif": "heif",
+  "video/mp4": "mp4",
+  "video/ogg": "ogv",
+  "video/3gpp": "3gp",
+  "video/mpeg": "mpeg",
+  "video/webm": "webm",
+  "video/3gpp2": "3g2",
+  "video/x-flv": "flv",
+  "video/x-ms-wmv": "wmv",
+  "video/x-msvideo": "avi",
+  "video/quicktime": "mov",
+  "application/pdf": "pdf",
+  "video/x-matroska": "mkv",
+};
+
+export const getID = (id: string) => {
+  if (id.length > 8) {
+    return id.slice(0, 4) + id.slice(-4);
+  }
+
+  return id;
+};
+
 export const getFile = async (name: string) => {
   const { $id } = await storage.getFile({
     fileId: name,
@@ -46,10 +78,10 @@ export const deleteFile = async (id: string) => {
   });
 };
 
-const createFile = async (file: File, name: string) => {
+export const createFile = async (file: File, name: string) => {
   const blob = await file.arrayBuffer();
 
-  const extension = file.name.split(".")[1];
+  const extension = EXTENSION[file.type]!;
 
   const custom = new File([blob], `${name}.${extension}`, {
     type: file.type,

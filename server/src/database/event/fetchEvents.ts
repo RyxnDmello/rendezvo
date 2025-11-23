@@ -1,10 +1,12 @@
 import EventModel from "@models/event.model";
 
+import { FetchEventsValidatorSchema } from "@validators/event/fetchEvents.validator";
+
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 
 import ApiError from "@utils/ApiError";
 
-type Query = {
+type Filter = {
   ownerID: string;
   mode?: string;
   status?: string;
@@ -18,42 +20,36 @@ type Query = {
 };
 
 const fetchEvents = async (
-  ownerID: string,
-  mode?: string,
-  status?: string,
-  visibility?: string,
-  attendance?: string,
-  approved?: boolean,
-  name?: string,
+  query: FetchEventsValidatorSchema,
   limit: number = 0
 ) => {
-  const query: Query = {
-    ownerID,
+  const filter: Filter = {
+    ownerID: query.ownerID,
   };
 
-  if (mode !== undefined) {
-    query.mode = mode;
+  if (query.mode !== undefined) {
+    filter.mode = query.mode;
   }
 
-  if (status !== undefined) {
-    query.status = status;
+  if (query.status !== undefined) {
+    filter.status = query.status;
   }
 
-  if (visibility !== undefined) {
-    query.visibility = visibility;
+  if (query.visibility !== undefined) {
+    filter.visibility = query.visibility;
   }
 
-  if (attendance !== undefined) {
-    query.attendance = attendance;
+  if (query.attendance !== undefined) {
+    filter.attendance = query.attendance;
   }
 
-  if (approved !== undefined) {
-    query.approved = approved;
+  if (query.approved !== undefined) {
+    filter.approved = query.approved;
   }
 
-  if (name !== undefined) {
-    query.name = {
-      $regex: name,
+  if (query.name !== undefined) {
+    filter.name = {
+      $regex: query.name,
       $options: "i",
     };
   }

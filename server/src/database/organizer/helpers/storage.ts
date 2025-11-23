@@ -1,12 +1,26 @@
-import { getFile, uploadFile, updateFile, deleteFile } from "@helpers/storage";
+import {
+  getID,
+  getFile,
+  uploadFile,
+  updateFile,
+  deleteFile,
+} from "@helpers/storage";
 
 import AppwriteError, { isAppwriteError } from "@utils/AppwriteError";
 
 import ApiError from "@utils/ApiError";
 
+export const getProfileID = (id: string) => {
+  return `ORGANIZER_${getID(id)}_PROFILE`;
+};
+
+export const getBannerID = (id: string) => {
+  return `ORGANIZER_${getID(id)}_BANNER`;
+};
+
 export const getProfile = async (id: string) => {
   try {
-    return await getFile(`${id}_PROFILE`);
+    return await getFile(getProfileID(id));
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -21,7 +35,7 @@ export const getProfile = async (id: string) => {
 
 export const getBanner = async (id: string) => {
   try {
-    return await getFile(`${id}_BANNER`);
+    return await getFile(getBannerID(id));
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -36,7 +50,7 @@ export const getBanner = async (id: string) => {
 
 export const uploadProfile = async (id: string, file: File) => {
   try {
-    return await uploadFile(file, `${id}_PROFILE`);
+    return await uploadFile(file, getProfileID(id));
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -51,7 +65,7 @@ export const uploadProfile = async (id: string, file: File) => {
 
 export const uploadBanner = async (id: string, file: File) => {
   try {
-    return await uploadFile(file, `${id}_BANNER`);
+    return await uploadFile(file, getBannerID(id));
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -66,7 +80,7 @@ export const uploadBanner = async (id: string, file: File) => {
 
 export const updateProfile = async (id: string, file: File) => {
   try {
-    return await updateFile(file, `${id}_PROFILE`);
+    return await updateFile(file, getProfileID(id));
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -81,7 +95,7 @@ export const updateProfile = async (id: string, file: File) => {
 
 export const updateBanner = async (id: string, file: File) => {
   try {
-    return await updateFile(file, `${id}_BANNER`);
+    return await updateFile(file, getBannerID(id));
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -96,7 +110,7 @@ export const updateBanner = async (id: string, file: File) => {
 
 export const deleteProfile = async (id: string) => {
   try {
-    await deleteFile(`${id}_PROFILE`);
+    await deleteFile(getProfileID(id));
 
     return {
       success: true,
@@ -115,7 +129,7 @@ export const deleteProfile = async (id: string) => {
 
 export const deleteBanner = async (id: string) => {
   try {
-    await deleteFile(`${id}_BANNER`);
+    await deleteFile(getBannerID(id));
 
     return {
       success: true,

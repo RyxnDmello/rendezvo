@@ -37,11 +37,11 @@ router
   .patch(authorize, uploadOrganizerMediaValidator, _uploadOrganizerMedia)
   .delete(authorize, _deleteOrganizerMedia);
 router
-  .basePath("/:id/banner")
+  .basePath("/:id/media/banner")
   .patch(authorize, uploadOrganizerBannerValidator, _uploadOrganizerBanner)
   .delete(authorize, _deleteOrganizerBanner);
 router
-  .basePath("/:id/profile")
+  .basePath("/:id/media/profile")
   .patch(authorize, uploadOrganizerProfileValidator, _uploadOrganizerProfile)
   .delete(authorize, _deleteOrganizerProfile);
 

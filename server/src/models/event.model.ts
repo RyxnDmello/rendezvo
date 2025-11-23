@@ -2,6 +2,7 @@ import { Schema, model } from "mongoose";
 
 import shopSchema, { Shop } from "@schemas/event/shop.schema";
 import rsvpSchema, { Rsvp } from "@schemas/event/rsvp.schema";
+import albumSchema, { Album } from "@schemas/event/album.schema";
 import basicSchema, { Basic } from "@schemas/event/basic.schema";
 import policySchema, { Policy } from "@schemas/event/policy.schema";
 import ticketSchema, { Ticket } from "@schemas/event/ticket.schema";
@@ -33,6 +34,7 @@ export interface Event {
   tickets: Ticket[] | null;
   coupons: Coupon[] | null;
   shop: Shop | null;
+  album: Album | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -164,6 +166,13 @@ const eventSchema = new Schema<Event>(
     shop: {
       _id: false,
       type: shopSchema,
+      required: false,
+      index: true,
+      default: null,
+    },
+    album: {
+      _id: false,
+      type: albumSchema,
       required: false,
       index: true,
       default: null,
