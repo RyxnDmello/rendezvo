@@ -3,8 +3,8 @@ import EventModel from "@models/event.model";
 import { deleteCover, deleteBanner } from "../helpers/storage";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import AppwriteError, { isAppwriteError } from "@utils/AppwriteError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const deleteEventMedia = async (id: string) => {
   try {
@@ -59,8 +59,12 @@ const deleteEventMedia = async (id: string) => {
       success: true,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
+    }
+
+    if (isAppwriteError(error)) {
+      throw new AppwriteError(error);
     }
 
     if (isMongooseError(error)) {

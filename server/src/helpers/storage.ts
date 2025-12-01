@@ -36,9 +36,9 @@ export const getID = (id: string) => {
   return id;
 };
 
-export const getFile = async (name: string) => {
+export const getFile = async (id: string) => {
   const { $id } = await storage.getFile({
-    fileId: name,
+    fileId: id,
     bucketId: APPWRITE_STORAGE_ID,
   });
 
@@ -54,21 +54,21 @@ export const getFiles = async (queries: string[]) => {
   return files.map((file) => file.$id);
 };
 
-export const uploadFile = async (file: File, name: string) => {
-  const custom = await createFile(file, name);
+export const uploadFile = async (id: string, file: File) => {
+  const custom = await createFile(id, file);
 
   const { $id } = await storage.createFile({
+    fileId: id,
     file: custom,
-    fileId: name,
     bucketId: APPWRITE_STORAGE_ID,
   });
 
   return $id;
 };
 
-export const updateFile = async (file: File, name: string) => {
-  await deleteFile(name);
-  return await uploadFile(file, name);
+export const updateFile = async (id: string, file: File) => {
+  await deleteFile(id);
+  return await uploadFile(id, file);
 };
 
 export const deleteFile = async (id: string) => {
@@ -78,12 +78,12 @@ export const deleteFile = async (id: string) => {
   });
 };
 
-export const createFile = async (file: File, name: string) => {
+export const createFile = async (id: string, file: File) => {
   const blob = await file.arrayBuffer();
 
   const extension = EXTENSION[file.type]!;
 
-  const custom = new File([blob], `${name}.${extension}`, {
+  const custom = new File([blob], `${id}.${extension}`, {
     type: file.type,
   });
 

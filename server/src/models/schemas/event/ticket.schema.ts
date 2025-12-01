@@ -7,7 +7,7 @@ import scheduleSchema, { Schedule } from "./ticket/schedule.schema";
 export type Type = "free" | "paid";
 
 export interface Ticket {
-  id: string;
+  id?: string;
   type: Type;
   name: string;
   description: string;
@@ -17,12 +17,6 @@ export interface Ticket {
 }
 
 const ticketSchema = new Schema<Ticket>({
-  id: {
-    type: Schema.Types.String,
-    required: [true, "Ticket ID Must Be Provided"],
-    index: true,
-    trim: true,
-  },
   type: {
     type: Schema.Types.String,
     required: [true, "Ticket Type Must Be Provided"],

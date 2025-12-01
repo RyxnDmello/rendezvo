@@ -3,8 +3,7 @@ import EventModel, { Event } from "@models/event.model";
 import { UpdateEventValidatorSchema } from "@validators/event/updateEvent.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const updateEvent = async (id: string, data: UpdateEventValidatorSchema) => {
   try {
@@ -68,7 +67,7 @@ const updateEvent = async (id: string, data: UpdateEventValidatorSchema) => {
       success: true,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

@@ -3,8 +3,7 @@ import EventModel from "@models/event.model";
 import { FetchEventsValidatorSchema } from "@validators/event/fetchEvents.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 type Filter = {
   ownerID: string;
@@ -73,7 +72,7 @@ const fetchEvents = async (
       };
     });
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

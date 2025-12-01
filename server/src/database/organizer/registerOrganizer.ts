@@ -5,8 +5,7 @@ import { RegisterOrganizerValidatorSchema } from "@validators/organizer/register
 import { hashPassword } from "@helpers/password";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const registerOrganizer = async (data: RegisterOrganizerValidatorSchema) => {
   try {
@@ -47,7 +46,7 @@ const registerOrganizer = async (data: RegisterOrganizerValidatorSchema) => {
       verified: newOrganizer.verified,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

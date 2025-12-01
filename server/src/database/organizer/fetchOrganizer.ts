@@ -1,8 +1,7 @@
 import OrganizerModel from "@models/organizer.model";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const fetchOrganizer = async (id: string) => {
   try {
@@ -32,7 +31,7 @@ const fetchOrganizer = async (id: string) => {
       ...data,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

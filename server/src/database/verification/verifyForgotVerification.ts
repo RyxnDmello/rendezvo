@@ -8,8 +8,7 @@ import { VerifyForgotVerificationValidatorSchema } from "@validators/verificatio
 import { hashPassword } from "@helpers/password";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const verifyForgotVerification = async (
   data: VerifyForgotVerificationValidatorSchema
@@ -90,7 +89,7 @@ const verifyForgotVerification = async (
       session.endSession();
     }
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

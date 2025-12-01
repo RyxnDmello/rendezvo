@@ -4,8 +4,7 @@ import OrganizerModel from "@models/organizer.model";
 import { CreateEventValidatorSchema } from "@validators/event/createEvent.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const createEvent = async (data: CreateEventValidatorSchema) => {
   try {
@@ -25,7 +24,7 @@ const createEvent = async (data: CreateEventValidatorSchema) => {
       success: true,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

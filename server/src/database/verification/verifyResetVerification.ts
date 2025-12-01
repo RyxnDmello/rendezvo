@@ -6,8 +6,7 @@ import VerificationModel from "@models/verification.model";
 import { VerifyResetVerificationValidatorSchema } from "@validators/verification/verifyResetVerification.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const verifyResetVerification = async (
   data: VerifyResetVerificationValidatorSchema
@@ -87,7 +86,7 @@ const verifyResetVerification = async (
       session.endSession();
     }
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

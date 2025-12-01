@@ -5,8 +5,8 @@ import { UploadOrganizerBannerValidatorSchema } from "@validators/organizer/medi
 import { uploadBanner, updateBanner } from "../helpers/storage";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import AppwriteError, { isAppwriteError } from "@utils/AppwriteError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const uploadOrganizerBanner = async (
   id: string,
@@ -55,8 +55,12 @@ const uploadOrganizerBanner = async (
       success: true,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
+    }
+
+    if (isAppwriteError(error)) {
+      throw new AppwriteError(error);
     }
 
     if (isMongooseError(error)) {

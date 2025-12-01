@@ -8,8 +8,7 @@ import { VerifyAuthVerificationValidatorSchema } from "@validators/verification/
 import { createTokens } from "@database/organizer/helpers/token";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const verifyAuthVerification = async (
   data: VerifyAuthVerificationValidatorSchema
@@ -111,7 +110,7 @@ const verifyAuthVerification = async (
       session.endSession();
     }
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

@@ -5,7 +5,7 @@ import { ContentfulStatusCode } from "hono/utils/http-status";
 import AppwriteError from "./AppwriteError";
 import MongooseError from "./MongooseError";
 
-interface CustomError {
+export interface CustomError {
   error: string;
   code: ErrorCode;
 }
@@ -89,6 +89,14 @@ export const status: Record<ErrorCode, ContentfulStatusCode> = {
   FILE_UPLOAD_FAILED: 400,
   FILE_ALREADY_EXISTS: 409,
   STORAGE_SERVER_ERROR: 500,
+};
+
+export const isApiError = (error: unknown) => {
+  return (
+    error instanceof ApiError ||
+    error instanceof AppwriteError ||
+    error instanceof MongooseError
+  );
 };
 
 export default class ApiError extends Error {

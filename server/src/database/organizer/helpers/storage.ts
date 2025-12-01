@@ -50,7 +50,7 @@ export const getBanner = async (id: string) => {
 
 export const uploadProfile = async (id: string, file: File) => {
   try {
-    return await uploadFile(file, getProfileID(id));
+    return await uploadFile(getProfileID(id), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -65,7 +65,7 @@ export const uploadProfile = async (id: string, file: File) => {
 
 export const uploadBanner = async (id: string, file: File) => {
   try {
-    return await uploadFile(file, getBannerID(id));
+    return await uploadFile(getBannerID(id), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -80,7 +80,7 @@ export const uploadBanner = async (id: string, file: File) => {
 
 export const updateProfile = async (id: string, file: File) => {
   try {
-    return await updateFile(file, getProfileID(id));
+    return await updateFile(getProfileID(id), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -95,7 +95,7 @@ export const updateProfile = async (id: string, file: File) => {
 
 export const updateBanner = async (id: string, file: File) => {
   try {
-    return await updateFile(file, getBannerID(id));
+    return await updateFile(getBannerID(id), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);

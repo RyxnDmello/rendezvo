@@ -8,8 +8,7 @@ import { generateOTP } from "@helpers/generator";
 import { hashPassword, verifyPassword } from "@helpers/password";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const createResetVerification = async (
   data: CreateResetVerificationValidatorSchema
@@ -102,7 +101,7 @@ const createResetVerification = async (
       success: true,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

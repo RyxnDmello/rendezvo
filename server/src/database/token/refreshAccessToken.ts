@@ -6,8 +6,7 @@ import {
 } from "@database/organizer/helpers/token";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const refreshAccessToken = async (user: string, token: string) => {
   try {
@@ -55,7 +54,7 @@ const refreshAccessToken = async (user: string, token: string) => {
       "BAD_REQUEST"
     );
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

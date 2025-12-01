@@ -3,8 +3,7 @@ import OrganizerModel from "@models/organizer.model";
 import { UpdateOrganizerValidatorSchema } from "@validators/organizer/updateOrganizer.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const updateOrganizer = async (
   id: string,
@@ -65,7 +64,7 @@ const updateOrganizer = async (
       success: true,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

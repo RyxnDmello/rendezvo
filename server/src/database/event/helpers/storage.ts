@@ -125,7 +125,7 @@ export const getVideos = async (id: string) => {
 
 export const uploadCover = async (id: string, file: File) => {
   try {
-    return await uploadFile(file, getCoverID(id));
+    return await uploadFile(getCoverID(id), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -140,7 +140,7 @@ export const uploadCover = async (id: string, file: File) => {
 
 export const uploadBanner = async (id: string, file: File) => {
   try {
-    return await uploadFile(file, getBannerID(id));
+    return await uploadFile(getBannerID(id), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -155,7 +155,7 @@ export const uploadBanner = async (id: string, file: File) => {
 
 export const uploadImage = async (id: string, index: number, file: File) => {
   try {
-    return await uploadFile(file, getImageID(id, index));
+    return await uploadFile(getImageID(id, index), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -170,7 +170,7 @@ export const uploadImage = async (id: string, index: number, file: File) => {
 
 export const uploadVideo = async (id: string, index: number, file: File) => {
   try {
-    return await uploadFile(file, getVideoID(id, index));
+    return await uploadFile(getVideoID(id, index), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -185,7 +185,7 @@ export const uploadVideo = async (id: string, index: number, file: File) => {
 
 export const updateCover = async (id: string, file: File) => {
   try {
-    return await updateFile(file, getCoverID(id));
+    return await updateFile(getCoverID(id), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -200,7 +200,7 @@ export const updateCover = async (id: string, file: File) => {
 
 export const updateBanner = async (id: string, file: File) => {
   try {
-    return await updateFile(file, getBannerID(id));
+    return await updateFile(getBannerID(id), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -215,7 +215,7 @@ export const updateBanner = async (id: string, file: File) => {
 
 export const updateImage = async (id: string, index: number, file: File) => {
   try {
-    return await updateFile(file, getImageID(id, index));
+    return await updateFile(getImageID(id, index), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);
@@ -230,7 +230,7 @@ export const updateImage = async (id: string, index: number, file: File) => {
 
 export const updateVideo = async (id: string, index: number, file: File) => {
   try {
-    return await updateFile(file, getVideoID(id, index));
+    return await updateFile(getVideoID(id, index), file);
   } catch (error) {
     if (isAppwriteError(error)) {
       throw new AppwriteError(error);

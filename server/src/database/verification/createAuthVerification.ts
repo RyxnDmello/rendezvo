@@ -5,8 +5,7 @@ import { getExpiryDate } from "@helpers/date";
 import { generateOTP } from "@helpers/generator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const createAuthVerification = async (email: string) => {
   try {
@@ -74,7 +73,7 @@ const createAuthVerification = async (email: string) => {
       success: true,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

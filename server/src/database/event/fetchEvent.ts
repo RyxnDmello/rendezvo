@@ -1,8 +1,7 @@
 import EventModel from "@models/event.model";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const fetchEvent = async (id: string) => {
   try {
@@ -24,7 +23,7 @@ const fetchEvent = async (id: string) => {
       ...data,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 

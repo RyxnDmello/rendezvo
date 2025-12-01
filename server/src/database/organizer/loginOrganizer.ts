@@ -7,8 +7,7 @@ import { verifyPassword } from "@helpers/password";
 import { createTokens } from "./helpers/token";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
-
-import ApiError from "@utils/ApiError";
+import ApiError, { isApiError } from "@utils/ApiError";
 
 const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
   try {
@@ -69,7 +68,7 @@ const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
       refreshToken,
     };
   } catch (error) {
-    if (error instanceof ApiError) {
+    if (isApiError(error)) {
       throw error;
     }
 
