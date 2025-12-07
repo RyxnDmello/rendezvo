@@ -140,6 +140,7 @@ const eventSchema = new Schema<Event>(
       default: null,
     },
     tickets: {
+      _id: false,
       type: [ticketSchema],
       required: false,
       index: true,
@@ -152,6 +153,7 @@ const eventSchema = new Schema<Event>(
       default: null,
     },
     coupons: {
+      _id: false,
       type: [couponSchema],
       required: false,
       index: true,

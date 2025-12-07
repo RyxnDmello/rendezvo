@@ -204,7 +204,7 @@ export const eventRsvpValidatorSchema = z.strictObject(
       .min(1, "At Least 1 RSVP Field Must Be Provided")
       .max(5, "At Most 5 RSVP Field Must Be Provided"),
   },
-  "Only Event RSVP Details Must Be Provided"
+  "Event RSVP Details Must Be Provided"
 );
 
 export type EventRsvpValidatorSchema = z.infer<typeof eventRsvpValidatorSchema>;

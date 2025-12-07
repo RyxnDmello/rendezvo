@@ -1,0 +1,94 @@
+import EventModel from "@models/event.model";
+import OrganizerModel from "@models/organizer.model";
+
+import { ToggleTicketValidatorSchema } from "@validators/ticket/toggleTicket.validator";
+
+import MongooseError, { isMongooseError } from "@utils/MongooseError";
+import ApiError, { isApiError } from "@utils/ApiError";
+
+const toggleTicket = async (
+  id: string,
+  ticketID: string,
+  data: ToggleTicketValidatorSchema
+) => {
+  try {
+    const [dbEvent, dbOrganizer] = await Promise.all([
+      EventModel.findById(id, {
+        ownerID: 1,
+        tickets: 1,
+      }).lean({
+        versionKey: false,
+      }),
+      OrganizerModel.exists({
+        _id: data.ownerID,
+      }),
+    ]);
+
+    if (!dbEvent) {
+      throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (!dbOrganizer) {
+      throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (dbEvent.ownerID !== data.ownerID) {
+      throw new ApiError(
+        "You Do Not Have The Permission To Make This Request",
+        "UNAUTHORIZED"
+      );
+    }
+
+    if (!dbEvent.tickets || dbEvent.tickets.length === 0) {
+      throw new ApiError("Event With Given ID Has No Tickets", "BAD_REQUEST");
+    }
+
+    const index = dbEvent.tickets.findIndex((ticket) => ticket.id === ticketID);
+
+    if (index === -1) {
+      throw new ApiError("Ticket With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    dbEvent.tickets[index]!.active = !dbEvent.tickets[index]!.active;
+
+    const { acknowledged, modifiedCount } = await EventModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          tickets: dbEvent.tickets,
+        },
+      },
+      {
+        runValidators: true,
+      }
+    );
+
+    if (!acknowledged || modifiedCount !== 1) {
+      throw new ApiError(
+        "Unable To Toggle Ticket Due To Server Error",
+        "INTERNAL_SERVER_ERROR"
+      );
+    }
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    if (isApiError(error)) {
+      throw error;
+    }
+
+    if (isMongooseError(error)) {
+      throw new MongooseError(error);
+    }
+
+    throw new ApiError(
+      "Unable To Toggle Ticket Due To Server Error",
+      "INTERNAL_SERVER_ERROR"
+    );
+  }
+};
+
+export default toggleTicket;

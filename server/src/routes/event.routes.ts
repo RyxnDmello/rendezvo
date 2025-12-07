@@ -17,6 +17,8 @@ import {
   _deleteEventBanner,
 } from "@controllers/event.controller";
 
+import ticketRoutes from "./ticket.routes";
+
 import authorize from "@middlewares/authorize.middleware";
 
 import fetchEventsValidator from "@validators/event/fetchEvents.validator";
@@ -62,5 +64,7 @@ router
   .basePath("/:id/media/video")
   .patch(authorize, uploadEventVideoValidator, _uploadEventVideo)
   .delete(authorize, deleteEventVideoValidator, _deleteEventVideo);
+
+router.route("/:id/ticket", ticketRoutes);
 
 export default router;

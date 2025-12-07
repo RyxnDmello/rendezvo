@@ -35,7 +35,7 @@ export const eventAddressValidatorSchema = z.strictObject(
       .max(6, "Zip Code Must Be 6 Digits")
       .regex(/^\d{6}$/, "Zip Code Must Contain 6 Digits"),
   },
-  "Only Event Address Details Must Be Provided"
+  "Event Address Details Must Be Provided"
 );
 
 export type EventAddressValidatorSchema = z.infer<

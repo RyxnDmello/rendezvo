@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, Types } from "mongoose";
 
 import pricingSchema, { Pricing } from "./ticket/pricing.schema";
 import quantitySchema, { Quantity } from "./ticket/quantity.schema";
@@ -7,9 +7,10 @@ import scheduleSchema, { Schedule } from "./ticket/schedule.schema";
 export type Type = "free" | "paid";
 
 export interface Ticket {
-  id?: string;
+  id: string;
   type: Type;
   name: string;
+  active: boolean;
   description: string;
   pricing: Pricing;
   quantity: Quantity;
@@ -17,6 +18,13 @@ export interface Ticket {
 }
 
 const ticketSchema = new Schema<Ticket>({
+  id: {
+    type: Schema.Types.String,
+    required: [true, "Ticket ID Must Be Provided"],
+    index: true,
+    trim: true,
+    default: new Types.ObjectId().toString(),
+  },
   type: {
     type: Schema.Types.String,
     required: [true, "Ticket Type Must Be Provided"],
@@ -28,6 +36,12 @@ const ticketSchema = new Schema<Ticket>({
       message: "Invalid Ticket Type",
     },
     default: "paid",
+  },
+  active: {
+    type: Schema.Types.Boolean,
+    required: [true, "Ticket Must Be Either Active Or Inactive"],
+    index: true,
+    default: true,
   },
   name: {
     type: Schema.Types.String,

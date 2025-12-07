@@ -42,7 +42,7 @@ export const eventPolicyValidatorSchema = z.strictObject(
     terms: termsSchema,
     refund: refundSchema,
   },
-  "Only Event Policy Details Must Be Provided"
+  "Event Policy Details Must Be Provided"
 );
 
 export type EventPolicyValidatorSchema = z.infer<

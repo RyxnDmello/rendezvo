@@ -66,7 +66,7 @@ export const eventSecurityValidatorSchema = z.strictObject(
       .min(1, "At Least 1 Security Code Must Be Provided")
       .max(10, "At Most 10 Security Codes Must Be Provided"),
   },
-  "Only Event Security Codes Must Be Provided"
+  "Event Security Codes Must Be Provided"
 );
 
 export type EventSecurityValidatorSchema = z.infer<

@@ -38,7 +38,7 @@ export const eventBasicValidatorSchema = z.strictObject(
       .max(10, "At Most 10 Event Tags Must Be Provided")
       .optional(),
   },
-  "Only Event Basic Details Must Be Provided"
+  "Event Basic Details Must Be Provided"
 );
 
 export type EventBasicValidatorSchema = z.infer<

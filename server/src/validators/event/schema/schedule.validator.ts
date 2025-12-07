@@ -131,7 +131,7 @@ export const eventScheduleValidatorSchema = z
         }, "Duplicate Exception Dates Are Not Allowed")
         .optional(),
     },
-    "Only Event Schedule Details Must Be Provided"
+    "Event Schedule Details Must Be Provided"
   )
   .superRefine((data, ctx) => {
     const {
