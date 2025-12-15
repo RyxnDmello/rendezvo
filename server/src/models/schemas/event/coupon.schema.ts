@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, Types } from "mongoose";
 
 import pricingSchema, { Pricing } from "./coupon/pricing.schema";
 import quantitySchema, { Quantity } from "./coupon/quantity.schema";
@@ -11,6 +11,7 @@ export interface Coupon {
   ticketID: string | null;
   type: Type;
   name: string;
+  active: boolean;
   description: string;
   pricing: Pricing;
   quantity: Quantity;
@@ -23,6 +24,7 @@ const couponSchema = new Schema<Coupon>({
     required: [true, "Coupon ID Must Be Provided"],
     index: true,
     trim: true,
+    default: new Types.ObjectId().toString(),
   },
   ticketID: {
     type: Schema.Types.String,
@@ -42,6 +44,12 @@ const couponSchema = new Schema<Coupon>({
       message: "Invalid Coupon Type",
     },
     default: "general",
+  },
+  active: {
+    type: Schema.Types.Boolean,
+    required: [true, "Coupon Must Be Either Active Or Inactive"],
+    index: true,
+    default: true,
   },
   name: {
     type: Schema.Types.String,

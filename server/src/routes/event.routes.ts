@@ -18,6 +18,7 @@ import {
 } from "@controllers/event.controller";
 
 import ticketRoutes from "./ticket.routes";
+import couponRoutes from "./coupon.routes";
 
 import authorize from "@middlewares/authorize.middleware";
 
@@ -66,5 +67,6 @@ router
   .delete(authorize, deleteEventVideoValidator, _deleteEventVideo);
 
 router.route("/:id/ticket", ticketRoutes);
+router.route("/:id/coupon", couponRoutes);
 
 export default router;

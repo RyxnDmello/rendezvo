@@ -9,7 +9,11 @@ import { ticketScheduleValidatorSchema } from "./schema/schedule.validator";
 const addTicketValidatorSchema = z
   .strictObject(
     {
-      ownerID: z.string("Owner ID Must Be A Valid String ID"),
+      ownerID: z
+        .string("Owner ID Must Be Provided")
+        .trim()
+        .nonempty("Owner ID Must Be Provided")
+        .nonoptional("Owner ID Must Be Provided"),
       type: z.enum(["free", "paid"], "Invalid Ticket Type").default("paid"),
       active: z
         .boolean("Ticket Must Be Either Active Or Inactive")
