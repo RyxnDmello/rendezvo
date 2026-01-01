@@ -15,6 +15,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 
 const uploadEventMedia = async (
   id: string,
+  ownerID: string,
   data: UploadEventMediaValidatorSchema
 ) => {
   try {
@@ -26,6 +27,13 @@ const uploadEventMedia = async (
 
     if (!dbEvent) {
       throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (dbEvent.ownerID !== ownerID) {
+      throw new ApiError(
+        "You Are Not Authorized To Update This Event",
+        "FORBIDDEN"
+      );
     }
 
     const [coverID, bannerID] = await Promise.all([

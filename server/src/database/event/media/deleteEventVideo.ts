@@ -10,6 +10,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 
 const deleteEventVideo = async (
   id: string,
+  ownerID: string,
   data: DeleteEventVideoValidatorSchema
 ) => {
   try {
@@ -21,6 +22,13 @@ const deleteEventVideo = async (
 
     if (!dbEvent) {
       throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (dbEvent.ownerID !== ownerID) {
+      throw new ApiError(
+        "You Are Not Authorized To Update This Event",
+        "FORBIDDEN"
+      );
     }
 
     if (!dbEvent.album?.videos) {

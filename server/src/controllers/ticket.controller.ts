@@ -1,3 +1,5 @@
+import { Context } from "hono";
+
 import fetchTicket from "@database/ticket/fetchTicket";
 import fetchTickets from "@database/ticket/fetchTickets";
 
@@ -6,22 +8,17 @@ import updateTicket from "@database/ticket/updateTicket";
 import toggleTicket from "@database/ticket/toggleTicket";
 import deleteTicket from "@database/ticket/deleteTicket";
 
-import { FetchTicketContext } from "@validators/ticket/fetchTicket.validator";
-import { FetchTicketsContext } from "@validators/ticket/fetchTickets.validator";
-
 import { AddTicketContext } from "@validators/ticket/addTicket.validator";
 import { UpdateTicketContext } from "@validators/ticket/updateTicket.validator";
-import { ToggleTicketContext } from "@validators/ticket/toggleTicket.validator";
-import { DeleteTicketContext } from "@validators/ticket/deleteTicket.validator";
 
 import { ApiErrorResponse, ApiErrorCustomResponse } from "@utils/ApiError";
 
-export const _fetchTicket = async (ctx: FetchTicketContext) => {
+export const _fetchTicket = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const ticketID = ctx.req.param("ticketID");
-
-  const query = ctx.req.valid("query");
 
   try {
     if (!id) {
@@ -38,17 +35,17 @@ export const _fetchTicket = async (ctx: FetchTicketContext) => {
       });
     }
 
-    const ticket = await fetchTicket(id, ticketID, query);
+    const ticket = await fetchTicket(id, ticketID, user.id);
     return ctx.json(ticket, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
   }
 };
 
-export const _fetchTickets = async (ctx: FetchTicketsContext) => {
-  const id = ctx.req.param("id");
+export const _fetchTickets = async (ctx: Context) => {
+  const user = ctx.get("user");
 
-  const query = ctx.req.valid("query");
+  const id = ctx.req.param("id");
 
   try {
     if (!id) {
@@ -58,7 +55,7 @@ export const _fetchTickets = async (ctx: FetchTicketsContext) => {
       });
     }
 
-    const ticket = await fetchTickets(id, query);
+    const ticket = await fetchTickets(id, user.id);
     return ctx.json(ticket, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -66,6 +63,8 @@ export const _fetchTickets = async (ctx: FetchTicketsContext) => {
 };
 
 export const _addTicket = async (ctx: AddTicketContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("json");
@@ -78,7 +77,7 @@ export const _addTicket = async (ctx: AddTicketContext) => {
       });
     }
 
-    const result = await addTicket(id, data);
+    const result = await addTicket(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -86,6 +85,8 @@ export const _addTicket = async (ctx: AddTicketContext) => {
 };
 
 export const _updateTicket = async (ctx: UpdateTicketContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const ticketID = ctx.req.param("ticketID");
@@ -107,19 +108,19 @@ export const _updateTicket = async (ctx: UpdateTicketContext) => {
       });
     }
 
-    const result = await updateTicket(id, ticketID, data);
+    const result = await updateTicket(id, ticketID, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
   }
 };
 
-export const _toggleTicket = async (ctx: ToggleTicketContext) => {
+export const _toggleTicket = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const ticketID = ctx.req.param("ticketID");
-
-  const data = ctx.req.valid("query");
 
   try {
     if (!id) {
@@ -136,19 +137,19 @@ export const _toggleTicket = async (ctx: ToggleTicketContext) => {
       });
     }
 
-    const result = await toggleTicket(id, ticketID, data);
+    const result = await toggleTicket(id, ticketID, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
   }
 };
 
-export const _deleteTicket = async (ctx: DeleteTicketContext) => {
+export const _deleteTicket = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const ticketID = ctx.req.param("ticketID");
-
-  const data = ctx.req.valid("query");
 
   try {
     if (!id) {
@@ -165,7 +166,7 @@ export const _deleteTicket = async (ctx: DeleteTicketContext) => {
       });
     }
 
-    const result = await deleteTicket(id, ticketID, data);
+    const result = await deleteTicket(id, ticketID, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);

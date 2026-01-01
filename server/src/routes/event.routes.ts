@@ -20,7 +20,7 @@ import {
 import ticketRoutes from "./ticket.routes";
 import couponRoutes from "./coupon.routes";
 
-import authorize from "@middlewares/authorize.middleware";
+import { authorizeOrganizer } from "@middlewares/authorize.middleware";
 
 import fetchEventsValidator from "@validators/event/fetchEvents.validator";
 import createEventValidator from "@validators/event/createEvent.validator";
@@ -39,32 +39,32 @@ const router = new Hono();
 
 router
   .basePath("/")
-  .get(authorize, fetchEventsValidator, _fetchEvents)
-  .post(authorize, createEventValidator, _createEvent);
+  .get(authorizeOrganizer, fetchEventsValidator, _fetchEvents)
+  .post(authorizeOrganizer, createEventValidator, _createEvent);
 router
   .basePath("/:id")
-  .get(authorize, _fetchEvent)
-  .patch(authorize, updateEventValidator, _updateEvent);
+  .get(authorizeOrganizer, _fetchEvent)
+  .patch(authorizeOrganizer, updateEventValidator, _updateEvent);
 router
   .basePath("/:id/media")
-  .patch(authorize, uploadEventMediaValidator, _uploadEventMedia)
-  .delete(authorize, _deleteEventMedia);
+  .patch(authorizeOrganizer, uploadEventMediaValidator, _uploadEventMedia)
+  .delete(authorizeOrganizer, _deleteEventMedia);
 router
   .basePath("/:id/media/cover")
-  .patch(authorize, uploadEventCoverValidator, _uploadEventCover)
-  .delete(authorize, _deleteEventCover);
+  .patch(authorizeOrganizer, uploadEventCoverValidator, _uploadEventCover)
+  .delete(authorizeOrganizer, _deleteEventCover);
 router
   .basePath("/:id/media/banner")
-  .patch(authorize, uploadEventBannerValidator, _uploadEventBanner)
-  .delete(authorize, _deleteEventBanner);
+  .patch(authorizeOrganizer, uploadEventBannerValidator, _uploadEventBanner)
+  .delete(authorizeOrganizer, _deleteEventBanner);
 router
   .basePath("/:id/media/image")
-  .patch(authorize, uploadEventImageValidator, _uploadEventImage)
-  .delete(authorize, deleteEventImageValidator, _deleteEventImage);
+  .patch(authorizeOrganizer, uploadEventImageValidator, _uploadEventImage)
+  .delete(authorizeOrganizer, deleteEventImageValidator, _deleteEventImage);
 router
   .basePath("/:id/media/video")
-  .patch(authorize, uploadEventVideoValidator, _uploadEventVideo)
-  .delete(authorize, deleteEventVideoValidator, _deleteEventVideo);
+  .patch(authorizeOrganizer, uploadEventVideoValidator, _uploadEventVideo)
+  .delete(authorizeOrganizer, deleteEventVideoValidator, _deleteEventVideo);
 
 router.route("/:id/ticket", ticketRoutes);
 router.route("/:id/coupon", couponRoutes);

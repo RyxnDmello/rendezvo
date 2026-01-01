@@ -9,11 +9,6 @@ import { couponScheduleValidatorSchema } from "./schema/schedule.validator";
 const addCouponValidatorSchema = z
   .strictObject(
     {
-      ownerID: z
-        .string("Owner ID Must Be Provided")
-        .trim()
-        .nonempty("Owner ID Must Be Provided")
-        .nonoptional("Owner ID Must Be Provided"),
       ticketID: z.string("Ticket ID Must Be A Valid ID").optional(),
       type: z
         .enum(["general", "targeted"], "Invalid Coupon Type")

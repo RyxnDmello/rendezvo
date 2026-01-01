@@ -12,11 +12,6 @@ import { eventSecurityValidatorSchema } from "./schema/security.validator";
 const createEventValidatorSchema = z
   .strictObject(
     {
-      ownerID: z
-        .string("Owner ID Must Be Provided")
-        .trim()
-        .nonempty("Owner ID Must Be Provided")
-        .nonoptional("Owner ID Must Be Provided"),
       mode: z.enum(["online", "offline"], "Invalid Event Mode"),
       attendance: z.enum(["open", "rsvp"], "Invalid Event Attendance"),
       visibility: z.enum(["public", "private"], "Invalid Event Visibility"),

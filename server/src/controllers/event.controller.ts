@@ -33,6 +33,8 @@ import { DeleteEventVideoContext } from "@validators/event/media/deleteEventVide
 import { ApiErrorResponse, ApiErrorCustomResponse } from "@utils/ApiError";
 
 export const _fetchEvent = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   try {
@@ -43,7 +45,7 @@ export const _fetchEvent = async (ctx: Context) => {
       });
     }
 
-    const event = await fetchEvent(id);
+    const event = await fetchEvent(id, user.id);
     return ctx.json(event, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -51,10 +53,12 @@ export const _fetchEvent = async (ctx: Context) => {
 };
 
 export const _fetchEvents = async (ctx: FetchEventsContext) => {
+  const user = ctx.get("user");
+
   const query = ctx.req.valid("query");
 
   try {
-    const events = await fetchEvents(query);
+    const events = await fetchEvents(user.id, query);
     return ctx.json(events, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -62,10 +66,12 @@ export const _fetchEvents = async (ctx: FetchEventsContext) => {
 };
 
 export const _createEvent = async (ctx: CreateEventContext) => {
+  const user = ctx.get("user");
+
   const data = ctx.req.valid("json");
 
   try {
-    const result = await createEvent(data);
+    const result = await createEvent(user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -73,6 +79,8 @@ export const _createEvent = async (ctx: CreateEventContext) => {
 };
 
 export const _updateEvent = async (ctx: UpdateEventContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("json");
@@ -85,7 +93,7 @@ export const _updateEvent = async (ctx: UpdateEventContext) => {
       });
     }
 
-    const result = await updateEvent(id, data);
+    const result = await updateEvent(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -93,6 +101,8 @@ export const _updateEvent = async (ctx: UpdateEventContext) => {
 };
 
 export const _uploadEventMedia = async (ctx: UploadEventMediaContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("form");
@@ -105,7 +115,7 @@ export const _uploadEventMedia = async (ctx: UploadEventMediaContext) => {
       });
     }
 
-    const result = await uploadEventMedia(id, data);
+    const result = await uploadEventMedia(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -113,6 +123,8 @@ export const _uploadEventMedia = async (ctx: UploadEventMediaContext) => {
 };
 
 export const _uploadEventCover = async (ctx: UploadEventCoverContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("form");
@@ -125,7 +137,7 @@ export const _uploadEventCover = async (ctx: UploadEventCoverContext) => {
       });
     }
 
-    const result = await uploadEventCover(id, data);
+    const result = await uploadEventCover(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -133,6 +145,8 @@ export const _uploadEventCover = async (ctx: UploadEventCoverContext) => {
 };
 
 export const _uploadEventBanner = async (ctx: UploadEventBannerContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("form");
@@ -145,7 +159,7 @@ export const _uploadEventBanner = async (ctx: UploadEventBannerContext) => {
       });
     }
 
-    const result = await uploadEventBanner(id, data);
+    const result = await uploadEventBanner(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -153,6 +167,8 @@ export const _uploadEventBanner = async (ctx: UploadEventBannerContext) => {
 };
 
 export const _uploadEventImage = async (ctx: UploadEventImageContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("form");
@@ -165,7 +181,7 @@ export const _uploadEventImage = async (ctx: UploadEventImageContext) => {
       });
     }
 
-    const result = await uploadEventImage(id, data);
+    const result = await uploadEventImage(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -173,6 +189,8 @@ export const _uploadEventImage = async (ctx: UploadEventImageContext) => {
 };
 
 export const _uploadEventVideo = async (ctx: UploadEventVideoContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("form");
@@ -185,7 +203,7 @@ export const _uploadEventVideo = async (ctx: UploadEventVideoContext) => {
       });
     }
 
-    const result = await uploadEventVideo(id, data);
+    const result = await uploadEventVideo(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -193,6 +211,8 @@ export const _uploadEventVideo = async (ctx: UploadEventVideoContext) => {
 };
 
 export const _deleteEventMedia = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   try {
@@ -203,7 +223,7 @@ export const _deleteEventMedia = async (ctx: Context) => {
       });
     }
 
-    const result = await deleteEventMedia(id);
+    const result = await deleteEventMedia(id, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -211,6 +231,8 @@ export const _deleteEventMedia = async (ctx: Context) => {
 };
 
 export const _deleteEventCover = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   try {
@@ -221,7 +243,7 @@ export const _deleteEventCover = async (ctx: Context) => {
       });
     }
 
-    const result = await deleteEventCover(id);
+    const result = await deleteEventCover(id, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -229,6 +251,8 @@ export const _deleteEventCover = async (ctx: Context) => {
 };
 
 export const _deleteEventBanner = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   try {
@@ -239,7 +263,7 @@ export const _deleteEventBanner = async (ctx: Context) => {
       });
     }
 
-    const result = await deleteEventBanner(id);
+    const result = await deleteEventBanner(id, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -247,6 +271,8 @@ export const _deleteEventBanner = async (ctx: Context) => {
 };
 
 export const _deleteEventImage = async (ctx: DeleteEventImageContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("json");
@@ -259,7 +285,7 @@ export const _deleteEventImage = async (ctx: DeleteEventImageContext) => {
       });
     }
 
-    const result = await deleteEventImage(id, data);
+    const result = await deleteEventImage(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -267,6 +293,8 @@ export const _deleteEventImage = async (ctx: DeleteEventImageContext) => {
 };
 
 export const _deleteEventVideo = async (ctx: DeleteEventVideoContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("json");
@@ -279,7 +307,7 @@ export const _deleteEventVideo = async (ctx: DeleteEventVideoContext) => {
       });
     }
 
-    const result = await deleteEventVideo(id, data);
+    const result = await deleteEventVideo(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);

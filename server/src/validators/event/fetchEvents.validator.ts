@@ -4,11 +4,6 @@ import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
 export const fetchEventsValidatorSchema = z.strictObject(
   {
-    ownerID: z
-      .string("Owner ID Must Be Provided")
-      .trim()
-      .nonempty("Owner ID Must Be Provided")
-      .nonoptional("Owner ID Must Be Provided"),
     mode: z.string("Mode Must Be A Valid Event Mode").trim().optional(),
     status: z.string("Status Must Be A Valid Event Status").trim().optional(),
     visibility: z

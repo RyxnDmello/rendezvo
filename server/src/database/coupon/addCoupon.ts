@@ -10,7 +10,11 @@ import { AddCouponValidatorSchema } from "@validators/coupon/addCoupon.validator
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const addCoupon = async (id: string, data: AddCouponValidatorSchema) => {
+const addCoupon = async (
+  id: string,
+  ownerID: string,
+  data: AddCouponValidatorSchema
+) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(id, {
@@ -22,7 +26,7 @@ const addCoupon = async (id: string, data: AddCouponValidatorSchema) => {
         versionKey: false,
       }),
       OrganizerModel.exists({
-        _id: data.ownerID,
+        _id: ownerID,
       }),
     ]);
 
@@ -34,10 +38,10 @@ const addCoupon = async (id: string, data: AddCouponValidatorSchema) => {
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== data.ownerID) {
+    if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
-        "You Do Not Have The Permission To Make This Request",
-        "UNAUTHORIZED"
+        "You Are Not Authorized To Add Coupons To This Event",
+        "FORBIDDEN"
       );
     }
 

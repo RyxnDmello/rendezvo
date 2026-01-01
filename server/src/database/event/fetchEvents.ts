@@ -19,11 +19,12 @@ type Filter = {
 };
 
 const fetchEvents = async (
+  ownerID: string,
   query: FetchEventsValidatorSchema,
   limit: number = 0
 ) => {
   const filter: Filter = {
-    ownerID: query.ownerID,
+    ownerID,
   };
 
   if (query.mode !== undefined) {

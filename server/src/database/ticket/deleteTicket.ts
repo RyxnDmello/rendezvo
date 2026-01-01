@@ -1,16 +1,10 @@
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
 
-import { DeleteTicketValidatorSchema } from "@validators/ticket/deleteTicket.validator";
-
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const deleteTicket = async (
-  id: string,
-  ticketID: string,
-  query: DeleteTicketValidatorSchema
-) => {
+const deleteTicket = async (id: string, ticketID: string, ownerID: string) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(id, {
@@ -20,7 +14,7 @@ const deleteTicket = async (
         versionKey: false,
       }),
       OrganizerModel.exists({
-        _id: query.ownerID,
+        _id: ownerID,
       }),
     ]);
 
@@ -32,10 +26,10 @@ const deleteTicket = async (
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== query.ownerID) {
+    if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
-        "You Do Not Have The Permission To Make This Request",
-        "UNAUTHORIZED"
+        "You Are Not Authorized To Delete Tickets For This Event",
+        "FORBIDDEN"
       );
     }
 

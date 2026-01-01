@@ -14,7 +14,7 @@ import {
   _deleteOrganizerProfile,
 } from "@controllers/organizer.controller";
 
-import authorize from "@middlewares/authorize.middleware";
+import { authorizeOrganizer } from "@middlewares/authorize.middleware";
 
 import loginOrganizerValidator from "@validators/organizer/loginOrganizer.validator";
 import updateOrganizerValidator from "@validators/organizer/updateOrganizer.validator";
@@ -28,21 +28,33 @@ const router = new Hono();
 router.post("/login", loginOrganizerValidator, _loginOrganizer);
 router.post("/register", registerOrganizerValidator, _registerOrganizer);
 router
-  .basePath("/:id")
-  .get(authorize, _fetchOrganizer)
-  .patch(authorize, updateOrganizerValidator, _updateOrganizer)
-  .delete(authorize, _removeOrganizer);
+  .basePath("/")
+  .get(authorizeOrganizer, _fetchOrganizer)
+  .patch(authorizeOrganizer, updateOrganizerValidator, _updateOrganizer)
+  .delete(authorizeOrganizer, _removeOrganizer);
 router
-  .basePath("/:id/media")
-  .patch(authorize, uploadOrganizerMediaValidator, _uploadOrganizerMedia)
-  .delete(authorize, _deleteOrganizerMedia);
+  .basePath("/media")
+  .patch(
+    authorizeOrganizer,
+    uploadOrganizerMediaValidator,
+    _uploadOrganizerMedia
+  )
+  .delete(authorizeOrganizer, _deleteOrganizerMedia);
 router
-  .basePath("/:id/media/banner")
-  .patch(authorize, uploadOrganizerBannerValidator, _uploadOrganizerBanner)
-  .delete(authorize, _deleteOrganizerBanner);
+  .basePath("/media/banner")
+  .patch(
+    authorizeOrganizer,
+    uploadOrganizerBannerValidator,
+    _uploadOrganizerBanner
+  )
+  .delete(authorizeOrganizer, _deleteOrganizerBanner);
 router
-  .basePath("/:id/media/profile")
-  .patch(authorize, uploadOrganizerProfileValidator, _uploadOrganizerProfile)
-  .delete(authorize, _deleteOrganizerProfile);
+  .basePath("/media/profile")
+  .patch(
+    authorizeOrganizer,
+    uploadOrganizerProfileValidator,
+    _uploadOrganizerProfile
+  )
+  .delete(authorizeOrganizer, _deleteOrganizerProfile);
 
 export default router;

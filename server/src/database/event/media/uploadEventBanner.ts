@@ -10,6 +10,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 
 const uploadEventBanner = async (
   id: string,
+  ownerID: string,
   data: UploadEventBannerValidatorSchema
 ) => {
   try {
@@ -21,6 +22,13 @@ const uploadEventBanner = async (
 
     if (!dbEvent) {
       throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (dbEvent.ownerID !== ownerID) {
+      throw new ApiError(
+        "You Are Not Authorized To Update This Event",
+        "FORBIDDEN"
+      );
     }
 
     const bannerID = dbEvent.album?.banner

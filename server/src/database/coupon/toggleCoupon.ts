@@ -1,16 +1,10 @@
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
 
-import { ToggleCouponValidatorSchema } from "@validators/coupon/toggleCoupon.validator";
-
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const toggleCoupon = async (
-  id: string,
-  couponID: string,
-  data: ToggleCouponValidatorSchema
-) => {
+const toggleCoupon = async (id: string, couponID: string, ownerID: string) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(id, {
@@ -20,7 +14,7 @@ const toggleCoupon = async (
         versionKey: false,
       }),
       OrganizerModel.exists({
-        _id: data.ownerID,
+        _id: ownerID,
       }),
     ]);
 
@@ -32,10 +26,10 @@ const toggleCoupon = async (
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== data.ownerID) {
+    if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
-        "You Do Not Have The Permission To Make This Request",
-        "UNAUTHORIZED"
+        "You Are Not Authorized To Toggle Coupons From This Event",
+        "FORBIDDEN"
       );
     }
 

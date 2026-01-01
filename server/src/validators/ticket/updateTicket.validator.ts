@@ -13,11 +13,6 @@ const updateTicketValidatorSchema = z
         ["basic", "pricing", "quantity", "schedule"],
         "Provide The Specific Action You Need To Perform"
       ),
-      ownerID: z
-        .string("Owner ID Must Be Provided")
-        .trim()
-        .nonempty("Owner ID Must Be Provided")
-        .nonoptional("Owner ID Must Be Provided"),
       name: z
         .string("Ticket Name Must Be A Valid String")
         .min(4, "Ticket Name Must Be A Minimum Of 4 Characters")

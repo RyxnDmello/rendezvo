@@ -5,7 +5,11 @@ import { UpdateEventValidatorSchema } from "@validators/event/updateEvent.valida
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const updateEvent = async (id: string, data: UpdateEventValidatorSchema) => {
+const updateEvent = async (
+  id: string,
+  ownerID: string,
+  data: UpdateEventValidatorSchema
+) => {
   try {
     const dbEvent = await EventModel.findById(id, {
       createdAt: 0,
@@ -16,6 +20,13 @@ const updateEvent = async (id: string, data: UpdateEventValidatorSchema) => {
 
     if (!dbEvent) {
       throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (dbEvent.ownerID !== ownerID) {
+      throw new ApiError(
+        "You Are Not Authorized To Update This Event",
+        "FORBIDDEN"
+      );
     }
 
     const { action, ...event } = data;

@@ -8,11 +8,11 @@ import {
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const refreshAccessToken = async (user: string, token: string) => {
+const refreshAccessToken = async (role: string, token: string) => {
   try {
     const { id } = await verifyRefreshToken(token);
 
-    if (user === "organizer") {
+    if (role === "organizer") {
       const dbOrganizer = await OrganizerModel.findOne(
         {
           _id: id,
@@ -30,14 +30,11 @@ const refreshAccessToken = async (user: string, token: string) => {
       if (!dbOrganizer || !dbOrganizer.verified) {
         throw new ApiError(
           "You Are Not Authorized To Access This Service",
-          "BAD_REQUEST"
+          "FORBIDDEN"
         );
       }
 
-      const accessToken = await createAccessToken(
-        dbOrganizer._id.toString(),
-        dbOrganizer.email
-      );
+      const accessToken = await createAccessToken(dbOrganizer._id.toString());
 
       return {
         id: dbOrganizer._id,
@@ -51,7 +48,7 @@ const refreshAccessToken = async (user: string, token: string) => {
 
     throw new ApiError(
       "You Are Not Authorized To Access This Service",
-      "BAD_REQUEST"
+      "FORBIDDEN"
     );
   } catch (error) {
     if (isApiError(error)) {

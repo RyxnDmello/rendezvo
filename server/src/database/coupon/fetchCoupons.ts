@@ -1,12 +1,10 @@
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
 
-import { FetchCouponsValidatorSchema } from "@validators/coupon/fetchCoupons.validator";
-
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const fetchCoupons = async (id: string, query: FetchCouponsValidatorSchema) => {
+const fetchCoupons = async (id: string, ownerID: string) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(id, {
@@ -16,7 +14,7 @@ const fetchCoupons = async (id: string, query: FetchCouponsValidatorSchema) => {
         versionKey: false,
       }),
       OrganizerModel.exists({
-        _id: query.ownerID,
+        _id: ownerID,
       }),
     ]);
 
@@ -28,10 +26,10 @@ const fetchCoupons = async (id: string, query: FetchCouponsValidatorSchema) => {
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== query.ownerID) {
+    if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
-        "You Do Not Have The Permission To Make This Request",
-        "UNAUTHORIZED"
+        "You Are Not Authorized To Retrieve Coupons From This Event",
+        "FORBIDDEN"
       );
     }
 

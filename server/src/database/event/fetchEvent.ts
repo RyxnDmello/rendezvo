@@ -3,7 +3,7 @@ import EventModel from "@models/event.model";
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const fetchEvent = async (id: string) => {
+const fetchEvent = async (id: string, ownerID: string) => {
   try {
     const dbEvent = await EventModel.findById(id, {
       createdAt: 0,
@@ -14,6 +14,13 @@ const fetchEvent = async (id: string) => {
 
     if (!dbEvent) {
       throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (dbEvent.ownerID !== ownerID) {
+      throw new ApiError(
+        "You Are Not Authorized To Retrieve This Event",
+        "FORBIDDEN"
+      );
     }
 
     const { _id, ...data } = dbEvent;

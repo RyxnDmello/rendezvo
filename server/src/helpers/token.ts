@@ -7,18 +7,18 @@ export type Payload = Record<string, any>;
 export const ALGORITHM: SignatureAlgorithm = "HS512";
 
 export const createToken = async (
-  data: Payload,
+  payload: Payload,
   secret: string,
   expiry: number
 ) => {
   const exp = Math.floor(Date.now() / 1000) + expiry * 60;
-  return await sign({ data, exp }, secret, ALGORITHM);
+  return await sign({ payload, exp }, secret, ALGORITHM);
 };
 
 export const verifyToken = async <T extends Payload>(
   token: string,
   secret: string
 ) => {
-  const { data } = await verify(token, secret, ALGORITHM);
-  return data ? (data as T) : null;
+  const { payload } = await verify(token, secret, ALGORITHM);
+  return payload ? (payload as T) : null;
 };

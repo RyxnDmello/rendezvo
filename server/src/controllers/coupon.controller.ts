@@ -1,3 +1,5 @@
+import { Context } from "hono";
+
 import fetchCoupon from "@database/coupon/fetchCoupon";
 import fetchCoupons from "@database/coupon/fetchCoupons";
 
@@ -6,22 +8,17 @@ import updateCoupon from "@database/coupon/updateCoupon";
 import toggleCoupon from "@database/coupon/toggleCoupon";
 import deleteCoupon from "@database/coupon/deleteCoupon";
 
-import { FetchCouponContext } from "@validators/coupon/fetchCoupon.validator";
-import { FetchCouponsContext } from "@validators/coupon/fetchCoupons.validator";
-
 import { AddCouponContext } from "@validators/coupon/addCoupon.validator";
 import { UpdateCouponContext } from "@validators/coupon/updateCoupon.validator";
-import { ToggleCouponContext } from "@validators/coupon/toggleCoupon.validator";
-import { DeleteCouponContext } from "@validators/coupon/deleteCoupon.validator";
 
 import { ApiErrorResponse, ApiErrorCustomResponse } from "@utils/ApiError";
 
-export const _fetchCoupon = async (ctx: FetchCouponContext) => {
+export const _fetchCoupon = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const couponID = ctx.req.param("couponID");
-
-  const query = ctx.req.valid("query");
 
   try {
     if (!id) {
@@ -38,17 +35,17 @@ export const _fetchCoupon = async (ctx: FetchCouponContext) => {
       });
     }
 
-    const coupon = await fetchCoupon(id, couponID, query);
+    const coupon = await fetchCoupon(id, couponID, user.id);
     return ctx.json(coupon, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
   }
 };
 
-export const _fetchCoupons = async (ctx: FetchCouponsContext) => {
-  const id = ctx.req.param("id");
+export const _fetchCoupons = async (ctx: Context) => {
+  const user = ctx.get("user");
 
-  const query = ctx.req.valid("query");
+  const id = ctx.req.param("id");
 
   try {
     if (!id) {
@@ -58,7 +55,7 @@ export const _fetchCoupons = async (ctx: FetchCouponsContext) => {
       });
     }
 
-    const coupon = await fetchCoupons(id, query);
+    const coupon = await fetchCoupons(id, user.id);
     return ctx.json(coupon, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -66,6 +63,8 @@ export const _fetchCoupons = async (ctx: FetchCouponsContext) => {
 };
 
 export const _addCoupon = async (ctx: AddCouponContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const data = ctx.req.valid("json");
@@ -78,7 +77,7 @@ export const _addCoupon = async (ctx: AddCouponContext) => {
       });
     }
 
-    const result = await addCoupon(id, data);
+    const result = await addCoupon(id, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -86,6 +85,8 @@ export const _addCoupon = async (ctx: AddCouponContext) => {
 };
 
 export const _updateCoupon = async (ctx: UpdateCouponContext) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const couponID = ctx.req.param("couponID");
@@ -107,19 +108,19 @@ export const _updateCoupon = async (ctx: UpdateCouponContext) => {
       });
     }
 
-    const result = await updateCoupon(id, couponID, data);
+    const result = await updateCoupon(id, couponID, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
   }
 };
 
-export const _toggleCoupon = async (ctx: ToggleCouponContext) => {
+export const _toggleCoupon = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const couponID = ctx.req.param("couponID");
-
-  const data = ctx.req.valid("query");
 
   try {
     if (!id) {
@@ -136,19 +137,19 @@ export const _toggleCoupon = async (ctx: ToggleCouponContext) => {
       });
     }
 
-    const result = await toggleCoupon(id, couponID, data);
+    const result = await toggleCoupon(id, couponID, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
   }
 };
 
-export const _deleteCoupon = async (ctx: DeleteCouponContext) => {
+export const _deleteCoupon = async (ctx: Context) => {
+  const user = ctx.get("user");
+
   const id = ctx.req.param("id");
 
   const couponID = ctx.req.param("couponID");
-
-  const data = ctx.req.valid("query");
 
   try {
     if (!id) {
@@ -165,7 +166,7 @@ export const _deleteCoupon = async (ctx: DeleteCouponContext) => {
       });
     }
 
-    const result = await deleteCoupon(id, couponID, data);
+    const result = await deleteCoupon(id, couponID, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);

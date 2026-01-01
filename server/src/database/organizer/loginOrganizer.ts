@@ -54,8 +54,7 @@ const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
     }
 
     const { accessToken, refreshToken } = await createTokens(
-      dbOrganizer._id.toString(),
-      dbOrganizer.email
+      dbOrganizer._id.toString()
     );
 
     return {

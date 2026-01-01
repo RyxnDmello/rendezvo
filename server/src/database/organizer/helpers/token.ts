@@ -12,7 +12,7 @@ import { env } from "@constants/env";
 
 export interface AccessTokenPayload {
   id: string;
-  email: string;
+  role: "organizer";
 }
 
 export interface RefreshTokenPayload {
@@ -26,9 +26,12 @@ const {
   ORGANIZER_REFRESH_TOKEN_SECRET,
 } = env.SECRET;
 
-export const createAccessToken = async (id: string, email: string) => {
+export const createAccessToken = async (id: string) => {
   return await createToken(
-    { id, email },
+    {
+      id,
+      role: "organizer",
+    },
     ORGANIZER_ACCESS_TOKEN_SECRET,
     ORGANIZER_ACCESS_TOKEN_EXPIRY
   );
@@ -42,9 +45,9 @@ export const createRefreshToken = async (id: string) => {
   );
 };
 
-export const createTokens = async (id: string, email: string) => {
+export const createTokens = async (id: string) => {
   const [accessToken, refreshToken] = await Promise.all([
-    createAccessToken(id, email),
+    createAccessToken(id),
     createRefreshToken(id),
   ]);
 
@@ -56,19 +59,19 @@ export const createTokens = async (id: string, email: string) => {
 
 export const verifyAccessToken = async (token: string) => {
   try {
-    const data = await verifyToken<AccessTokenPayload>(
+    const payload = await verifyToken<AccessTokenPayload>(
       token,
       ORGANIZER_ACCESS_TOKEN_SECRET
     );
 
-    if (!data) {
+    if (!payload) {
       throw new ApiError(
         "Invalid Authorization Provided",
         "ACCESS_TOKEN_INVALID"
       );
     }
 
-    return data;
+    return payload;
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
@@ -104,19 +107,19 @@ export const verifyAccessToken = async (token: string) => {
 
 export const verifyRefreshToken = async (token: string) => {
   try {
-    const data = await verifyToken<RefreshTokenPayload>(
+    const payload = await verifyToken<RefreshTokenPayload>(
       token,
       ORGANIZER_REFRESH_TOKEN_SECRET
     );
 
-    if (!data) {
+    if (!payload) {
       throw new ApiError(
         "Invalid Authorization Provided",
         "REFRESH_TOKEN_INVALID"
       );
     }
 
-    return data;
+    return payload;
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;

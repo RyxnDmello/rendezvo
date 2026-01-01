@@ -25,10 +25,10 @@ import { setSessionCookie } from "@database/organizer/helpers/cookie";
 import { ApiErrorCustomResponse, ApiErrorResponse } from "@utils/ApiError";
 
 export const _fetchOrganizer = async (ctx: Context) => {
-  const id = ctx.req.param("id");
+  const user = ctx.get("user");
 
   try {
-    const organizer = await fetchOrganizer(id);
+    const organizer = await fetchOrganizer(user.id);
     return ctx.json(organizer, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -63,19 +63,19 @@ export const _registerOrganizer = async (ctx: RegisterOrganizerContext) => {
 };
 
 export const _updateOrganizer = async (ctx: UpdateOrganizerContext) => {
-  const id = ctx.req.param("id");
+  const user = ctx.get("user");
 
   const data = ctx.req.valid("json");
 
   try {
-    if (!id) {
+    if (!user.id) {
       return ApiErrorCustomResponse(ctx, {
         error: "User ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const result = await updateOrganizer(id, data);
+    const result = await updateOrganizer(user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -85,19 +85,19 @@ export const _updateOrganizer = async (ctx: UpdateOrganizerContext) => {
 export const _uploadOrganizerMedia = async (
   ctx: UploadOrganizerMediaContext
 ) => {
-  const id = ctx.req.param("id");
+  const user = ctx.get("user");
 
   const data = ctx.req.valid("form");
 
   try {
-    if (!id) {
+    if (!user.id) {
       return ApiErrorCustomResponse(ctx, {
         error: "User ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const result = await uploadOrganizerMedia(id, data);
+    const result = await uploadOrganizerMedia(user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -107,19 +107,19 @@ export const _uploadOrganizerMedia = async (
 export const _uploadOrganizerBanner = async (
   ctx: UploadOrganizerBannerContext
 ) => {
-  const id = ctx.req.param("id");
+  const user = ctx.get("user");
 
   const data = ctx.req.valid("form");
 
   try {
-    if (!id) {
+    if (!user.id) {
       return ApiErrorCustomResponse(ctx, {
         error: "User ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const result = await uploadOrganizerBanner(id, data);
+    const result = await uploadOrganizerBanner(user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -129,19 +129,19 @@ export const _uploadOrganizerBanner = async (
 export const _uploadOrganizerProfile = async (
   ctx: UploadOrganizerProfileContext
 ) => {
-  const id = ctx.req.param("id");
+  const user = ctx.get("user");
 
   const data = ctx.req.valid("form");
 
   try {
-    if (!id) {
+    if (!user.id) {
       return ApiErrorCustomResponse(ctx, {
         error: "User ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const result = await uploadOrganizerProfile(id, data);
+    const result = await uploadOrganizerProfile(user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -149,17 +149,17 @@ export const _uploadOrganizerProfile = async (
 };
 
 export const _deleteOrganizerMedia = async (ctx: Context) => {
-  const id = ctx.req.param("id");
+  const user = ctx.get("user");
 
   try {
-    if (!id) {
+    if (!user.id) {
       return ApiErrorCustomResponse(ctx, {
         error: "User ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const result = await deleteOrganizerMedia(id);
+    const result = await deleteOrganizerMedia(user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -167,17 +167,17 @@ export const _deleteOrganizerMedia = async (ctx: Context) => {
 };
 
 export const _deleteOrganizerBanner = async (ctx: Context) => {
-  const id = ctx.req.param("id");
+  const user = ctx.get("user");
 
   try {
-    if (!id) {
+    if (!user.id) {
       return ApiErrorCustomResponse(ctx, {
         error: "User ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const result = await deleteOrganizerBanner(id);
+    const result = await deleteOrganizerBanner(user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -185,17 +185,17 @@ export const _deleteOrganizerBanner = async (ctx: Context) => {
 };
 
 export const _deleteOrganizerProfile = async (ctx: Context) => {
-  const id = ctx.req.param("id");
+  const user = ctx.get("user");
 
   try {
-    if (!id) {
+    if (!user.id) {
       return ApiErrorCustomResponse(ctx, {
         error: "User ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const result = await deleteOrganizerProfile(id);
+    const result = await deleteOrganizerProfile(user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);

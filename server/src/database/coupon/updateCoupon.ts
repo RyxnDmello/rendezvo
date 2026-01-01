@@ -11,6 +11,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 const updateCoupon = async (
   id: string,
   couponID: string,
+  ownerID: string,
   data: UpdateCouponValidatorSchema
 ) => {
   try {
@@ -23,7 +24,7 @@ const updateCoupon = async (
         versionKey: false,
       }),
       OrganizerModel.exists({
-        _id: data.ownerID,
+        _id: ownerID,
       }),
     ]);
 
@@ -35,10 +36,10 @@ const updateCoupon = async (
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== data.ownerID) {
+    if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
-        "You Do Not Have The Permission To Make This Request",
-        "UNAUTHORIZED"
+        "You Are Not Authorized To Update Coupons For This Event",
+        "FORBIDDEN"
       );
     }
 

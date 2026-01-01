@@ -10,7 +10,11 @@ import { AddTicketValidatorSchema } from "@validators/ticket/addTicket.validator
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const addTicket = async (id: string, data: AddTicketValidatorSchema) => {
+const addTicket = async (
+  id: string,
+  ownerID: string,
+  data: AddTicketValidatorSchema
+) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(id, {
@@ -21,7 +25,7 @@ const addTicket = async (id: string, data: AddTicketValidatorSchema) => {
         versionKey: false,
       }),
       OrganizerModel.exists({
-        _id: data.ownerID,
+        _id: ownerID,
       }),
     ]);
 
@@ -33,10 +37,10 @@ const addTicket = async (id: string, data: AddTicketValidatorSchema) => {
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== data.ownerID) {
+    if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
-        "You Do Not Have The Permission To Make This Request",
-        "UNAUTHORIZED"
+        "You Are Not Authorized To Add Tickets For This Event",
+        "FORBIDDEN"
       );
     }
 

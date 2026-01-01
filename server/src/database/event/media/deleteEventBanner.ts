@@ -6,7 +6,7 @@ import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import AppwriteError, { isAppwriteError } from "@utils/AppwriteError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const deleteEventBanner = async (id: string) => {
+const deleteEventBanner = async (id: string, ownerID: string) => {
   try {
     const dbEvent = await EventModel.findById(id, {
       album: 1,
@@ -16,6 +16,13 @@ const deleteEventBanner = async (id: string) => {
 
     if (!dbEvent) {
       throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (dbEvent.ownerID !== ownerID) {
+      throw new ApiError(
+        "You Are Not Authorized To Update This Event",
+        "FORBIDDEN"
+      );
     }
 
     if (!dbEvent.album?.banner) {

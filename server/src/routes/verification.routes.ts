@@ -9,7 +9,7 @@ import {
   _verifyForgotVerification,
 } from "@controllers/verification.controller";
 
-import authorize from "@middlewares/authorize.middleware";
+import { authorizeUser } from "@middlewares/authorize.middleware";
 
 import createAuthVerificationValidator from "@validators/verification/createAuthVerification.validator";
 import createResetVerificationValidator from "@validators/verification/createResetVerification.validator";
@@ -38,7 +38,7 @@ router.post(
 );
 router.post(
   "/reset/verify",
-  authorize,
+  authorizeUser,
   verifyResetVerificationValidator,
   _verifyResetVerification
 );

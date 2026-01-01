@@ -1,12 +1,10 @@
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
 
-import { FetchTicketsValidatorSchema } from "@validators/ticket/fetchTickets.validator";
-
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const fetchTickets = async (id: string, query: FetchTicketsValidatorSchema) => {
+const fetchTickets = async (id: string, ownerID: string) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(id, {
@@ -16,7 +14,7 @@ const fetchTickets = async (id: string, query: FetchTicketsValidatorSchema) => {
         versionKey: false,
       }),
       OrganizerModel.exists({
-        _id: query.ownerID,
+        _id: ownerID,
       }),
     ]);
 
@@ -28,10 +26,10 @@ const fetchTickets = async (id: string, query: FetchTicketsValidatorSchema) => {
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== query.ownerID) {
+    if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
-        "You Do Not Have The Permission To Make This Request",
-        "UNAUTHORIZED"
+        "You Are Not Authorized To Access Tickets For This Event",
+        "FORBIDDEN"
       );
     }
 
