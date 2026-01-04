@@ -1,7 +1,9 @@
 {
   "name": "server",
   "scripts": {
-    "dev": "bun run --hot ./src/server.ts"
+    "dev": "bun run --hot ./src/server.ts",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
   },
   "dependencies": {
     "@hono/zod-validator": "^0.7.3",
