@@ -21,14 +21,14 @@ const registerOrganizer = async (data: RegisterOrganizerValidatorSchema) => {
     if (dbOrganizerWithEmail) {
       throw new ApiError(
         "User With Given Email Address Already Exists",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
     if (dbOrganizerWithMobile) {
       throw new ApiError(
         "User With Given Mobile Number Already Exists",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
@@ -42,7 +42,7 @@ const registerOrganizer = async (data: RegisterOrganizerValidatorSchema) => {
     await newOrganizer.save();
 
     return {
-      email: newOrganizer.email,
+      id: newOrganizer.id,
       verified: newOrganizer.verified,
     };
   } catch (error) {
@@ -56,7 +56,7 @@ const registerOrganizer = async (data: RegisterOrganizerValidatorSchema) => {
 
     throw new ApiError(
       "Unable To Create Account Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

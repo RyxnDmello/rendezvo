@@ -7,7 +7,7 @@ export const ticketScheduleValidatorSchema = z
         .string("Ticket Sales Start Date Must Be YYYY-MM-DD Format")
         .regex(
           /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-          "Ticket Sales Start Date Must Be In YYYY-MM-DD Format"
+          "Ticket Sales Start Date Must Be In YYYY-MM-DD Format",
         )
         .refine((val) => {
           const date = new Date(val);
@@ -18,14 +18,14 @@ export const ticketScheduleValidatorSchema = z
         .string("Ticket Sales Start Time Must Be In The 24 Hour Format")
         .regex(
           /^([01]\d|2[0-3]):([0-5]\d)$/,
-          "Ticket Sales Start Time Must Be In The 24 Hour Format"
+          "Ticket Sales Start Time Must Be In The 24 Hour Format",
         )
         .trim(),
       endDate: z
         .string("Ticket Sales End Date Must Be YYYY-MM-DD Format")
         .regex(
           /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-          "Ticket Sales End Date Must Be In YYYY-MM-DD Format"
+          "Ticket Sales End Date Must Be In YYYY-MM-DD Format",
         )
         .refine((val) => {
           const date = new Date(val);
@@ -36,11 +36,11 @@ export const ticketScheduleValidatorSchema = z
         .string("Ticket Sales End Time Must Be In The 24 Hour Format")
         .regex(
           /^([01]\d|2[0-3]):([0-5]\d)$/,
-          "Ticket Sales End Time Must Be In The 24 Hour Format"
+          "Ticket Sales End Time Must Be In The 24 Hour Format",
         )
         .trim(),
     },
-    "Ticket Schedule Details Must Be Provided"
+    "Ticket Schedule Details Must Be Provided",
   )
   .superRefine((data, ctx) => {
     const { endDate, endTime, startDate, startTime } = data;

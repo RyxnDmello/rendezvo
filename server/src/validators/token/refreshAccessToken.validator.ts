@@ -8,12 +8,12 @@ export const refreshAccessTokenValidatorSchema = z.strictObject(
   {
     role: z.enum(roles, "Invalid Role Provided"),
   },
-  "User Role Must Be Provided"
+  "User Role Must Be Provided",
 );
 
 const refreshAccessTokenValidator = validator(
   "query",
-  refreshAccessTokenValidatorSchema
+  refreshAccessTokenValidatorSchema,
 );
 
 export type RefreshAccessTokenValidatorSchema = z.infer<

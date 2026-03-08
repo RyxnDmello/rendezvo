@@ -6,9 +6,9 @@ export type Type = "auth" | "reset";
 
 export interface Verification {
   id?: string;
+  userID?: string;
   type: Type;
   otp: string;
-  email: string;
   password: string | null;
   expiredAt: Date;
   createdAt?: Date;
@@ -17,6 +17,12 @@ export interface Verification {
 
 const verificationSchema = new Schema<Verification>(
   {
+    userID: {
+      type: Schema.Types.String,
+      required: [true, "Event Owner ID Must Be Provided"],
+      index: true,
+      trim: true,
+    },
     otp: {
       type: Schema.Types.String,
       required: [true, "OTP Must Be Provided"],
@@ -35,15 +41,6 @@ const verificationSchema = new Schema<Verification>(
         values: ["auth", "reset"],
         message: "Invalid Verification Type",
       },
-    },
-    email: {
-      type: Schema.Types.String,
-      required: [true, "Email Must Be Provided"],
-      lowercase: true,
-      index: true,
-      trim: true,
-      minLength: [10, "Email Must Be A Minimum Of 10 Characters"],
-      maxLength: [250, "Email Must Be A Maximum Of 250 Characters"],
     },
     password: {
       type: Schema.Types.String,
@@ -64,7 +61,7 @@ const verificationSchema = new Schema<Verification>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const VerificationModel = model("verification", verificationSchema);

@@ -21,7 +21,7 @@ const deleteEventMedia = async (id: string, ownerID: string) => {
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -47,7 +47,7 @@ const deleteEventMedia = async (id: string, ownerID: string) => {
         },
         {
           runValidators: true,
-        }
+        },
       ),
       Promise.all([
         dbEvent.album?.cover ? deleteCover(id) : undefined,
@@ -58,7 +58,7 @@ const deleteEventMedia = async (id: string, ownerID: string) => {
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Delete Media Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -80,7 +80,7 @@ const deleteEventMedia = async (id: string, ownerID: string) => {
 
     throw new ApiError(
       "Unable To Delete Media Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

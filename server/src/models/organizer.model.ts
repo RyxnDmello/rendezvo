@@ -86,7 +86,7 @@ const organizerSchema = new Schema<Organizer>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const OrganizerModel = model("organizer", organizerSchema);

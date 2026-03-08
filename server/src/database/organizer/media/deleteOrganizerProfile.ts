@@ -39,7 +39,7 @@ const deleteOrganizerProfile = async (id: string) => {
         },
         {
           runValidators: true,
-        }
+        },
       ),
       deleteProfile(id),
     ]);
@@ -47,7 +47,7 @@ const deleteOrganizerProfile = async (id: string) => {
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Delete Profile Image Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -69,7 +69,7 @@ const deleteOrganizerProfile = async (id: string) => {
 
     throw new ApiError(
       "Unable To Delete Profile Image Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

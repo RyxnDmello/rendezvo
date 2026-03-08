@@ -21,12 +21,12 @@ const uploadEventImageValidatorSchema = z.strictObject(
       .max(5 * 1024 * 1024, "Event Image Cannot Exceed 5MB")
       .refine((file) => TYPES.includes(file.type), "Invalid Event Image Type"),
   },
-  "Only Event Image Must Be Provided"
+  "Only Event Image Must Be Provided",
 );
 
 const uploadEventImageValidator = validator(
   "form",
-  uploadEventImageValidatorSchema
+  uploadEventImageValidatorSchema,
 );
 
 export type UploadEventImageValidatorSchema = z.infer<

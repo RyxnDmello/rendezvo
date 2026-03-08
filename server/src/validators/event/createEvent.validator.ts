@@ -22,7 +22,7 @@ const createEventValidatorSchema = z
       rsvp: eventRsvpValidatorSchema.optional(),
       security: eventSecurityValidatorSchema.optional(),
     },
-    "Event Details Must Be Provided"
+    "Event Details Must Be Provided",
   )
   .superRefine((values, ctx) => {
     const { attendance, visibility, rsvp, security } = values;

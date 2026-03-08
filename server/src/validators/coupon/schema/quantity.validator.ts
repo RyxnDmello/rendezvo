@@ -7,7 +7,7 @@ export const couponQuantityValidatorSchema = z.strictObject(
       .min(1, "Coupon Quantity Must Be A Minimum Of 1")
       .max(500, "Coupon Quantity Must Be A Maximum Of 500"),
   },
-  "Coupon Quantity Details Must Be Provided"
+  "Coupon Quantity Details Must Be Provided",
 );
 
 export type CouponQuantityValidatorSchema = z.infer<

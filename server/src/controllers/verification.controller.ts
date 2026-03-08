@@ -1,3 +1,5 @@
+import { Context } from "hono";
+
 import createAuthVerification from "@database/verification/createAuthVerification";
 import createResetVerification from "@database/verification/createResetVerification";
 import createForgotVerification from "@database/verification/createForgotVerification";
@@ -6,9 +8,7 @@ import verifyAuthVerification from "@database/verification/verifyAuthVerificatio
 import verifyResetVerification from "@database/verification/verifyResetVerification";
 import verifyForgotVerification from "@database/verification/verifyForgotVerification";
 
-import { CreateAuthVerificationContext } from "@validators/verification/createAuthVerification.validator";
 import { CreateResetVerificationContext } from "@validators/verification/createResetVerification.validator";
-import { CreateForgotVerificationContext } from "@validators/verification/createForgotVerification.validator";
 
 import { VerifyAuthVerificationContext } from "@validators/verification/verifyAuthVerification.validator";
 import { VerifyResetVerificationContext } from "@validators/verification/verifyResetVerification.validator";
@@ -16,15 +16,38 @@ import { VerifyForgotVerificationContext } from "@validators/verification/verify
 
 import { setSessionCookie } from "@database/organizer/helpers/cookie";
 
-import { ApiErrorResponse } from "@utils/ApiError";
+import { ApiErrorResponse, ApiErrorCustomResponse } from "@utils/ApiError";
 
-export const _createAuthVerification = async (
-  ctx: CreateAuthVerificationContext
-) => {
-  const { email } = ctx.req.valid("json");
+export const _createAuthVerification = async (ctx: Context) => {
+  const id = ctx.req.param("id");
+
+  if (!id) {
+    return ApiErrorCustomResponse(ctx, {
+      error: "User ID Must Be Provided",
+      code: "BAD_REQUEST",
+    });
+  }
 
   try {
-    const result = await createAuthVerification(email);
+    const result = await createAuthVerification(id);
+    return ctx.json(result, 200);
+  } catch (error) {
+    return ApiErrorResponse(ctx, error);
+  }
+};
+
+export const _createForgotVerification = async (ctx: Context) => {
+  const id = ctx.req.param("id");
+
+  if (!id) {
+    return ApiErrorCustomResponse(ctx, {
+      error: "User ID Must Be Provided",
+      code: "BAD_REQUEST",
+    });
+  }
+
+  try {
+    const result = await createForgotVerification(id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -32,25 +55,14 @@ export const _createAuthVerification = async (
 };
 
 export const _createResetVerification = async (
-  ctx: CreateResetVerificationContext
+  ctx: CreateResetVerificationContext,
 ) => {
+  const user = ctx.get("user");
+
   const data = ctx.req.valid("json");
 
   try {
-    const result = await createResetVerification(data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
-  }
-};
-
-export const _createForgotVerification = async (
-  ctx: CreateForgotVerificationContext
-) => {
-  const { email } = ctx.req.valid("json");
-
-  try {
-    const result = await createForgotVerification(email);
+    const result = await createResetVerification(user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -58,12 +70,24 @@ export const _createForgotVerification = async (
 };
 
 export const _verifyAuthVerification = async (
-  ctx: VerifyAuthVerificationContext
+  ctx: VerifyAuthVerificationContext,
 ) => {
+  const id = ctx.req.param("id");
+
+  if (!id) {
+    return ApiErrorCustomResponse(ctx, {
+      error: "User ID Must Be Provided",
+      code: "BAD_REQUEST",
+    });
+  }
+
   const data = ctx.req.valid("json");
 
   try {
-    const { refreshToken, ...organizer } = await verifyAuthVerification(data);
+    const { refreshToken, ...organizer } = await verifyAuthVerification(
+      id,
+      data,
+    );
 
     if (refreshToken) {
       await setSessionCookie(ctx, refreshToken);
@@ -75,26 +99,37 @@ export const _verifyAuthVerification = async (
   }
 };
 
-export const _verifyResetVerification = async (
-  ctx: VerifyResetVerificationContext
+export const _verifyForgotVerification = async (
+  ctx: VerifyForgotVerificationContext,
 ) => {
+  const id = ctx.req.param("id");
+
+  if (!id) {
+    return ApiErrorCustomResponse(ctx, {
+      error: "User ID Must Be Provided",
+      code: "BAD_REQUEST",
+    });
+  }
+
   const data = ctx.req.valid("json");
 
   try {
-    const result = await verifyResetVerification(data);
+    const result = await verifyForgotVerification(id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
   }
 };
 
-export const _verifyForgotVerification = async (
-  ctx: VerifyForgotVerificationContext
+export const _verifyResetVerification = async (
+  ctx: VerifyResetVerificationContext,
 ) => {
+  const user = ctx.get("user");
+
   const data = ctx.req.valid("json");
 
   try {
-    const result = await verifyForgotVerification(data);
+    const result = await verifyResetVerification(user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);

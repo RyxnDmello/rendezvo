@@ -25,12 +25,12 @@ const uploadEventMediaValidatorSchema = z.strictObject(
       .max(5 * 1024 * 1024, "Banner Image Cannot Exceed 5MB")
       .refine((file) => TYPES.includes(file.type), "Invalid Banner Image Type"),
   },
-  "Only Organizer Media Must Be Provided"
+  "Only Organizer Media Must Be Provided",
 );
 
 const uploadEventMediaValidator = validator(
   "form",
-  uploadEventMediaValidatorSchema
+  uploadEventMediaValidatorSchema,
 );
 
 export type UploadEventMediaValidatorSchema = z.infer<

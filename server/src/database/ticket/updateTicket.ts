@@ -3,6 +3,8 @@ import { Schedule } from "@schemas/event/schedule.schema";
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
 
+import { clearCachedTicket, clearCachedTickets } from "./helpers/redis";
+
 import { UpdateTicketValidatorSchema } from "@validators/ticket/updateTicket.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
@@ -10,13 +12,13 @@ import ApiError, { isApiError } from "@utils/ApiError";
 
 const updateTicket = async (
   id: string,
-  ticketID: string,
+  eventID: string,
   ownerID: string,
-  data: UpdateTicketValidatorSchema
+  data: UpdateTicketValidatorSchema,
 ) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
-      EventModel.findById(id, {
+      EventModel.findById(eventID, {
         ownerID: 1,
         tickets: 1,
         schedule: 1,
@@ -39,7 +41,7 @@ const updateTicket = async (
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update Tickets For This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -47,7 +49,7 @@ const updateTicket = async (
       throw new ApiError("Event With Given ID Has No Tickets", "BAD_REQUEST");
     }
 
-    const index = dbEvent.tickets.findIndex((ticket) => ticket.id === ticketID);
+    const index = dbEvent.tickets.findIndex((ticket) => ticket.id === id);
 
     if (index === -1) {
       throw new ApiError("Ticket With Given ID Does Not Exist", "BAD_REQUEST");
@@ -66,7 +68,7 @@ const updateTicket = async (
         if (exists) {
           throw new ApiError(
             "Ticket With Given Name Already Exists",
-            "VALIDATION_ERROR"
+            "VALIDATION_ERROR",
           );
         }
 
@@ -90,7 +92,7 @@ const updateTicket = async (
       if (increment < 1) {
         throw new ApiError(
           "Ticket Quantity Must Be Greater Than The Current Quantity",
-          "BAD_REQUEST"
+          "BAD_REQUEST",
         );
       }
 
@@ -121,7 +123,7 @@ const updateTicket = async (
 
     const { acknowledged, modifiedCount } = await EventModel.updateOne(
       {
-        _id: id,
+        _id: eventID,
       },
       {
         $set: {
@@ -130,15 +132,20 @@ const updateTicket = async (
       },
       {
         runValidators: true,
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Update Ticket Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
+
+    await Promise.all([
+      clearCachedTickets(eventID, ownerID),
+      clearCachedTicket(eventID, eventID, ownerID),
+    ]);
 
     return {
       success: true,
@@ -154,23 +161,23 @@ const updateTicket = async (
 
     throw new ApiError(
       "Unable To Update Ticket Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };
 
 const validateSchedule = (
   eventSchedule: Schedule,
-  ticketSchedule: UpdateTicketValidatorSchema["schedule"]
+  ticketSchedule: UpdateTicketValidatorSchema["schedule"],
 ) => {
   const ticketStartDate = combine(
     new Date(ticketSchedule!.startDate),
-    ticketSchedule!.startTime
+    ticketSchedule!.startTime,
   );
 
   const ticketEndDate = combine(
     new Date(ticketSchedule!.endDate),
-    ticketSchedule!.endTime
+    ticketSchedule!.endTime,
   );
 
   if (eventSchedule.type === "custom") {
@@ -182,14 +189,14 @@ const validateSchedule = (
     if (ticketStartDate > eventStartDate) {
       throw new ApiError(
         "Ticket Sales Start Date Must Be Set Before The Event Start Date",
-        "VALIDATION_ERROR"
+        "VALIDATION_ERROR",
       );
     }
 
     if (ticketEndDate > eventEndDate) {
       throw new ApiError(
         "Ticket Sales End Date Must Be Set Before The Event End Date",
-        "VALIDATION_ERROR"
+        "VALIDATION_ERROR",
       );
     }
 
@@ -199,25 +206,25 @@ const validateSchedule = (
   if (!eventSchedule.slots) {
     const eventStartDate = combine(
       eventSchedule.startDate!,
-      eventSchedule.startTime!
+      eventSchedule.startTime!,
     );
 
     const eventEndDate = combine(
       eventSchedule.endDate!,
-      eventSchedule.endTime!
+      eventSchedule.endTime!,
     );
 
     if (ticketStartDate > eventStartDate) {
       throw new ApiError(
         "Ticket Sales Start Date Must Be Set Before The Event Start Date",
-        "VALIDATION_ERROR"
+        "VALIDATION_ERROR",
       );
     }
 
     if (ticketEndDate > eventEndDate) {
       throw new ApiError(
         "Ticket Sales End Date Must Be Set Before The Event End Date",
-        "VALIDATION_ERROR"
+        "VALIDATION_ERROR",
       );
     }
 
@@ -226,25 +233,25 @@ const validateSchedule = (
 
   const eventStartDate = combine(
     eventSchedule.startDate!,
-    eventSchedule.slots[0]!.startTime
+    eventSchedule.slots[0]!.startTime,
   );
 
   const eventEndDate = combine(
     eventSchedule.endDate!,
-    eventSchedule.slots[eventSchedule.slots.length - 1]!.endTime
+    eventSchedule.slots[eventSchedule.slots.length - 1]!.endTime,
   );
 
   if (ticketStartDate > eventStartDate) {
     throw new ApiError(
       "Ticket Sales Start Date Must Be Set Before The Event Start Date",
-      "VALIDATION_ERROR"
+      "VALIDATION_ERROR",
     );
   }
 
   if (ticketEndDate > eventEndDate) {
     throw new ApiError(
       "Ticket Sales End Date Must Be Set Before The Event End Date",
-      "VALIDATION_ERROR"
+      "VALIDATION_ERROR",
     );
   }
 };

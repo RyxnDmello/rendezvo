@@ -5,18 +5,12 @@ import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 export const createResetVerificationValidatorSchema = z
   .strictObject(
     {
-      email: z
-        .email("Email Must Be A Valid Email Address")
-        .min(10, "Email Must Be A Minimum Of 10 Characters")
-        .max(250, "Email Must Be A Maximum Of 250 Characters")
-        .lowercase("Email Must Be Lowercase")
-        .trim(),
       password: z
         .string("Password Must Be A String Or Phrase")
         .min(8, "Password Must Be A Minimum Of 8 Characters")
         .regex(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,50}$/,
-          "Password Must Contain At Least 1 Lowercase, 1 Uppercase, 1 Digit, And 1 Special Character"
+          "Password Must Contain At Least 1 Lowercase, 1 Uppercase, 1 Digit, And 1 Special Character",
         )
         .max(50, "Password Must Be A Maximum Of 50 Characters")
         .trim(),
@@ -25,12 +19,12 @@ export const createResetVerificationValidatorSchema = z
         .min(8, "Password Must Be A Minimum Of 8 Characters")
         .regex(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,50}$/,
-          "Password Must Contain At Least 1 Lowercase, 1 Uppercase, 1 Digit, And 1 Special Character"
+          "Password Must Contain At Least 1 Lowercase, 1 Uppercase, 1 Digit, And 1 Special Character",
         )
         .max(50, "Password Must Be A Maximum Of 50 Characters")
         .trim(),
     },
-    "Only Email, Password, And New Password Must Be Provided"
+    "Only Password And New Password Must Be Provided",
   )
   .refine((data) => {
     return data.password !== data.newPassword;
@@ -38,7 +32,7 @@ export const createResetVerificationValidatorSchema = z
 
 const createResetVerificationValidator = validator(
   "json",
-  createResetVerificationValidatorSchema
+  createResetVerificationValidatorSchema,
 );
 
 export type CreateResetVerificationValidatorSchema = z.infer<

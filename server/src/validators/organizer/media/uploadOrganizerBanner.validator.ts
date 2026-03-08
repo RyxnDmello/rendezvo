@@ -11,12 +11,12 @@ const uploadOrganizerBannerValidatorSchema = z.strictObject(
         return ["image/png", "image/jpeg"].includes(file.type);
       }, "Invalid Banner Image Type"),
   },
-  "Only Organizer Banner Image Must Be Provided"
+  "Only Organizer Banner Image Must Be Provided",
 );
 
 const uploadOrganizerBannerValidator = validator(
   "form",
-  uploadOrganizerBannerValidatorSchema
+  uploadOrganizerBannerValidatorSchema,
 );
 
 export type UploadOrganizerBannerValidatorSchema = z.infer<

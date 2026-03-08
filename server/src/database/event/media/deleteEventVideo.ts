@@ -11,7 +11,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 const deleteEventVideo = async (
   id: string,
   ownerID: string,
-  data: DeleteEventVideoValidatorSchema
+  data: DeleteEventVideoValidatorSchema,
 ) => {
   try {
     const dbEvent = await EventModel.findById(id, {
@@ -27,7 +27,7 @@ const deleteEventVideo = async (
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -38,13 +38,13 @@ const deleteEventVideo = async (
     }
 
     const videos = dbEvent.album.videos.filter(
-      (image) => image.id !== getVideoID(id, data.index)
+      (image) => image.id !== getVideoID(id, data.index),
     );
 
     if (dbEvent.album.videos.length === videos.length) {
       throw new ApiError(
         "Event Video With Given Index Does Not Exist",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
@@ -60,7 +60,7 @@ const deleteEventVideo = async (
         },
         {
           runValidators: true,
-        }
+        },
       ),
       deleteVideo(id, data.index),
     ]);
@@ -68,7 +68,7 @@ const deleteEventVideo = async (
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Delete Event Video Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -90,7 +90,7 @@ const deleteEventVideo = async (
 
     throw new ApiError(
       "Unable To Delete Event Video Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

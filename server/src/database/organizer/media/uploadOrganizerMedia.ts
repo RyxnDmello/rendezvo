@@ -15,7 +15,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 
 const uploadOrganizerMedia = async (
   id: string,
-  data: UploadOrganizerMediaValidatorSchema
+  data: UploadOrganizerMediaValidatorSchema,
 ) => {
   try {
     const dbOrganizer = await OrganizerModel.findById(id, {
@@ -58,13 +58,13 @@ const uploadOrganizerMedia = async (
       },
       {
         runValidators: true,
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Upload Media Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -86,7 +86,7 @@ const uploadOrganizerMedia = async (
 
     throw new ApiError(
       "Unable To Upload Media Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

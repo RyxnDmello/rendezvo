@@ -15,7 +15,7 @@ export const couponPricingValidatorSchema = z
         .min(1, "Coupon Discount Limit Cannot Be Less Than 1")
         .optional(),
     },
-    "Coupon Pricing Details Must Be Provided"
+    "Coupon Pricing Details Must Be Provided",
   )
   .superRefine((values, ctx) => {
     const { type, amount, limit } = values;

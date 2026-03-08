@@ -11,7 +11,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 const uploadEventVideo = async (
   id: string,
   ownerID: string,
-  data: UploadEventVideoValidatorSchema
+  data: UploadEventVideoValidatorSchema,
 ) => {
   try {
     const dbEvent = await EventModel.findById(id, {
@@ -27,14 +27,14 @@ const uploadEventVideo = async (
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
     if (dbEvent.album?.videos?.length === 5) {
       throw new ApiError(
         "An Event Can Have A Maximum Of 5 Videos",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
@@ -81,13 +81,13 @@ const uploadEventVideo = async (
             videos,
           },
         },
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Upload Event Video Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -109,7 +109,7 @@ const uploadEventVideo = async (
 
     throw new ApiError(
       "Unable To Upload Event Video Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

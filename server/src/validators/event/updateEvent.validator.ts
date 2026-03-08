@@ -14,7 +14,7 @@ const updateEventValidatorSchema = z
     {
       action: z.enum(
         ["basic", "address", "schedule", "policy", "rsvp", "security"],
-        "Provide The Specific Action You Need To Perform"
+        "Provide The Specific Action You Need To Perform",
       ),
       rsvp: eventRsvpValidatorSchema.optional(),
       basic: eventBasicValidatorSchema.optional(),
@@ -23,7 +23,7 @@ const updateEventValidatorSchema = z
       schedule: eventScheduleValidatorSchema.optional(),
       security: eventSecurityValidatorSchema.optional(),
     },
-    "Only The Action And Event Details Must Be Provided"
+    "Only The Action And Event Details Must Be Provided",
   )
   .superRefine((values, ctx) => {
     const { action, ...fields } = values;

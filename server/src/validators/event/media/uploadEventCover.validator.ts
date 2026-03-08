@@ -21,12 +21,12 @@ const uploadEventCoverValidatorSchema = z.strictObject(
       .max(5 * 1024 * 1024, "Cover Image Cannot Exceed 5MB")
       .refine((file) => TYPES.includes(file.type), "Invalid Cover Image Type"),
   },
-  "Only Event Cover Image Must Be Provided"
+  "Only Event Cover Image Must Be Provided",
 );
 
 const uploadEventCoverValidator = validator(
   "form",
-  uploadEventCoverValidatorSchema
+  uploadEventCoverValidatorSchema,
 );
 
 export type UploadEventCoverValidatorSchema = z.infer<

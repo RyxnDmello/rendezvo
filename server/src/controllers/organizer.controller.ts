@@ -83,7 +83,7 @@ export const _updateOrganizer = async (ctx: UpdateOrganizerContext) => {
 };
 
 export const _uploadOrganizerMedia = async (
-  ctx: UploadOrganizerMediaContext
+  ctx: UploadOrganizerMediaContext,
 ) => {
   const user = ctx.get("user");
 
@@ -105,7 +105,7 @@ export const _uploadOrganizerMedia = async (
 };
 
 export const _uploadOrganizerBanner = async (
-  ctx: UploadOrganizerBannerContext
+  ctx: UploadOrganizerBannerContext,
 ) => {
   const user = ctx.get("user");
 
@@ -127,7 +127,7 @@ export const _uploadOrganizerBanner = async (
 };
 
 export const _uploadOrganizerProfile = async (
-  ctx: UploadOrganizerProfileContext
+  ctx: UploadOrganizerProfileContext,
 ) => {
   const user = ctx.get("user");
 

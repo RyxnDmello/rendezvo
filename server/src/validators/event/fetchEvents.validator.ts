@@ -23,7 +23,7 @@ export const fetchEventsValidatorSchema = z.strictObject(
       .optional(),
     name: z.string("Name Must Be A Valid Event Name").trim().optional(),
   },
-  "Invalid Query Params Provided"
+  "Invalid Query Params Provided",
 );
 
 const fetchEventsValidator = validator("query", fetchEventsValidatorSchema);

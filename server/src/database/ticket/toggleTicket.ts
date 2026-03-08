@@ -1,13 +1,15 @@
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
 
+import { clearCachedTicket, clearCachedTickets } from "./helpers/redis";
+
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const toggleTicket = async (id: string, ticketID: string, ownerID: string) => {
+const toggleTicket = async (id: string, eventID: string, ownerID: string) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
-      EventModel.findById(id, {
+      EventModel.findById(eventID, {
         ownerID: 1,
         tickets: 1,
       }).lean({
@@ -29,7 +31,7 @@ const toggleTicket = async (id: string, ticketID: string, ownerID: string) => {
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Toggle Tickets For This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -37,7 +39,7 @@ const toggleTicket = async (id: string, ticketID: string, ownerID: string) => {
       throw new ApiError("Event With Given ID Has No Tickets", "BAD_REQUEST");
     }
 
-    const index = dbEvent.tickets.findIndex((ticket) => ticket.id === ticketID);
+    const index = dbEvent.tickets.findIndex((ticket) => ticket.id === id);
 
     if (index === -1) {
       throw new ApiError("Ticket With Given ID Does Not Exist", "BAD_REQUEST");
@@ -47,7 +49,7 @@ const toggleTicket = async (id: string, ticketID: string, ownerID: string) => {
 
     const { acknowledged, modifiedCount } = await EventModel.updateOne(
       {
-        _id: id,
+        _id: eventID,
       },
       {
         $set: {
@@ -56,15 +58,20 @@ const toggleTicket = async (id: string, ticketID: string, ownerID: string) => {
       },
       {
         runValidators: true,
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Toggle Ticket Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
+
+    await Promise.all([
+      clearCachedTickets(eventID, ownerID),
+      clearCachedTicket(id, eventID, ownerID),
+    ]);
 
     return {
       success: true,
@@ -80,7 +87,7 @@ const toggleTicket = async (id: string, ticketID: string, ownerID: string) => {
 
     throw new ApiError(
       "Unable To Toggle Ticket Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

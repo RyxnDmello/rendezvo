@@ -7,21 +7,20 @@ import { generateOTP } from "@helpers/generator";
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const createForgotVerification = async (email: string) => {
+const createForgotVerification = async (id: string) => {
   try {
     const [dbOrganizer, dbVerification] = await Promise.all([
-      OrganizerModel.exists({ email }),
+      OrganizerModel.exists({
+        _id: id,
+      }),
       VerificationModel.exists({
+        userID: id,
         type: "reset",
-        email,
       }),
     ]);
 
     if (!dbOrganizer) {
-      throw new ApiError(
-        "User With Given Email Address Does Not Exist",
-        "BAD_REQUEST"
-      );
+      throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
     const otp = generateOTP();
@@ -41,7 +40,7 @@ const createForgotVerification = async (email: string) => {
         },
         {
           runValidators: true,
-        }
+        },
       );
 
       return {
@@ -50,9 +49,9 @@ const createForgotVerification = async (email: string) => {
     }
 
     const newVerification = new VerificationModel({
+      userID: id,
       type: "reset",
       otp,
-      email,
       expiredAt: expiry,
     });
 
@@ -72,7 +71,7 @@ const createForgotVerification = async (email: string) => {
 
     throw new ApiError(
       "Unable To Send Verification Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

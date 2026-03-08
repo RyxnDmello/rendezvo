@@ -28,7 +28,7 @@ export const getProfile = async (id: string) => {
 
     throw new ApiError(
       "Unable To Retrieve Profile Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -43,7 +43,7 @@ export const getBanner = async (id: string) => {
 
     throw new ApiError(
       "Unable To Retrieve Banner Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -58,7 +58,7 @@ export const uploadProfile = async (id: string, file: File) => {
 
     throw new ApiError(
       "Unable To Upload Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -73,7 +73,7 @@ export const uploadBanner = async (id: string, file: File) => {
 
     throw new ApiError(
       "Unable To Upload Banner Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -88,7 +88,7 @@ export const updateProfile = async (id: string, file: File) => {
 
     throw new ApiError(
       "Unable To Update Profile Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -103,7 +103,7 @@ export const updateBanner = async (id: string, file: File) => {
 
     throw new ApiError(
       "Unable To Update Banner Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -122,7 +122,7 @@ export const deleteProfile = async (id: string) => {
 
     throw new ApiError(
       "Unable To Delete Profile Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -141,7 +141,7 @@ export const deleteBanner = async (id: string) => {
 
     throw new ApiError(
       "Unable To Delete Banner Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };

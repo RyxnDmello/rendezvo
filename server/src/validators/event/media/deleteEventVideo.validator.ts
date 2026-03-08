@@ -9,12 +9,12 @@ const deleteEventVideoValidatorSchema = z.strictObject(
       .min(1, "Video Index Must Be A Minimum Of 1")
       .max(5, "Video Index Must Be A Maximum Of 5"),
   },
-  "Only Event Event Video Index Must Be Provided"
+  "Only Event Event Video Index Must Be Provided",
 );
 
 const deleteEventVideoValidator = validator(
   "json",
-  deleteEventVideoValidatorSchema
+  deleteEventVideoValidatorSchema,
 );
 
 export type DeleteEventVideoValidatorSchema = z.infer<

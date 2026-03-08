@@ -16,12 +16,12 @@ import { ApiErrorResponse, ApiErrorCustomResponse } from "@utils/ApiError";
 export const _fetchTicket = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const ticketID = ctx.req.param("ticketID");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
@@ -35,7 +35,7 @@ export const _fetchTicket = async (ctx: Context) => {
       });
     }
 
-    const ticket = await fetchTicket(id, ticketID, user.id);
+    const ticket = await fetchTicket(ticketID, eventID, user.id);
     return ctx.json(ticket, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -45,17 +45,17 @@ export const _fetchTicket = async (ctx: Context) => {
 export const _fetchTickets = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const ticket = await fetchTickets(id, user.id);
+    const ticket = await fetchTickets(eventID, user.id);
     return ctx.json(ticket, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -65,19 +65,19 @@ export const _fetchTickets = async (ctx: Context) => {
 export const _addTicket = async (ctx: AddTicketContext) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const data = ctx.req.valid("json");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const result = await addTicket(id, user.id, data);
+    const result = await addTicket(eventID, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -87,14 +87,14 @@ export const _addTicket = async (ctx: AddTicketContext) => {
 export const _updateTicket = async (ctx: UpdateTicketContext) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const ticketID = ctx.req.param("ticketID");
 
   const data = ctx.req.valid("json");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
@@ -108,7 +108,7 @@ export const _updateTicket = async (ctx: UpdateTicketContext) => {
       });
     }
 
-    const result = await updateTicket(id, ticketID, user.id, data);
+    const result = await updateTicket(ticketID, eventID, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -118,12 +118,12 @@ export const _updateTicket = async (ctx: UpdateTicketContext) => {
 export const _toggleTicket = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const ticketID = ctx.req.param("ticketID");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
@@ -137,7 +137,7 @@ export const _toggleTicket = async (ctx: Context) => {
       });
     }
 
-    const result = await toggleTicket(id, ticketID, user.id);
+    const result = await toggleTicket(ticketID, eventID, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -147,12 +147,12 @@ export const _toggleTicket = async (ctx: Context) => {
 export const _deleteTicket = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const ticketID = ctx.req.param("ticketID");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
@@ -166,7 +166,7 @@ export const _deleteTicket = async (ctx: Context) => {
       });
     }
 
-    const result = await deleteTicket(id, ticketID, user.id);
+    const result = await deleteTicket(ticketID, eventID, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);

@@ -15,17 +15,17 @@ export const loginOrganizerValidatorSchema = z.strictObject(
       .min(8, "Password Must Be A Minimum Of 8 Characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,50}$/,
-        "Password Must Contain At Least 1 Lowercase, 1 Uppercase, 1 Digit, And 1 Special Character"
+        "Password Must Contain At Least 1 Lowercase, 1 Uppercase, 1 Digit, And 1 Special Character",
       )
       .max(50, "Password Must Be A Maximum Of 50 Characters")
       .trim(),
   },
-  "Only Email And Password Must Be Provided"
+  "Only Email And Password Must Be Provided",
 );
 
 const loginOrganizerValidator = validator(
   "json",
-  loginOrganizerValidatorSchema
+  loginOrganizerValidatorSchema,
 );
 
 export type LoginOrganizerValidatorSchema = z.infer<

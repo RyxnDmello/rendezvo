@@ -7,7 +7,7 @@ export const ticketQuantityValidatorSchema = z.strictObject(
       .min(1, "Ticket Quantity Must Be A Minimum Of 1")
       .max(500, "Ticket Quantity Must Be A Maximum Of 500"),
   },
-  "Ticket Quantity Details Must Be Provided"
+  "Ticket Quantity Details Must Be Provided",
 );
 
 export type TicketQuantityValidatorSchema = z.infer<

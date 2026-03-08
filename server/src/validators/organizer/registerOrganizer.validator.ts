@@ -21,7 +21,7 @@ export const registerOrganizerValidatorSchema = z.strictObject(
       .positive("Mobile Number Must Be A Valid 10 Digit Number")
       .refine(
         (value) => ["6", "7", "8", "9"].includes(value.toString()[0]!),
-        "Mobile Number Must Start With 6, 7, 8, Or 9"
+        "Mobile Number Must Start With 6, 7, 8, Or 9",
       )
       .min(6000000000, "Mobile Number Must Be 10 Digits")
       .max(9999999999, "Mobile Number Must Be 10 Digits"),
@@ -30,17 +30,17 @@ export const registerOrganizerValidatorSchema = z.strictObject(
       .min(8, "Password Must Be A Minimum Of 8 Characters")
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,50}$/,
-        "Password Must Contain At Least 1 Lowercase, 1 Uppercase, 1 Digit, And 1 Special Character"
+        "Password Must Contain At Least 1 Lowercase, 1 Uppercase, 1 Digit, And 1 Special Character",
       )
       .max(50, "Password Must Be A Maximum Of 50 Characters")
       .trim(),
   },
-  "Only Name, Email, Mobile, And Password Must Be Provided"
+  "Only Name, Email, Mobile, And Password Must Be Provided",
 );
 
 const registerOrganizerValidator = validator(
   "json",
-  registerOrganizerValidatorSchema
+  registerOrganizerValidatorSchema,
 );
 
 export type RegisterOrganizerValidatorSchema = z.infer<

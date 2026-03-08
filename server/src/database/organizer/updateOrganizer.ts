@@ -1,5 +1,7 @@
 import OrganizerModel from "@models/organizer.model";
 
+import { clearCachedOrganizer } from "./helpers/redis";
+
 import { UpdateOrganizerValidatorSchema } from "@validators/organizer/updateOrganizer.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
@@ -7,7 +9,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 
 const updateOrganizer = async (
   id: string,
-  data: UpdateOrganizerValidatorSchema
+  data: UpdateOrganizerValidatorSchema,
 ) => {
   try {
     const dbOrganizer = await OrganizerModel.findOne(
@@ -17,7 +19,7 @@ const updateOrganizer = async (
       {
         mobile: 1,
         verified: 1,
-      }
+      },
     ).lean({
       versionKey: false,
     });
@@ -29,7 +31,7 @@ const updateOrganizer = async (
     if (!dbOrganizer.verified) {
       throw new ApiError(
         "Unable To Proceed Since Account Has Not Been Verified",
-        "ACCOUNT_LOCKED"
+        "ACCOUNT_LOCKED",
       );
     }
 
@@ -41,7 +43,7 @@ const updateOrganizer = async (
       if (dbOrganizerWithMobile) {
         throw new ApiError(
           "User With Given Mobile Number Already Exists",
-          "BAD_REQUEST"
+          "BAD_REQUEST",
         );
       }
     }
@@ -50,15 +52,17 @@ const updateOrganizer = async (
       {
         _id: dbOrganizer._id,
       },
-      data
+      data,
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Update User Due To Server",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
+
+    await clearCachedOrganizer(dbOrganizer._id.toString());
 
     return {
       success: true,
@@ -74,7 +78,7 @@ const updateOrganizer = async (
 
     throw new ApiError(
       "Unable To Update User Due To Server",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

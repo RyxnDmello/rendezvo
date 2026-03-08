@@ -1,13 +1,15 @@
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
 
+import { clearCachedCoupon, clearCachedCoupons } from "./helpers/redis";
+
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const deleteCoupon = async (id: string, couponID: string, ownerID: string) => {
+const deleteCoupon = async (id: string, eventID: string, ownerID: string) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
-      EventModel.findById(id, {
+      EventModel.findById(eventID, {
         ownerID: 1,
         coupons: 1,
       }).lean({
@@ -29,7 +31,7 @@ const deleteCoupon = async (id: string, couponID: string, ownerID: string) => {
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Delete Coupons From This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -37,7 +39,7 @@ const deleteCoupon = async (id: string, couponID: string, ownerID: string) => {
       throw new ApiError("Event With Given ID Has No Coupons", "BAD_REQUEST");
     }
 
-    const coupon = dbEvent.coupons.find((coupon) => coupon.id === couponID);
+    const coupon = dbEvent.coupons.find((coupon) => coupon.id === id);
 
     if (!coupon) {
       throw new ApiError("Coupon With Given ID Does Not Exist", "BAD_REQUEST");
@@ -46,39 +48,44 @@ const deleteCoupon = async (id: string, couponID: string, ownerID: string) => {
     if (coupon.active) {
       throw new ApiError(
         "Coupon Must Be Set As Inactive Before Deletion",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
     if (coupon.quantity.used !== 0) {
       throw new ApiError(
         "Coupon Cannot Be Deleted Since Coupons Have Been Used",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
     const { acknowledged, modifiedCount } = await EventModel.updateOne(
       {
-        _id: id,
+        _id: eventID,
       },
       {
         $pull: {
           coupons: {
-            id: couponID,
+            id: id,
           },
         },
       },
       {
         runValidators: true,
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Delete Coupon Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
+
+    await Promise.all([
+      clearCachedCoupons(eventID, ownerID),
+      clearCachedCoupon(id, eventID, ownerID),
+    ]);
 
     return {
       success: true,
@@ -94,7 +101,7 @@ const deleteCoupon = async (id: string, couponID: string, ownerID: string) => {
 
     throw new ApiError(
       "Unable To Delete Coupon Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

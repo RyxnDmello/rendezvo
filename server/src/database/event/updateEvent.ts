@@ -2,13 +2,15 @@ import EventModel, { Event } from "@models/event.model";
 
 import { UpdateEventValidatorSchema } from "@validators/event/updateEvent.validator";
 
+import { clearCachedEvent, clearCachedEvents } from "./helpers/redis";
+
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
 const updateEvent = async (
   id: string,
   ownerID: string,
-  data: UpdateEventValidatorSchema
+  data: UpdateEventValidatorSchema,
 ) => {
   try {
     const dbEvent = await EventModel.findById(id, {
@@ -25,7 +27,7 @@ const updateEvent = async (
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -35,9 +37,14 @@ const updateEvent = async (
       if (dbEvent.attendance === "open") {
         throw new ApiError(
           "Open Attendance Events Cannot Have RSVP Details",
-          "BAD_REQUEST"
+          "BAD_REQUEST",
         );
       }
+
+      await Promise.all([
+        clearCachedEvents(ownerID),
+        clearCachedEvent(id, ownerID),
+      ]);
 
       return await updateRsvp(id, dbEvent, data);
     }
@@ -46,9 +53,14 @@ const updateEvent = async (
       if (dbEvent.visibility === "public") {
         throw new ApiError(
           "Public Visibility Events Cannot Have Security Codes",
-          "BAD_REQUEST"
+          "BAD_REQUEST",
         );
       }
+
+      await Promise.all([
+        clearCachedEvents(ownerID),
+        clearCachedEvent(id, ownerID),
+      ]);
 
       return await updateSecurity(id, dbEvent, data);
     }
@@ -64,15 +76,20 @@ const updateEvent = async (
       },
       {
         runValidators: true,
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Update Event Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
+
+    await Promise.all([
+      clearCachedEvents(ownerID),
+      clearCachedEvent(id, ownerID),
+    ]);
 
     return {
       success: true,
@@ -88,7 +105,7 @@ const updateEvent = async (
 
     throw new ApiError(
       "Unable To Update Event Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };
@@ -96,14 +113,14 @@ const updateEvent = async (
 const updateRsvp = async (
   id: string,
   event: Event,
-  data: UpdateEventValidatorSchema
+  data: UpdateEventValidatorSchema,
 ) => {
   const prevFields = new Map(
-    event.rsvp!.fields.map((field) => [field.name, field])
+    event.rsvp!.fields.map((field) => [field.name, field]),
   );
 
   const newFields = new Map(
-    data.rsvp!.fields.map((field) => [field.name, field])
+    data.rsvp!.fields.map((field) => [field.name, field]),
   );
 
   for (const [name, newField] of newFields) {
@@ -143,13 +160,13 @@ const updateRsvp = async (
     },
     {
       runValidators: true,
-    }
+    },
   );
 
   if (!acknowledged || modifiedCount !== 1) {
     throw new ApiError(
       "Unable To Update Event Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 
@@ -161,14 +178,14 @@ const updateRsvp = async (
 const updateSecurity = async (
   id: string,
   event: Event,
-  data: UpdateEventValidatorSchema
+  data: UpdateEventValidatorSchema,
 ) => {
   const prevCodes = new Map(
-    event.security!.codes.map((code) => [code.code, code])
+    event.security!.codes.map((code) => [code.code, code]),
   );
 
   const newCodes = new Map(
-    data.security!.codes.map((code) => [code.code, code])
+    data.security!.codes.map((code) => [code.code, code]),
   );
 
   for (const [code, newCode] of newCodes) {
@@ -194,13 +211,13 @@ const updateSecurity = async (
     },
     {
       runValidators: true,
-    }
+    },
   );
 
   if (!acknowledged || modifiedCount !== 1) {
     throw new ApiError(
       "Unable To Update Event Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 

@@ -182,7 +182,7 @@ const eventSchema = new Schema<Event>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const EventModel = model("event", eventSchema);

@@ -10,7 +10,7 @@ type Target = keyof ValidationTargets;
 
 type ValidatorMiddleware<
   T extends Target,
-  S extends z.ZodType
+  S extends z.ZodType,
 > = MiddlewareHandler<
   Env,
   string,
@@ -27,14 +27,14 @@ export type ValidatorContext<T> = T extends (
     ? Parameters<T>[0]
     : never
   : T extends (arg: infer First, ...rest: any) => any
-  ? First extends Context
-    ? First
-    : never
-  : T extends { (...args: infer P): any }
-  ? P[0] extends Context
-    ? P[0]
-    : never
-  : never;
+    ? First extends Context
+      ? First
+      : never
+    : T extends { (...args: infer P): any }
+      ? P[0] extends Context
+        ? P[0]
+        : never
+      : never;
 
 const validator = <T extends Target, S extends z.ZodType>(t: T, s: S) => {
   const handler = zValidator(t, s, (result, ctx) => {

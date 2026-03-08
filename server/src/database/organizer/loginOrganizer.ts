@@ -21,7 +21,7 @@ const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
         mobile: 1,
         password: 1,
         verified: 1,
-      }
+      },
     ).lean({
       versionKey: false,
     });
@@ -29,14 +29,14 @@ const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
     if (!dbOrganizer) {
       throw new ApiError(
         "User With Given Email Address Does Not Exist",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
     if (!dbOrganizer.password) {
       throw new ApiError(
         "Please Try A Different Method To Login",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
@@ -54,7 +54,7 @@ const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
     }
 
     const { accessToken, refreshToken } = await createTokens(
-      dbOrganizer._id.toString()
+      dbOrganizer._id.toString(),
     );
 
     return {
@@ -77,7 +77,7 @@ const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
 
     throw new ApiError(
       "Unable To Login Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

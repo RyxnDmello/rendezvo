@@ -9,7 +9,7 @@ export const ticketPricingValidatorSchema = z.strictObject(
       .number("Ticket Cover Charge Must Be A Valid Number")
       .min(0, "Ticket Cover Charge Must Be A Minimum Of 0"),
   },
-  "Ticket Pricing Details Must Be Provided"
+  "Ticket Pricing Details Must Be Provided",
 );
 
 export type TicketPricingValidatorSchema = z.infer<

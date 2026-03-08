@@ -8,7 +8,7 @@ const globalValidatorSchema = z.strictObject(
       .max(9999, "Port Must Be Between 3000 And 9999")
       .default(8080),
   },
-  "Global Environment Variables Are Missing"
+  "Global Environment Variables Are Missing",
 );
 
 const secretValidatorSchema = z.strictObject(
@@ -50,7 +50,21 @@ const secretValidatorSchema = z.strictObject(
       .min(32, "Refresh Token Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Refresh Token Secret Must Be A Maximum Of 64 Characters"),
   },
-  "Secret Environment Variables Are Missing"
+  "Secret Environment Variables Are Missing",
+);
+
+const redisValidatorSchema = z.strictObject(
+  {
+    REDIS_PORT: z.coerce
+      .number("Redis Port Must Be A Valid Number")
+      .min(3000, "Redis Port Must Be Between 3000 And 9999")
+      .max(9999, "Redis Port Must Be Between 3000 And 9999")
+      .default(6379),
+    REDIS_HOST: z.string("Redis Host Must Be A Valid Host"),
+    REDIS_USERNAME: z.string("Redis Username Must Be A Valid Username"),
+    REDIS_PASSWORD: z.string("Redis Password Must Be A Valid Password"),
+  },
+  "Redis Environment Variables Are Missing",
 );
 
 const mongodbValidatorSchema = z.strictObject(
@@ -59,7 +73,7 @@ const mongodbValidatorSchema = z.strictObject(
     MONGODB_APP: z.string("MongoDB App Must Be A Valid App"),
     MONGODB_DATABASE: z.string("MongoDB Database Must Be A Valid Database"),
   },
-  "MongoDB Environment Variables Are Missing"
+  "MongoDB Environment Variables Are Missing",
 );
 
 const appwriteValidatorSchema = z.strictObject(
@@ -69,7 +83,7 @@ const appwriteValidatorSchema = z.strictObject(
     APPWRITE_API_KEY: z.string("Appwrite API Key Must Be A Valid API Key"),
     APPWRITE_STORAGE_ID: z.string("Appwrite Storage ID Must Be A Valid ID"),
   },
-  "MongoDB Environment Variables Are Missing"
+  "MongoDB Environment Variables Are Missing",
 );
 
 const envValidatorSchema = z
@@ -77,10 +91,11 @@ const envValidatorSchema = z
     {
       GLOBAL: globalValidatorSchema,
       SECRET: secretValidatorSchema,
+      REDIS: redisValidatorSchema,
       MONGODB: mongodbValidatorSchema,
       APPWRITE: appwriteValidatorSchema,
     },
-    "Environment Variables Are Missing"
+    "Environment Variables Are Missing",
   )
   .superRefine((values, ctx) => {
     const {

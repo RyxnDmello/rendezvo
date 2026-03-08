@@ -11,12 +11,12 @@ const uploadOrganizerProfileValidatorSchema = z.strictObject(
         return ["image/png", "image/jpeg"].includes(file.type);
       }, "Invalid Profile Image Type"),
   },
-  "Only Organizer Profile Image Must Be Provided"
+  "Only Organizer Profile Image Must Be Provided",
 );
 
 const uploadOrganizerProfileValidator = validator(
   "form",
-  uploadOrganizerProfileValidatorSchema
+  uploadOrganizerProfileValidatorSchema,
 );
 
 export type UploadOrganizerProfileValidatorSchema = z.infer<

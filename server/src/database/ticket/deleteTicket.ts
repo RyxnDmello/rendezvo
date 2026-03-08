@@ -1,13 +1,15 @@
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
 
+import { clearCachedTicket, clearCachedTickets } from "./helpers/redis";
+
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const deleteTicket = async (id: string, ticketID: string, ownerID: string) => {
+const deleteTicket = async (id: string, eventID: string, ownerID: string) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
-      EventModel.findById(id, {
+      EventModel.findById(eventID, {
         ownerID: 1,
         tickets: 1,
       }).lean({
@@ -29,7 +31,7 @@ const deleteTicket = async (id: string, ticketID: string, ownerID: string) => {
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Delete Tickets For This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -37,7 +39,7 @@ const deleteTicket = async (id: string, ticketID: string, ownerID: string) => {
       throw new ApiError("Event With Given ID Has No Tickets", "BAD_REQUEST");
     }
 
-    const ticket = dbEvent.tickets.find((ticket) => ticket.id === ticketID);
+    const ticket = dbEvent.tickets.find((ticket) => ticket.id === id);
 
     if (!ticket) {
       throw new ApiError("Ticket With Given ID Does Not Exist", "BAD_REQUEST");
@@ -46,39 +48,44 @@ const deleteTicket = async (id: string, ticketID: string, ownerID: string) => {
     if (ticket.active) {
       throw new ApiError(
         "Ticket Must Be Set As Inactive Before Deletion",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
     if (ticket.quantity.sold !== 0) {
       throw new ApiError(
         "Ticket Cannot Be Deleted Since Tickets Have Been Sold",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
     const { acknowledged, modifiedCount } = await EventModel.updateOne(
       {
-        _id: id,
+        _id: eventID,
       },
       {
         $pull: {
           tickets: {
-            id: ticketID,
+            id: id,
           },
         },
       },
       {
         runValidators: true,
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Delete Ticket Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
+
+    await Promise.all([
+      clearCachedTickets(eventID, ownerID),
+      clearCachedTicket(id, eventID, ownerID),
+    ]);
 
     return {
       success: true,
@@ -94,7 +101,7 @@ const deleteTicket = async (id: string, ticketID: string, ownerID: string) => {
 
     throw new ApiError(
       "Unable To Delete Ticket Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

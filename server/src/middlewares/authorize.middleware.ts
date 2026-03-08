@@ -14,7 +14,7 @@ const authorize = (role?: Role) => {
       if (!authorization) {
         throw new ApiError(
           "You Are Not Authorized To Access This Service",
-          "INVALID_CREDENTIALS"
+          "INVALID_CREDENTIALS",
         );
       }
 
@@ -23,7 +23,7 @@ const authorize = (role?: Role) => {
       if (!token) {
         throw new ApiError(
           "You Are Not Authorized To Access This Service",
-          "ACCESS_TOKEN_MISSING"
+          "ACCESS_TOKEN_MISSING",
         );
       }
 
@@ -32,7 +32,7 @@ const authorize = (role?: Role) => {
       if (role && role !== payload.role) {
         throw new ApiError(
           "You Do Not Have Sufficient Permissions To Access This Service",
-          "UNAUTHORIZED"
+          "UNAUTHORIZED",
         );
       }
 

@@ -22,7 +22,7 @@ const termsSchema = new Schema<Terms>({
     trim: true,
     minLength: [4, "Terms Description Must Be A Minimum Of 4 Characters"],
     maxLength: [500, "Terms Description Must Be A Maximum Of 500 Characters"],
-    default: "", 
+    default: "",
   },
 });
 

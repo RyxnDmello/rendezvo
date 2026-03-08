@@ -23,12 +23,12 @@ const uploadEventVideoValidatorSchema = z.strictObject(
       .max(5 * 1024 * 1024, "Event Video Cannot Exceed 5MB")
       .refine((file) => TYPES.includes(file.type), "Invalid Event Video Type"),
   },
-  "Only Event Video Must Be Provided"
+  "Only Event Video Must Be Provided",
 );
 
 const uploadEventVideoValidator = validator(
   "form",
-  uploadEventVideoValidatorSchema
+  uploadEventVideoValidatorSchema,
 );
 
 export type UploadEventVideoValidatorSchema = z.infer<

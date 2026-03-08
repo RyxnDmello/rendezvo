@@ -13,7 +13,7 @@ const termsSchema = z.strictObject(
       .max(500, "Terms Description Must Be A Maximum Of 500 Characters")
       .trim(),
   },
-  "Event Terms & Condition Policy Details Must Be Provided"
+  "Event Terms & Condition Policy Details Must Be Provided",
 );
 
 const refundSchema = z.strictObject(
@@ -34,7 +34,7 @@ const refundSchema = z.strictObject(
       .max(250, "Refund Description Must Be A Maximum Of 250 Characters")
       .trim(),
   },
-  "Event Refund Policy Details Must Be Provided"
+  "Event Refund Policy Details Must Be Provided",
 );
 
 export const eventPolicyValidatorSchema = z.strictObject(
@@ -42,7 +42,7 @@ export const eventPolicyValidatorSchema = z.strictObject(
     terms: termsSchema,
     refund: refundSchema,
   },
-  "Event Policy Details Must Be Provided"
+  "Event Policy Details Must Be Provided",
 );
 
 export type EventPolicyValidatorSchema = z.infer<

@@ -21,7 +21,7 @@ const deleteEventBanner = async (id: string, ownerID: string) => {
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -46,7 +46,7 @@ const deleteEventBanner = async (id: string, ownerID: string) => {
         },
         {
           runValidators: true,
-        }
+        },
       ),
       deleteBanner(id),
     ]);
@@ -54,7 +54,7 @@ const deleteEventBanner = async (id: string, ownerID: string) => {
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Delete Event Banner Image Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -76,7 +76,7 @@ const deleteEventBanner = async (id: string, ownerID: string) => {
 
     throw new ApiError(
       "Unable To Delete Event Banner Image Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

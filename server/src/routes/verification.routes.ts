@@ -11,41 +11,36 @@ import {
 
 import { authorizeUser } from "@middlewares/authorize.middleware";
 
-import createAuthVerificationValidator from "@validators/verification/createAuthVerification.validator";
 import createResetVerificationValidator from "@validators/verification/createResetVerification.validator";
-import createForgotVerificationValidator from "@validators/verification/createForgotVerification.validator";
 import verifyAuthVerificationValidator from "@validators/verification/verifyAuthVerification.validator";
 import verifyResetVerificationValidator from "@validators/verification/verifyResetVerification.validator";
 import verifyForgotVerificationValidator from "@validators/verification/verifyForgotVerification.validator";
 
 const router = new Hono();
 
-router.post("/auth", createAuthVerificationValidator, _createAuthVerification);
+router.post("/auth/:id", _createAuthVerification);
+router.post("/forgot/:id", _createForgotVerification);
 router.post(
   "/reset",
+  authorizeUser,
   createResetVerificationValidator,
-  _createResetVerification
+  _createResetVerification,
 );
 router.post(
-  "/forgot",
-  createForgotVerificationValidator,
-  _createForgotVerification
-);
-router.post(
-  "/auth/verify",
+  "/auth/:id/verify",
   verifyAuthVerificationValidator,
-  _verifyAuthVerification
+  _verifyAuthVerification,
+);
+router.post(
+  "/forgot/:id/verify",
+  verifyForgotVerificationValidator,
+  _verifyForgotVerification,
 );
 router.post(
   "/reset/verify",
   authorizeUser,
   verifyResetVerificationValidator,
-  _verifyResetVerification
-);
-router.post(
-  "/forgot/verify",
-  verifyForgotVerificationValidator,
-  _verifyForgotVerification
+  _verifyResetVerification,
 );
 
 export default router;

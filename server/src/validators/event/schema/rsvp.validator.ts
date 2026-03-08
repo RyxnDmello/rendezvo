@@ -19,7 +19,7 @@ const validatorSchema = z.strictObject(
       .string("Minimum Date Validator Must Be YYYY-MM-DD Format")
       .regex(
         /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-        "Minimum Date Validator Must Be In YYYY-MM-DD Format"
+        "Minimum Date Validator Must Be In YYYY-MM-DD Format",
       )
       .trim()
       .optional(),
@@ -27,7 +27,7 @@ const validatorSchema = z.strictObject(
       .string("Maximum Date Validator Must Be YYYY-MM-DD Format")
       .regex(
         /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-        "Maximum Date Validator Must Be In YYYY-MM-DD Format"
+        "Maximum Date Validator Must Be In YYYY-MM-DD Format",
       )
       .trim()
       .optional(),
@@ -42,7 +42,7 @@ const validatorSchema = z.strictObject(
       .max(50, "Maximum Text Validator Cannot Be More Than 50")
       .optional(),
   },
-  "Field Validation Must Be Provided"
+  "Field Validation Must Be Provided",
 );
 
 const fieldSchema = z
@@ -50,7 +50,7 @@ const fieldSchema = z
     {
       type: z.enum(
         ["text", "number", "date", "dropdown"],
-        "Invalid Field Type Provided"
+        "Invalid Field Type Provided",
       ),
       active: z.boolean("Field Must Be Enabled Or Disabled").default(true),
       name: z
@@ -78,7 +78,7 @@ const fieldSchema = z
             .min(1, "Dropdown Option Must Be A Minimum Of 1 Character")
             .max(10, "Dropdown Option Must Be A Maximum Of 10 Character")
             .trim(),
-          "Dropdown Options Must Be A List Of Options"
+          "Dropdown Options Must Be A List Of Options",
         )
         .refine((options) => {
           const unique = new Set(options);
@@ -89,7 +89,7 @@ const fieldSchema = z
         .optional(),
       validator: validatorSchema,
     },
-    "RSVP Fields Must Be Provided"
+    "RSVP Fields Must Be Provided",
   )
   .superRefine((values, ctx) => {
     const { type, options, validator } = values;
@@ -204,7 +204,7 @@ export const eventRsvpValidatorSchema = z.strictObject(
       .min(1, "At Least 1 RSVP Field Must Be Provided")
       .max(5, "At Most 5 RSVP Field Must Be Provided"),
   },
-  "Event RSVP Details Must Be Provided"
+  "Event RSVP Details Must Be Provided",
 );
 
 export type EventRsvpValidatorSchema = z.infer<typeof eventRsvpValidatorSchema>;

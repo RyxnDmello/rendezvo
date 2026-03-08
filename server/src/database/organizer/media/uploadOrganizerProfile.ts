@@ -10,7 +10,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 
 const uploadOrganizerProfile = async (
   id: string,
-  data: UploadOrganizerProfileValidatorSchema
+  data: UploadOrganizerProfileValidatorSchema,
 ) => {
   try {
     const dbOrganizer = await OrganizerModel.findById(id, {
@@ -41,13 +41,13 @@ const uploadOrganizerProfile = async (
             },
           },
         },
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Upload Profile Image Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -69,7 +69,7 @@ const uploadOrganizerProfile = async (
 
     throw new ApiError(
       "Unable To Upload Profile Image Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

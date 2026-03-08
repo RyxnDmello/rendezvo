@@ -37,7 +37,7 @@ router
   .patch(
     authorizeOrganizer,
     uploadOrganizerMediaValidator,
-    _uploadOrganizerMedia
+    _uploadOrganizerMedia,
   )
   .delete(authorizeOrganizer, _deleteOrganizerMedia);
 router
@@ -45,7 +45,7 @@ router
   .patch(
     authorizeOrganizer,
     uploadOrganizerBannerValidator,
-    _uploadOrganizerBanner
+    _uploadOrganizerBanner,
   )
   .delete(authorizeOrganizer, _deleteOrganizerBanner);
 router
@@ -53,7 +53,7 @@ router
   .patch(
     authorizeOrganizer,
     uploadOrganizerProfileValidator,
-    _uploadOrganizerProfile
+    _uploadOrganizerProfile,
   )
   .delete(authorizeOrganizer, _deleteOrganizerProfile);
 

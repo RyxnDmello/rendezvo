@@ -11,7 +11,7 @@ const updateTicketValidatorSchema = z
     {
       action: z.enum(
         ["basic", "pricing", "quantity", "schedule"],
-        "Provide The Specific Action You Need To Perform"
+        "Provide The Specific Action You Need To Perform",
       ),
       name: z
         .string("Ticket Name Must Be A Valid String")
@@ -19,7 +19,7 @@ const updateTicketValidatorSchema = z
         .max(50, "Ticket Name Must Be A Maximum Of 50 Characters")
         .regex(
           /^[A-Za-z\s]+$/,
-          "Ticket Name Must Contain Only Letters And Spaces"
+          "Ticket Name Must Contain Only Letters And Spaces",
         )
         .optional(),
       description: z
@@ -31,7 +31,7 @@ const updateTicketValidatorSchema = z
       quantity: ticketQuantityValidatorSchema.optional(),
       schedule: ticketScheduleValidatorSchema.optional(),
     },
-    "Ticket Details Must Be Provided"
+    "Ticket Details Must Be Provided",
   )
   .superRefine((values, ctx) => {
     const { action, ...fields } = values;
@@ -48,7 +48,7 @@ const updateTicketValidatorSchema = z
     }
 
     const others = ["pricing", "quantity", "schedule"].filter(
-      (key) => key !== action
+      (key) => key !== action,
     );
 
     for (const key of others) {

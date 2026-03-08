@@ -10,7 +10,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 
 const uploadOrganizerBanner = async (
   id: string,
-  data: UploadOrganizerBannerValidatorSchema
+  data: UploadOrganizerBannerValidatorSchema,
 ) => {
   try {
     const dbOrganizer = await OrganizerModel.findById(id, {
@@ -41,13 +41,13 @@ const uploadOrganizerBanner = async (
             },
           },
         },
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Upload Banner Image Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -69,7 +69,7 @@ const uploadOrganizerBanner = async (
 
     throw new ApiError(
       "Unable To Upload Banner Image Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

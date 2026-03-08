@@ -15,7 +15,7 @@ const codeSchema = z
         .max(10, "Security Code Must Be A Maximum Of 10 Characters")
         .regex(
           /^[A-Za-z0-9]+$/,
-          "Security Code Must Contain Letters And Numbers"
+          "Security Code Must Contain Letters And Numbers",
         )
         .trim(),
       uses: z
@@ -26,7 +26,7 @@ const codeSchema = z
         .string("Security Code Expiry Date Must Be YYYY-MM-DD Format")
         .regex(
           /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-          "Security Code Expiry Date Must Be In YYYY-MM-DD Format"
+          "Security Code Expiry Date Must Be In YYYY-MM-DD Format",
         )
         .refine((val) => {
           const date = new Date(val);
@@ -35,7 +35,7 @@ const codeSchema = z
         .trim()
         .optional(),
     },
-    "Security Code Details Must Be Provided"
+    "Security Code Details Must Be Provided",
   )
   .superRefine((values, ctx) => {
     const { type, uses } = values;
@@ -66,7 +66,7 @@ export const eventSecurityValidatorSchema = z.strictObject(
       .min(1, "At Least 1 Security Code Must Be Provided")
       .max(10, "At Most 10 Security Codes Must Be Provided"),
   },
-  "Event Security Codes Must Be Provided"
+  "Event Security Codes Must Be Provided",
 );
 
 export type EventSecurityValidatorSchema = z.infer<

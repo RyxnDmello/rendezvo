@@ -9,12 +9,12 @@ const deleteEventImageValidatorSchema = z.strictObject(
       .min(1, "Image Index Must Be A Minimum Of 1")
       .max(5, "Image Index Must Be A Maximum Of 5"),
   },
-  "Only Event Event Image Index Must Be Provided"
+  "Only Event Event Image Index Must Be Provided",
 );
 
 const deleteEventImageValidator = validator(
   "json",
-  deleteEventImageValidatorSchema
+  deleteEventImageValidatorSchema,
 );
 
 export type DeleteEventImageValidatorSchema = z.infer<

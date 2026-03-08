@@ -11,33 +11,34 @@ import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
 const verifyAuthVerification = async (
-  data: VerifyAuthVerificationValidatorSchema
+  id: string,
+  data: VerifyAuthVerificationValidatorSchema,
 ) => {
   try {
     const dbVerification = await VerificationModel.findOne(
       {
+        userID: id,
         type: "auth",
-        email: data.email,
       },
       {
         otp: 1,
         expiredAt: 1,
-      }
+      },
     ).lean({
       versionKey: false,
     });
 
     if (!dbVerification) {
       throw new ApiError(
-        "Verification For Given Email Address Does Not Exist",
-        "BAD_REQUEST"
+        "Verification For Given User Does Not Exist",
+        "BAD_REQUEST",
       );
     }
 
     if (dbVerification.expiredAt < new Date()) {
       throw new ApiError(
-        "Verification For Given Email Address Has Expired",
-        "SESSION_EXPIRED"
+        "Verification For Given User Has Expired",
+        "SESSION_EXPIRED",
       );
     }
 
@@ -54,13 +55,11 @@ const verifyAuthVerification = async (
         {
           _id: dbVerification._id,
         },
-        { session }
+        { session },
       );
 
-      const dbOrganizer = await OrganizerModel.findOneAndUpdate(
-        {
-          email: data.email,
-        },
+      const dbOrganizer = await OrganizerModel.findByIdAndUpdate(
+        id,
         {
           $set: {
             verified: true,
@@ -75,7 +74,7 @@ const verifyAuthVerification = async (
             mobile: 1,
             verified: 1,
           },
-        }
+        },
       ).lean({
         versionKey: true,
       });
@@ -83,7 +82,7 @@ const verifyAuthVerification = async (
       if (!dbOrganizer) {
         throw new ApiError(
           "Unable To Verify User Due To Server Error",
-          "INTERNAL_SERVER_ERROR"
+          "INTERNAL_SERVER_ERROR",
         );
       }
 
@@ -91,7 +90,6 @@ const verifyAuthVerification = async (
 
       const { accessToken, refreshToken } = await createTokens(
         dbOrganizer._id.toString(),
-        dbOrganizer.email
       );
 
       return {
@@ -120,7 +118,7 @@ const verifyAuthVerification = async (
 
     throw new ApiError(
       "Unable To Verify User Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

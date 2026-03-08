@@ -16,12 +16,12 @@ import { ApiErrorResponse, ApiErrorCustomResponse } from "@utils/ApiError";
 export const _fetchCoupon = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const couponID = ctx.req.param("couponID");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
@@ -35,7 +35,7 @@ export const _fetchCoupon = async (ctx: Context) => {
       });
     }
 
-    const coupon = await fetchCoupon(id, couponID, user.id);
+    const coupon = await fetchCoupon(couponID, eventID, user.id);
     return ctx.json(coupon, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -45,17 +45,17 @@ export const _fetchCoupon = async (ctx: Context) => {
 export const _fetchCoupons = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const coupon = await fetchCoupons(id, user.id);
+    const coupon = await fetchCoupons(eventID, user.id);
     return ctx.json(coupon, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -65,19 +65,19 @@ export const _fetchCoupons = async (ctx: Context) => {
 export const _addCoupon = async (ctx: AddCouponContext) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const data = ctx.req.valid("json");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
 
-    const result = await addCoupon(id, user.id, data);
+    const result = await addCoupon(eventID, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -87,14 +87,14 @@ export const _addCoupon = async (ctx: AddCouponContext) => {
 export const _updateCoupon = async (ctx: UpdateCouponContext) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const couponID = ctx.req.param("couponID");
 
   const data = ctx.req.valid("json");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
@@ -108,7 +108,7 @@ export const _updateCoupon = async (ctx: UpdateCouponContext) => {
       });
     }
 
-    const result = await updateCoupon(id, couponID, user.id, data);
+    const result = await updateCoupon(couponID, eventID, user.id, data);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -118,12 +118,12 @@ export const _updateCoupon = async (ctx: UpdateCouponContext) => {
 export const _toggleCoupon = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const couponID = ctx.req.param("couponID");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
@@ -137,7 +137,7 @@ export const _toggleCoupon = async (ctx: Context) => {
       });
     }
 
-    const result = await toggleCoupon(id, couponID, user.id);
+    const result = await toggleCoupon(couponID, eventID, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);
@@ -147,12 +147,12 @@ export const _toggleCoupon = async (ctx: Context) => {
 export const _deleteCoupon = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  const id = ctx.req.param("id");
+  const eventID = ctx.req.param("id");
 
   const couponID = ctx.req.param("couponID");
 
   try {
-    if (!id) {
+    if (!eventID) {
       return ApiErrorCustomResponse(ctx, {
         error: "Event ID Must Be Provided",
         code: "BAD_REQUEST",
@@ -166,7 +166,7 @@ export const _deleteCoupon = async (ctx: Context) => {
       });
     }
 
-    const result = await deleteCoupon(id, couponID, user.id);
+    const result = await deleteCoupon(couponID, eventID, user.id);
     return ctx.json(result, 200);
   } catch (error) {
     return ApiErrorResponse(ctx, error);

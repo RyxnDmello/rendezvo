@@ -21,7 +21,7 @@ export const setCookie = async (
   ctx: Context,
   name: string,
   value: string,
-  expiry: number = 60 * 24 * 7
+  expiry: number = 60 * 24 * 7,
 ) => {
   await setSignedCookie(ctx, name, value, COOKIES_SECRET, {
     ...COOKIE_OPTIONS,

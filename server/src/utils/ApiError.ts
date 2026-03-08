@@ -135,7 +135,7 @@ export const ApiErrorResponse = (ctx: Context, error: unknown) => {
       error: "An Unexpected Error Occurred",
       code: "INTERNAL_SERVER_ERROR",
     },
-    500
+    500,
   );
 };
 

@@ -9,7 +9,7 @@ export const ALGORITHM: SignatureAlgorithm = "HS512";
 export const createToken = async (
   payload: Payload,
   secret: string,
-  expiry: number
+  expiry: number,
 ) => {
   const exp = Math.floor(Date.now() / 1000) + expiry * 60;
   return await sign({ payload, exp }, secret, ALGORITHM);
@@ -17,7 +17,7 @@ export const createToken = async (
 
 export const verifyToken = async <T extends Payload>(
   token: string,
-  secret: string
+  secret: string,
 ) => {
   const { payload } = await verify(token, secret, ALGORITHM);
   return payload ? (payload as T) : null;

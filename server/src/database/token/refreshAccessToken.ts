@@ -22,7 +22,7 @@ const refreshAccessToken = async (role: string, token: string) => {
           email: 1,
           mobile: 1,
           verified: 1,
-        }
+        },
       ).lean({
         versionKey: false,
       });
@@ -30,7 +30,7 @@ const refreshAccessToken = async (role: string, token: string) => {
       if (!dbOrganizer || !dbOrganizer.verified) {
         throw new ApiError(
           "You Are Not Authorized To Access This Service",
-          "FORBIDDEN"
+          "FORBIDDEN",
         );
       }
 
@@ -48,7 +48,7 @@ const refreshAccessToken = async (role: string, token: string) => {
 
     throw new ApiError(
       "You Are Not Authorized To Access This Service",
-      "FORBIDDEN"
+      "FORBIDDEN",
     );
   } catch (error) {
     if (isApiError(error)) {
@@ -61,7 +61,7 @@ const refreshAccessToken = async (role: string, token: string) => {
 
     throw new ApiError(
       "Unable To Authorize User Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

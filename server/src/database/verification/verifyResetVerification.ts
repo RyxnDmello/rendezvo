@@ -9,34 +9,35 @@ import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
 const verifyResetVerification = async (
-  data: VerifyResetVerificationValidatorSchema
+  id: string,
+  data: VerifyResetVerificationValidatorSchema,
 ) => {
   try {
     const dbVerification = await VerificationModel.findOne(
       {
+        userID: id,
         type: "reset",
-        email: data.email,
       },
       {
         otp: 1,
         password: 1,
         expiredAt: 1,
-      }
+      },
     ).lean({
       versionKey: false,
     });
 
     if (!dbVerification || !dbVerification.password) {
       throw new ApiError(
-        "Verification For Given Email Address Does Not Exist",
-        "BAD_REQUEST"
+        "Verification For Given User Does Not Exist",
+        "BAD_REQUEST",
       );
     }
 
     if (dbVerification.expiredAt < new Date()) {
       throw new ApiError(
-        "Verification For Given Email Address Has Expired",
-        "SESSION_EXPIRED"
+        "Verification For Given User Has Expired",
+        "SESSION_EXPIRED",
       );
     }
 
@@ -53,24 +54,24 @@ const verifyResetVerification = async (
         {
           _id: dbVerification._id,
         },
-        { session }
+        { session },
       );
 
       const result = await OrganizerModel.updateOne(
         {
-          email: data.email,
+          _id: id,
         },
         {
           $set: {
             password: dbVerification.password,
           },
-        }
+        },
       );
 
       if (!result.acknowledged || result.modifiedCount !== 1) {
         throw new ApiError(
           "Unable To Verify User Due To Server Error",
-          "INTERNAL_SERVER_ERROR"
+          "INTERNAL_SERVER_ERROR",
         );
       }
 
@@ -96,7 +97,7 @@ const verifyResetVerification = async (
 
     throw new ApiError(
       "Unable To Verify User Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

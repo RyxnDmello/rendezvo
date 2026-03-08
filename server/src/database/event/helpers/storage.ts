@@ -39,7 +39,7 @@ export const getCover = async (id: string) => {
 
     throw new ApiError(
       "Unable To Retrieve Event Cover Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -54,7 +54,7 @@ export const getBanner = async (id: string) => {
 
     throw new ApiError(
       "Unable To Retrieve Event Banner Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -69,7 +69,7 @@ export const getImage = async (id: string, index: number) => {
 
     throw new ApiError(
       "Unable To Retrieve Event Banner Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -86,7 +86,7 @@ export const getImages = async (id: string) => {
 
     throw new ApiError(
       "Unable To Retrieve Event Images Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -101,7 +101,7 @@ export const getVideo = async (id: string, index: number) => {
 
     throw new ApiError(
       "Unable To Retrieve Event Banner Video Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -118,7 +118,7 @@ export const getVideos = async (id: string) => {
 
     throw new ApiError(
       "Unable To Retrieve Event Videos Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -133,7 +133,7 @@ export const uploadCover = async (id: string, file: File) => {
 
     throw new ApiError(
       "Unable To Upload Event Cover Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -148,7 +148,7 @@ export const uploadBanner = async (id: string, file: File) => {
 
     throw new ApiError(
       "Unable To Upload Event Banner Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -163,7 +163,7 @@ export const uploadImage = async (id: string, index: number, file: File) => {
 
     throw new ApiError(
       "Unable To Upload Event Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -178,7 +178,7 @@ export const uploadVideo = async (id: string, index: number, file: File) => {
 
     throw new ApiError(
       "Unable To Upload Event Video Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -193,7 +193,7 @@ export const updateCover = async (id: string, file: File) => {
 
     throw new ApiError(
       "Unable To Update Event Cover Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -208,7 +208,7 @@ export const updateBanner = async (id: string, file: File) => {
 
     throw new ApiError(
       "Unable To Update Event Banner Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -223,7 +223,7 @@ export const updateImage = async (id: string, index: number, file: File) => {
 
     throw new ApiError(
       "Unable To Update Event Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -238,7 +238,7 @@ export const updateVideo = async (id: string, index: number, file: File) => {
 
     throw new ApiError(
       "Unable To Update Event Video Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -257,7 +257,7 @@ export const deleteCover = async (id: string) => {
 
     throw new ApiError(
       "Unable To Delete Event Cover Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -276,7 +276,7 @@ export const deleteBanner = async (id: string) => {
 
     throw new ApiError(
       "Unable To Delete Event Banner Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -295,7 +295,7 @@ export const deleteImage = async (id: string, index: number) => {
 
     throw new ApiError(
       "Unable To Delete Event Image Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };
@@ -314,7 +314,7 @@ export const deleteVideo = async (id: string, index: number) => {
 
     throw new ApiError(
       "Unable To Delete Event Video Due To Server Error",
-      "STORAGE_SERVER_ERROR"
+      "STORAGE_SERVER_ERROR",
     );
   }
 };

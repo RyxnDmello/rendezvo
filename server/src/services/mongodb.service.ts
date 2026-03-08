@@ -7,7 +7,6 @@ const connectMongoDB = async () => {
     console.log("\n-------------------------------------");
     console.log("MONGODB ATLAS | CONNECTION SUCCESSFUL");
     console.log("-------------------------------------\n");
-
     return;
   }
 
@@ -37,6 +36,7 @@ const connectMongoDB = async () => {
     console.log("---------------------------------\n");
 
     await disconnect();
+    process.exit(0);
   }
 };
 

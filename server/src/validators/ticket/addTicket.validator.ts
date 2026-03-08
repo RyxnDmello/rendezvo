@@ -19,7 +19,7 @@ const addTicketValidatorSchema = z
         .max(50, "Ticket Name Must Be A Maximum Of 50 Characters")
         .regex(
           /^[A-Za-z\s]+$/,
-          "Ticket Name Must Contain Only Letters And Spaces"
+          "Ticket Name Must Contain Only Letters And Spaces",
         ),
       description: z
         .string("Ticket Description Must Be A Valid String")
@@ -29,7 +29,7 @@ const addTicketValidatorSchema = z
       quantity: ticketQuantityValidatorSchema,
       schedule: ticketScheduleValidatorSchema,
     },
-    "Ticket Details Must Be Provided"
+    "Ticket Details Must Be Provided",
   )
   .superRefine((values, ctx) => {
     const { type, pricing } = values;

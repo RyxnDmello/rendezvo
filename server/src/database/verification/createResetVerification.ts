@@ -11,45 +11,38 @@ import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
 const createResetVerification = async (
-  data: CreateResetVerificationValidatorSchema
+  id: string,
+  data: CreateResetVerificationValidatorSchema,
 ) => {
   try {
     const [dbOrganizer, dbVerification] = await Promise.all([
-      OrganizerModel.findOne(
-        {
-          email: data.email,
-        },
-        {
-          verified: 1,
-          password: 1,
-        }
-      ).lean({
+      OrganizerModel.findById(id, {
+        verified: 1,
+        password: 1,
+      }).lean({
         versionKey: false,
       }),
       VerificationModel.exists({
+        userID: id,
         type: "reset",
-        email: data.email,
       }),
     ]);
 
     if (!dbOrganizer) {
-      throw new ApiError(
-        "User With Given Email Address Does Not Exist",
-        "BAD_REQUEST"
-      );
+      throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
     if (!dbOrganizer.verified) {
       throw new ApiError(
         "Unable To Proceed Since User Has Not Been Verified",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
     if (!dbOrganizer.password) {
       throw new ApiError(
         "You Have Opted For A Different Authentication Method",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
@@ -79,7 +72,7 @@ const createResetVerification = async (
         },
         {
           runValidators: true,
-        }
+        },
       );
 
       return {
@@ -88,9 +81,9 @@ const createResetVerification = async (
     }
 
     const newVerification = new VerificationModel({
+      userID: id,
       type: "reset",
       otp,
-      email: data.email,
       password: encrypted,
       expiredAt: expiry,
     });
@@ -111,7 +104,7 @@ const createResetVerification = async (
 
     throw new ApiError(
       "Unable To Send Verification Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

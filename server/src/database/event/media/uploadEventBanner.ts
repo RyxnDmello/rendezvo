@@ -11,7 +11,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 const uploadEventBanner = async (
   id: string,
   ownerID: string,
-  data: UploadEventBannerValidatorSchema
+  data: UploadEventBannerValidatorSchema,
 ) => {
   try {
     const dbEvent = await EventModel.findById(id, {
@@ -27,7 +27,7 @@ const uploadEventBanner = async (
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -49,13 +49,13 @@ const uploadEventBanner = async (
             },
           },
         },
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Upload Event Banner Image Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -77,7 +77,7 @@ const uploadEventBanner = async (
 
     throw new ApiError(
       "Unable To Upload Event Banner Image Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

@@ -40,7 +40,7 @@ const deleteOrganizerMedia = async (id: string) => {
         },
         {
           runValidators: true,
-        }
+        },
       ),
       Promise.all([
         dbOrganizer.profile?.image ? deleteProfile(id) : undefined,
@@ -51,7 +51,7 @@ const deleteOrganizerMedia = async (id: string) => {
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Delete Media Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -73,7 +73,7 @@ const deleteOrganizerMedia = async (id: string) => {
 
     throw new ApiError(
       "Unable To Delete Media Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

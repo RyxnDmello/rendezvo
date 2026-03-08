@@ -27,17 +27,17 @@ const profileValidatorSchema = z.strictObject(
             .max(20, "Socials Name Must Be A Maximum Of 20 Characters")
             .regex(
               /^[A-Za-z\s]+$/,
-              "Socials Name Must Contain Only Letters And Spaces"
+              "Socials Name Must Contain Only Letters And Spaces",
             )
             .trim()
             .nonoptional(),
-        })
+        }),
       )
       .min(1, "A Minimum Of 1 Socials Must Be Provided")
       .max(5, "A Maximum Of 5 Socials Must Be Provided")
       .optional(),
   },
-  "Invalid Or Unsupported Profile Properties Provided"
+  "Invalid Or Unsupported Profile Properties Provided",
 );
 
 const billingValidatorSchema = z.strictObject(
@@ -54,7 +54,7 @@ const billingValidatorSchema = z.strictObject(
       .max(50, "Bank Branch Must Be A Maximum Of 50 Characters")
       .regex(
         /^[A-Za-z\s]+$/,
-        "Bank Branch Must Contain Only Letters And Spaces"
+        "Bank Branch Must Contain Only Letters And Spaces",
       )
       .optional(),
     accountName: z
@@ -63,7 +63,7 @@ const billingValidatorSchema = z.strictObject(
       .max(50, "Account Name Must Be A Maximum Of 50 Characters")
       .regex(
         /^[A-Za-z\s]+$/,
-        "Account Name Must Contain Only Letters And Spaces"
+        "Account Name Must Contain Only Letters And Spaces",
       )
       .uppercase("Account Name Must Be Uppercase")
       .optional(),
@@ -75,7 +75,7 @@ const billingValidatorSchema = z.strictObject(
       .optional(),
     accountExpiry: z.date("Account Expiry Must Be A Valid Date").optional(),
   },
-  "Invalid Or Unsupported Billing Properties Provided"
+  "Invalid Or Unsupported Billing Properties Provided",
 );
 
 export const updateOrganizerValidatorSchema = z.strictObject(
@@ -92,7 +92,7 @@ export const updateOrganizerValidatorSchema = z.strictObject(
       .positive("Mobile Number Must Be A Valid 10 Digit Number")
       .refine(
         (value) => ["6", "7", "8", "9"].includes(value.toString()[0]!),
-        "Mobile Number Must Start With 6, 7, 8, Or 9"
+        "Mobile Number Must Start With 6, 7, 8, Or 9",
       )
       .min(6000000000, "Mobile Number Must Be 10 Digits")
       .max(9999999999, "Mobile Number Must Be 10 Digits")
@@ -100,12 +100,12 @@ export const updateOrganizerValidatorSchema = z.strictObject(
     profile: profileValidatorSchema.optional(),
     billing: billingValidatorSchema.optional(),
   },
-  "Invalid Or Unsupported Properties Provided"
+  "Invalid Or Unsupported Properties Provided",
 );
 
 const updateOrganizerValidator = validator(
   "json",
-  updateOrganizerValidatorSchema
+  updateOrganizerValidatorSchema,
 );
 
 export type UpdateOrganizerValidatorSchema = z.infer<

@@ -16,7 +16,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 const uploadEventMedia = async (
   id: string,
   ownerID: string,
-  data: UploadEventMediaValidatorSchema
+  data: UploadEventMediaValidatorSchema,
 ) => {
   try {
     const dbEvent = await EventModel.findById(id, {
@@ -32,7 +32,7 @@ const uploadEventMedia = async (
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -63,13 +63,13 @@ const uploadEventMedia = async (
             },
           },
         },
-      }
+      },
     );
 
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Upload Media Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -91,7 +91,7 @@ const uploadEventMedia = async (
 
     throw new ApiError(
       "Unable To Upload Media Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };

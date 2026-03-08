@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 
+import connectRedis from "@services/redis.service";
 import connectMongoDB from "@services/mongodb.service";
 
 import tokenRoutes from "@routes/token.routes";
@@ -9,6 +10,7 @@ import verificationRoutes from "@routes/verification.routes";
 
 const app = new Hono();
 
+connectRedis();
 connectMongoDB();
 
 app.route("/api/token", tokenRoutes);

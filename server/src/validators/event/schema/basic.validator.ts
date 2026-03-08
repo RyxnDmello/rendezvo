@@ -28,7 +28,7 @@ export const eventBasicValidatorSchema = z.strictObject(
           .max(10, "Event Tag Must Be A Maximum Of 10 Characters")
           .regex(/^[A-Za-z]+$/, "Event Tag Must Contain Only Letters")
           .trim(),
-        "Tags Must Be A List Of Valid Tags"
+        "Tags Must Be A List Of Valid Tags",
       )
       .refine((tags) => {
         const unique = new Set(tags);
@@ -38,7 +38,7 @@ export const eventBasicValidatorSchema = z.strictObject(
       .max(10, "At Most 10 Event Tags Must Be Provided")
       .optional(),
   },
-  "Event Basic Details Must Be Provided"
+  "Event Basic Details Must Be Provided",
 );
 
 export type EventBasicValidatorSchema = z.infer<

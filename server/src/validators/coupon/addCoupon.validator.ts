@@ -22,7 +22,7 @@ const addCouponValidatorSchema = z
         .max(50, "Coupon Name Must Be A Maximum Of 50 Characters")
         .regex(
           /^[A-Za-z\s]+$/,
-          "Coupon Name Must Contain Only Letters And Spaces"
+          "Coupon Name Must Contain Only Letters And Spaces",
         ),
       description: z
         .string("Coupon Description Must Be A Valid String")
@@ -32,7 +32,7 @@ const addCouponValidatorSchema = z
       quantity: couponQuantityValidatorSchema,
       schedule: couponScheduleValidatorSchema,
     },
-    "Coupon Details Must Be Provided"
+    "Coupon Details Must Be Provided",
   )
   .superRefine((values, ctx) => {
     const { type, ticketID } = values;

@@ -11,7 +11,7 @@ import ApiError, { isApiError } from "@utils/ApiError";
 const deleteEventImage = async (
   id: string,
   ownerID: string,
-  data: DeleteEventImageValidatorSchema
+  data: DeleteEventImageValidatorSchema,
 ) => {
   try {
     const dbEvent = await EventModel.findById(id, {
@@ -27,7 +27,7 @@ const deleteEventImage = async (
     if (dbEvent.ownerID !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update This Event",
-        "FORBIDDEN"
+        "FORBIDDEN",
       );
     }
 
@@ -38,13 +38,13 @@ const deleteEventImage = async (
     }
 
     const images = dbEvent.album.images.filter(
-      (image) => image.id !== getImageID(id, data.index)
+      (image) => image.id !== getImageID(id, data.index),
     );
 
     if (dbEvent.album.images.length === images.length) {
       throw new ApiError(
         "Event Image With Given Index Does Not Exist",
-        "BAD_REQUEST"
+        "BAD_REQUEST",
       );
     }
 
@@ -60,7 +60,7 @@ const deleteEventImage = async (
         },
         {
           runValidators: true,
-        }
+        },
       ),
       deleteImage(id, data.index),
     ]);
@@ -68,7 +68,7 @@ const deleteEventImage = async (
     if (!acknowledged || modifiedCount !== 1) {
       throw new ApiError(
         "Unable To Delete Event Image Due To Server Error",
-        "INTERNAL_SERVER_ERROR"
+        "INTERNAL_SERVER_ERROR",
       );
     }
 
@@ -90,7 +90,7 @@ const deleteEventImage = async (
 
     throw new ApiError(
       "Unable To Delete Event Image Due To Server Error",
-      "INTERNAL_SERVER_ERROR"
+      "INTERNAL_SERVER_ERROR",
     );
   }
 };
