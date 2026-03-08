@@ -23,7 +23,7 @@ const createEvent = async (
 
     const newEvent = new EventModel({
       ...data,
-      ownerID,
+      owner: ownerID,
     });
 
     await newEvent.save();

@@ -20,6 +20,7 @@ const uploadEventMedia = async (
 ) => {
   try {
     const dbEvent = await EventModel.findById(id, {
+      owner: 1,
       album: 1,
     }).lean({
       versionKey: false,
@@ -29,7 +30,7 @@ const uploadEventMedia = async (
       throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== ownerID) {
+    if (dbEvent.owner.toString() !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update This Event",
         "FORBIDDEN",

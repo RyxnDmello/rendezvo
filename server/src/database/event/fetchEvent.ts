@@ -39,7 +39,7 @@ const getEvent = async (id: string, ownerID: string) => {
     throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
   }
 
-  if (dbEvent.ownerID !== ownerID) {
+  if (dbEvent.owner.toString() !== ownerID) {
     throw new ApiError(
       "You Are Not Authorized To Retrieve This Event",
       "FORBIDDEN",

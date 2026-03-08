@@ -5,6 +5,11 @@ import OrganizerModel from "@models/organizer.model";
 
 import { clearCachedTicket, clearCachedTickets } from "./helpers/redis";
 
+import {
+  clearCachedEvent,
+  clearCachedEvents,
+} from "@database/event/helpers/redis";
+
 import { UpdateTicketValidatorSchema } from "@validators/ticket/updateTicket.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
@@ -19,7 +24,7 @@ const updateTicket = async (
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(eventID, {
-        ownerID: 1,
+        owner: 1,
         tickets: 1,
         schedule: 1,
       }).lean({
@@ -38,7 +43,7 @@ const updateTicket = async (
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== ownerID) {
+    if (dbEvent.owner.toString() !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update Tickets For This Event",
         "FORBIDDEN",
@@ -143,8 +148,10 @@ const updateTicket = async (
     }
 
     await Promise.all([
+      clearCachedEvents(ownerID),
+      clearCachedEvent(eventID, ownerID),
       clearCachedTickets(eventID, ownerID),
-      clearCachedTicket(eventID, eventID, ownerID),
+      clearCachedTicket(id, eventID, ownerID),
     ]);
 
     return {

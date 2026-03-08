@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
 import shopSchema, { Shop } from "@schemas/event/shop.schema";
 import rsvpSchema, { Rsvp } from "@schemas/event/rsvp.schema";
@@ -19,7 +19,7 @@ export type Visibility = "public" | "private";
 
 export interface Event {
   id?: string;
-  ownerID: string;
+  owner: Types.ObjectId;
   mode: Mode;
   status: Status;
   visibility: Visibility;
@@ -41,9 +41,10 @@ export interface Event {
 
 const eventSchema = new Schema<Event>(
   {
-    ownerID: {
-      type: Schema.Types.String,
+    owner: {
+      type: Schema.Types.ObjectId,
       required: [true, "Event Owner ID Must Be Provided"],
+      ref: "organizer",
       index: true,
       trim: true,
     },

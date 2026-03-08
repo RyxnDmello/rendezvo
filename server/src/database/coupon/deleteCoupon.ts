@@ -3,6 +3,11 @@ import OrganizerModel from "@models/organizer.model";
 
 import { clearCachedCoupon, clearCachedCoupons } from "./helpers/redis";
 
+import {
+  clearCachedEvent,
+  clearCachedEvents,
+} from "@database/event/helpers/redis";
+
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
@@ -10,7 +15,7 @@ const deleteCoupon = async (id: string, eventID: string, ownerID: string) => {
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(eventID, {
-        ownerID: 1,
+        owner: 1,
         coupons: 1,
       }).lean({
         versionKey: false,
@@ -28,7 +33,7 @@ const deleteCoupon = async (id: string, eventID: string, ownerID: string) => {
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== ownerID) {
+    if (dbEvent.owner.toString() !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Delete Coupons From This Event",
         "FORBIDDEN",
@@ -83,6 +88,8 @@ const deleteCoupon = async (id: string, eventID: string, ownerID: string) => {
     }
 
     await Promise.all([
+      clearCachedEvents(ownerID),
+      clearCachedEvent(eventID, ownerID),
       clearCachedCoupons(eventID, ownerID),
       clearCachedCoupon(id, eventID, ownerID),
     ]);

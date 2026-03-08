@@ -33,7 +33,7 @@ const fetchTicket = async (id: string, eventID: string, ownerID: string) => {
 const getTicket = async (id: string, eventID: string, ownerID: string) => {
   const [dbEvent, dbOrganizer] = await Promise.all([
     EventModel.findById(eventID, {
-      ownerID: 1,
+      owner: 1,
       tickets: 1,
     }).lean({
       versionKey: false,
@@ -51,7 +51,7 @@ const getTicket = async (id: string, eventID: string, ownerID: string) => {
     throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
   }
 
-  if (dbEvent.ownerID !== ownerID) {
+  if (dbEvent.owner.toString() !== ownerID) {
     throw new ApiError(
       "You Are Not Authorized To Access Tickets For This Event",
       "FORBIDDEN",

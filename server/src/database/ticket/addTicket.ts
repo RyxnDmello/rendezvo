@@ -7,6 +7,11 @@ import OrganizerModel from "@models/organizer.model";
 
 import { clearCachedTickets } from "./helpers/redis";
 
+import {
+  clearCachedEvent,
+  clearCachedEvents,
+} from "@database/event/helpers/redis";
+
 import { AddTicketValidatorSchema } from "@validators/ticket/addTicket.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
@@ -20,7 +25,7 @@ const addTicket = async (
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(eventID, {
-        ownerID: 1,
+        owner: 1,
         tickets: 1,
         schedule: 1,
       }).lean({
@@ -39,7 +44,7 @@ const addTicket = async (
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== ownerID) {
+    if (dbEvent.owner.toString() !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Add Tickets For This Event",
         "FORBIDDEN",
@@ -116,7 +121,11 @@ const addTicket = async (
       );
     }
 
-    await clearCachedTickets(eventID, ownerID);
+    await Promise.all([
+      clearCachedEvents(ownerID),
+      clearCachedEvent(eventID, ownerID),
+      clearCachedTickets(eventID, ownerID),
+    ]);
 
     return {
       success: true,

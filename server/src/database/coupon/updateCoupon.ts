@@ -5,6 +5,11 @@ import OrganizerModel from "@models/organizer.model";
 
 import { clearCachedCoupon, clearCachedCoupons } from "./helpers/redis";
 
+import {
+  clearCachedEvent,
+  clearCachedEvents,
+} from "@database/event/helpers/redis";
+
 import { UpdateCouponValidatorSchema } from "@validators/coupon/updateCoupon.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
@@ -19,7 +24,7 @@ const updateCoupon = async (
   try {
     const [dbEvent, dbOrganizer] = await Promise.all([
       EventModel.findById(eventID, {
-        ownerID: 1,
+        owner: 1,
         coupons: 1,
         schedule: 1,
       }).lean({
@@ -38,7 +43,7 @@ const updateCoupon = async (
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
 
-    if (dbEvent.ownerID !== ownerID) {
+    if (dbEvent.owner.toString() !== ownerID) {
       throw new ApiError(
         "You Are Not Authorized To Update Coupons For This Event",
         "FORBIDDEN",
@@ -154,6 +159,8 @@ const updateCoupon = async (
     }
 
     await Promise.all([
+      clearCachedEvents(ownerID),
+      clearCachedEvent(eventID, ownerID),
       clearCachedCoupons(eventID, ownerID),
       clearCachedCoupon(id, eventID, ownerID),
     ]);
