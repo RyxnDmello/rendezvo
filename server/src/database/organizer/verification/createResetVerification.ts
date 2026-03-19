@@ -23,7 +23,7 @@ const createResetVerification = async (
         versionKey: false,
       }),
       VerificationModel.exists({
-        userID: id,
+        user: id,
         type: "reset",
       }),
     ]);
@@ -81,7 +81,7 @@ const createResetVerification = async (
     }
 
     const newVerification = new VerificationModel({
-      userID: id,
+      user: id,
       type: "reset",
       otp,
       password: encrypted,

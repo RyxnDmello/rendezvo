@@ -3,32 +3,31 @@ import { startSession } from "mongoose";
 import OrganizerModel from "@models/organizer.model";
 import VerificationModel from "@models/verification.model";
 
-import { VerifyForgotVerificationValidatorSchema } from "@validators/verification/verifyForgotVerification.validator";
-
-import { hashPassword } from "@helpers/password";
+import { VerifyResetVerificationValidatorSchema } from "@validators/verification/verifyResetVerification.validator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const verifyForgotVerification = async (
+const verifyResetVerification = async (
   id: string,
-  data: VerifyForgotVerificationValidatorSchema,
+  data: VerifyResetVerificationValidatorSchema,
 ) => {
   try {
     const dbVerification = await VerificationModel.findOne(
       {
-        userID: id,
+        user: id,
         type: "reset",
       },
       {
         otp: 1,
+        password: 1,
         expiredAt: 1,
       },
     ).lean({
       versionKey: false,
     });
 
-    if (!dbVerification) {
+    if (!dbVerification || !dbVerification.password) {
       throw new ApiError(
         "Verification For Given User Does Not Exist",
         "BAD_REQUEST",
@@ -45,8 +44,6 @@ const verifyForgotVerification = async (
     if (dbVerification.otp !== data.otp) {
       throw new ApiError("Invalid OTP Provided", "INVALID_CREDENTIALS");
     }
-
-    const encrypted = await hashPassword(data.password);
 
     const session = await startSession();
 
@@ -66,7 +63,7 @@ const verifyForgotVerification = async (
         },
         {
           $set: {
-            password: encrypted,
+            password: dbVerification.password,
           },
         },
       );
@@ -105,4 +102,4 @@ const verifyForgotVerification = async (
   }
 };
 
-export default verifyForgotVerification;
+export default verifyResetVerification;

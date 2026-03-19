@@ -17,38 +17,38 @@ const secretValidatorSchema = z.strictObject(
       .string("Cookies Secret Must Be A Valid Secret")
       .min(32, "Cookies Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Cookies Secret Must Be A Maximum Of 64 Characters"),
-    ATTENDEE_ACCESS_TOKEN_EXPIRY: z.coerce
-      .number("Access Token Expiry Must Be Set In Minutes")
-      .min(15, "Access Token Expiry Must Be At Least 15 Minutes")
-      .max(30, "Access Token Expiry Must Be At Most 30 Minutes"),
-    ATTENDEE_REFRESH_TOKEN_EXPIRY: z.coerce
-      .number("Refresh Token Expiry Must Be Set In Minutes")
-      .min(60 * 24 * 7, "Refresh Token Expiry Must Be At Least 7 Days")
-      .max(60 * 24 * 14, "Refresh Token Expiry Must Be At Most 14 Days"),
-    ATTENDEE_ACCESS_TOKEN_SECRET: z
+    USER_ACCESS_TOKEN_SECRET: z
       .string("Access Token Secret Must Be A Valid Secret")
       .min(32, "Access Token Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Access Token Secret Must Be A Maximum Of 64 Characters"),
-    ATTENDEE_REFRESH_TOKEN_SECRET: z
+    USER_ACCESS_TOKEN_EXPIRY: z.coerce
+      .number("Access Token Expiry Must Be Set In Minutes")
+      .min(15, "Access Token Expiry Must Be At Least 15 Minutes")
+      .max(30, "Access Token Expiry Must Be At Most 30 Minutes"),
+    USER_REFRESH_TOKEN_SECRET: z
       .string("Refresh Token Secret Must Be A Valid Secret")
       .min(32, "Refresh Token Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Refresh Token Secret Must Be A Maximum Of 64 Characters"),
-    ORGANIZER_ACCESS_TOKEN_EXPIRY: z.coerce
-      .number("Access Token Expiry Must Be Set In Minutes")
-      .min(30, "Access Token Expiry Must Be At Least 30 Minutes")
-      .max(60, "Access Token Expiry Must Be At Most 1 Hour"),
-    ORGANIZER_REFRESH_TOKEN_EXPIRY: z.coerce
+    USER_REFRESH_TOKEN_EXPIRY: z.coerce
       .number("Refresh Token Expiry Must Be Set In Minutes")
-      .min(60 * 24 * 14, "Refresh Token Expiry Must Be At Least 14 Days")
-      .max(60 * 24 * 28, "Refresh Token Expiry Must Be At Most 28 Days"),
+      .min(60 * 24 * 7, "Refresh Token Expiry Must Be At Least 7 Days")
+      .max(60 * 24 * 14, "Refresh Token Expiry Must Be At Most 14 Days"),
     ORGANIZER_ACCESS_TOKEN_SECRET: z
       .string("Access Token Secret Must Be A Valid Secret")
       .min(32, "Access Token Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Access Token Secret Must Be A Maximum Of 64 Characters"),
+    ORGANIZER_ACCESS_TOKEN_EXPIRY: z.coerce
+      .number("Access Token Expiry Must Be Set In Minutes")
+      .min(30, "Access Token Expiry Must Be At Least 30 Minutes")
+      .max(60, "Access Token Expiry Must Be At Most 1 Hour"),
     ORGANIZER_REFRESH_TOKEN_SECRET: z
       .string("Refresh Token Secret Must Be A Valid Secret")
       .min(32, "Refresh Token Secret Must Be A Minimum Of 32 Characters")
       .max(64, "Refresh Token Secret Must Be A Maximum Of 64 Characters"),
+    ORGANIZER_REFRESH_TOKEN_EXPIRY: z.coerce
+      .number("Refresh Token Expiry Must Be Set In Minutes")
+      .min(60 * 24 * 14, "Refresh Token Expiry Must Be At Least 14 Days")
+      .max(60 * 24 * 28, "Refresh Token Expiry Must Be At Most 28 Days"),
   },
   "Secret Environment Variables Are Missing",
 );
@@ -100,16 +100,16 @@ const envValidatorSchema = z
   .superRefine((values, ctx) => {
     const {
       COOKIES_SECRET,
-      ATTENDEE_ACCESS_TOKEN_SECRET,
-      ATTENDEE_REFRESH_TOKEN_SECRET,
+      USER_ACCESS_TOKEN_SECRET,
+      USER_REFRESH_TOKEN_SECRET,
       ORGANIZER_ACCESS_TOKEN_SECRET,
       ORGANIZER_REFRESH_TOKEN_SECRET,
     } = values.SECRET;
 
     const secrets = [
       COOKIES_SECRET,
-      ATTENDEE_ACCESS_TOKEN_SECRET,
-      ATTENDEE_REFRESH_TOKEN_SECRET,
+      USER_ACCESS_TOKEN_SECRET,
+      USER_REFRESH_TOKEN_SECRET,
       ORGANIZER_ACCESS_TOKEN_SECRET,
       ORGANIZER_REFRESH_TOKEN_SECRET,
     ];

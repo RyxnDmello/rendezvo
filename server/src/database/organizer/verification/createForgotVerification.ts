@@ -14,7 +14,7 @@ const createForgotVerification = async (id: string) => {
         _id: id,
       }),
       VerificationModel.exists({
-        userID: id,
+        user: id,
         type: "reset",
       }),
     ]);
@@ -49,7 +49,7 @@ const createForgotVerification = async (id: string) => {
     }
 
     const newVerification = new VerificationModel({
-      userID: id,
+      user: id,
       type: "reset",
       otp,
       expiredAt: expiry,

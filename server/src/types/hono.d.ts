@@ -1,6 +1,6 @@
 import "hono";
 
-type Role = "admin" | "organizer" | "attendee";
+import { Role } from "@constants/user";
 
 declare module "hono" {
   interface ContextVariableMap {

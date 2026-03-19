@@ -7,7 +7,7 @@ import { generateOTP } from "@helpers/generator";
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const createAuthVerification = async (id: string) => {
+const createAccountVerification = async (id: string) => {
   try {
     const [dbOrganizer, dbVerification] = await Promise.all([
       OrganizerModel.findById(id, {
@@ -16,7 +16,7 @@ const createAuthVerification = async (id: string) => {
         versionKey: false,
       }),
       VerificationModel.exists({
-        userID: id,
+        user: id,
         type: "auth",
       }),
     ]);
@@ -55,7 +55,7 @@ const createAuthVerification = async (id: string) => {
     }
 
     const newVerification = new VerificationModel({
-      userID: id,
+      user: id,
       type: "auth",
       otp,
       expiredAt: expiry,
@@ -82,4 +82,4 @@ const createAuthVerification = async (id: string) => {
   }
 };
 
-export default createAuthVerification;
+export default createAccountVerification;

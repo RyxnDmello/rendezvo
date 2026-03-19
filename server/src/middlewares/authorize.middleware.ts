@@ -4,9 +4,9 @@ import ApiError, { ApiErrorResponse } from "@utils/ApiError";
 
 import { verifyAccessToken } from "@database/organizer/helpers/token";
 
-type Role = "admin" | "organizer" | "attendee";
+import { Role } from "@constants/user";
 
-const authorize = (role?: Role) => {
+const protect = (role: Role) => {
   return async (ctx: Context, next: Next) => {
     try {
       const { authorization } = ctx.req.header();
@@ -27,13 +27,18 @@ const authorize = (role?: Role) => {
         );
       }
 
-      const payload = await verifyAccessToken(token);
+      let payload = null;
 
-      if (role && role !== payload.role) {
-        throw new ApiError(
-          "You Do Not Have Sufficient Permissions To Access This Service",
-          "UNAUTHORIZED",
-        );
+      switch (role) {
+        case "organizer":
+          payload = await verifyAccessToken(token);
+          break;
+
+        default:
+          throw new ApiError(
+            "You Do Not Have Sufficient Permissions To Access This Service",
+            "UNAUTHORIZED",
+          );
       }
 
       ctx.set("user", payload);
@@ -45,9 +50,8 @@ const authorize = (role?: Role) => {
   };
 };
 
-export const authorizeUser = authorize();
-export const authorizeAdmin = authorize("admin");
-export const authorizeAttendee = authorize("attendee");
-export const authorizeOrganizer = authorize("organizer");
+export const authorizeUser = protect("user");
+export const authorizeAdmin = protect("admin");
+export const authorizeOrganizer = protect("organizer");
 
-export default authorize;
+export default protect;

@@ -14,6 +14,15 @@ import {
   _deleteOrganizerProfile,
 } from "@controllers/organizer.controller";
 
+import {
+  _createResetVerification,
+  _verifyResetVerification,
+  _createForgotVerification,
+  _verifyForgotVerification,
+  _createAccountVerification,
+  _verifyAccountVerification,
+} from "@controllers/verification.controller";
+
 import { authorizeOrganizer } from "@middlewares/authorize.middleware";
 
 import loginOrganizerValidator from "@validators/organizer/loginOrganizer.validator";
@@ -22,6 +31,11 @@ import registerOrganizerValidator from "@validators/organizer/registerOrganizer.
 import uploadOrganizerMediaValidator from "@validators/organizer/media/uploadOrganizerMedia.validator";
 import uploadOrganizerBannerValidator from "@validators/organizer/media/uploadOrganizerBanner.validator";
 import uploadOrganizerProfileValidator from "@validators/organizer/media/uploadOrganizerProfile.validator";
+
+import createResetVerificationValidator from "@validators/verification/createResetVerification.validator";
+import verifyResetVerificationValidator from "@validators/verification/verifyResetVerification.validator";
+import verifyForgotVerificationValidator from "@validators/verification/verifyForgotVerification.validator";
+import verifyAccountVerificationValidator from "@validators/verification/verifyAccountVerification.validator";
 
 const router = new Hono();
 
@@ -56,5 +70,32 @@ router
     _uploadOrganizerProfile,
   )
   .delete(authorizeOrganizer, _deleteOrganizerProfile);
+
+router
+  .basePath("/:id/verification")
+  .post(_createAccountVerification("organizer"))
+  .patch(
+    verifyAccountVerificationValidator,
+    _verifyAccountVerification("organizer"),
+  );
+router
+  .basePath("/:id/forgot")
+  .post(_createForgotVerification("organizer"))
+  .patch(
+    verifyForgotVerificationValidator,
+    _verifyForgotVerification("organizer"),
+  );
+router
+  .basePath("/reset")
+  .post(
+    authorizeOrganizer,
+    createResetVerificationValidator,
+    _createResetVerification("organizer"),
+  )
+  .patch(
+    authorizeOrganizer,
+    verifyResetVerificationValidator,
+    _verifyResetVerification("organizer"),
+  );
 
 export default router;

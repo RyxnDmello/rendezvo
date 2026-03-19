@@ -6,7 +6,7 @@ export type Type = "auth" | "reset";
 
 export interface Verification {
   id?: string;
-  userID?: string;
+  user?: string;
   type: Type;
   otp: string;
   password: string | null;
@@ -17,9 +17,9 @@ export interface Verification {
 
 const verificationSchema = new Schema<Verification>(
   {
-    userID: {
+    user: {
       type: Schema.Types.String,
-      required: [true, "Event Owner ID Must Be Provided"],
+      required: [true, "User ID Must Be Provided"],
       index: true,
       trim: true,
     },

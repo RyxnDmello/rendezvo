@@ -3,21 +3,21 @@ import { startSession } from "mongoose";
 import OrganizerModel from "@models/organizer.model";
 import VerificationModel from "@models/verification.model";
 
-import { VerifyAuthVerificationValidatorSchema } from "@validators/verification/verifyAuthVerification.validator";
+import { VerifyAccountVerificationValidatorSchema } from "@validators/verification/verifyAccountVerification.validator";
 
 import { createTokens } from "@database/organizer/helpers/token";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const verifyAuthVerification = async (
+const verifyAccountVerification = async (
   id: string,
-  data: VerifyAuthVerificationValidatorSchema,
+  data: VerifyAccountVerificationValidatorSchema,
 ) => {
   try {
     const dbVerification = await VerificationModel.findOne(
       {
-        userID: id,
+        user: id,
         type: "auth",
       },
       {
@@ -123,4 +123,4 @@ const verifyAuthVerification = async (
   }
 };
 
-export default verifyAuthVerification;
+export default verifyAccountVerification;

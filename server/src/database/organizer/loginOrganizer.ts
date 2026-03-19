@@ -48,7 +48,7 @@ const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
 
     if (!dbOrganizer.verified) {
       return {
-        email: dbOrganizer.email,
+        id: dbOrganizer._id,
         verified: dbOrganizer.verified,
       };
     }
