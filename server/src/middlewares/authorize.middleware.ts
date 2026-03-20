@@ -2,7 +2,8 @@ import { Context, Next } from "hono";
 
 import ApiError, { ApiErrorResponse } from "@utils/ApiError";
 
-import { verifyAccessToken } from "@database/organizer/helpers/token";
+import { verifyAccessToken as verifyUserAccessToken } from "@database/user/helpers/token";
+import { verifyAccessToken as verifyOrganizerAccessToken } from "@database/organizer/helpers/token";
 
 import { Role } from "@constants/user";
 
@@ -30,8 +31,12 @@ const protect = (role: Role) => {
       let payload = null;
 
       switch (role) {
+        case "user":
+          payload = await verifyUserAccessToken(token);
+          break;
+
         case "organizer":
-          payload = await verifyAccessToken(token);
+          payload = await verifyOrganizerAccessToken(token);
           break;
 
         default:

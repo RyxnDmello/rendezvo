@@ -12,7 +12,7 @@ import { env } from "@constants/env";
 
 export interface AccessTokenPayload {
   id: string;
-  role: "organizer";
+  role: "user";
 }
 
 export interface RefreshTokenPayload {
