@@ -2,15 +2,33 @@ import refreshAccessToken from "@database/token/refreshAccessToken";
 
 import { RefreshAccessTokenContext } from "@validators/token/refreshAccessToken.validator";
 
-import { getSessionCookie } from "@database/organizer/helpers/cookie";
+import { getSessionCookie as getUserSessionCookie } from "@database/user/helpers/cookie";
+import { getSessionCookie as getOrganizerSessionCookie } from "@database/organizer/helpers/cookie";
 
-import { ApiErrorResponse } from "@utils/ApiError";
+import { ApiErrorResponse, ApiErrorCustomResponse } from "@utils/ApiError";
 
 export const _refreshAccessToken = async (ctx: RefreshAccessTokenContext) => {
   const { role } = ctx.req.valid("query");
 
   try {
-    const token = await getSessionCookie(ctx);
+    let token = null;
+
+    switch (role) {
+      case "user":
+        token = await getUserSessionCookie(ctx);
+        break;
+
+      case "organizer":
+        token = await getOrganizerSessionCookie(ctx);
+        break;
+
+      default:
+        return ApiErrorCustomResponse(ctx, {
+          error: "Invalid User Role Provided",
+          code: "BAD_REQUEST",
+        });
+    }
+
     const credentials = await refreshAccessToken(role, token);
     return ctx.json(credentials, 200);
   } catch (error) {

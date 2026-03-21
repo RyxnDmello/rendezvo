@@ -9,7 +9,7 @@ import { LoginUserContext } from "@validators/user/loginUser.validator";
 import { UpdateUserContext } from "@validators/user/updateUser.validator";
 import { RegisterUserContext } from "@validators/user/registerUser.validator";
 
-import { setSessionCookie } from "@database/organizer/helpers/cookie";
+import { setSessionCookie } from "@database/user/helpers/cookie";
 
 import { ApiErrorCustomResponse, ApiErrorResponse } from "@utils/ApiError";
 

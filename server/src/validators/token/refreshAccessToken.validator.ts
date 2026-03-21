@@ -2,7 +2,9 @@ import * as z from "zod";
 
 import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
-const roles = ["admin", "organizer", "attendee"];
+import { Role } from "@constants/user";
+
+const roles: Role[] = ["user", "admin", "organizer"];
 
 export const refreshAccessTokenValidatorSchema = z.strictObject(
   {
