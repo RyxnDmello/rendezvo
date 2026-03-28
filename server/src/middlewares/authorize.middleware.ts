@@ -2,10 +2,15 @@ import { Context, Next } from "hono";
 
 import ApiError, { ApiErrorResponse } from "@utils/ApiError";
 
+import { AccessTokenPayload as UserAccessTokenPayload } from "@database/user/helpers/token";
+import { AccessTokenPayload as OrganizerAccessTokenPayload } from "@database/organizer/helpers/token";
+
 import { verifyAccessToken as verifyUserAccessToken } from "@database/user/helpers/token";
 import { verifyAccessToken as verifyOrganizerAccessToken } from "@database/organizer/helpers/token";
 
 import { Role } from "@constants/user";
+
+type Payload = UserAccessTokenPayload | OrganizerAccessTokenPayload | null;
 
 const protect = (role: Role) => {
   return async (ctx: Context, next: Next) => {
@@ -28,7 +33,7 @@ const protect = (role: Role) => {
         );
       }
 
-      let payload = null;
+      let payload: Payload = null;
 
       switch (role) {
         case "user":
@@ -46,7 +51,7 @@ const protect = (role: Role) => {
           );
       }
 
-      ctx.set("user", payload);
+      ctx.set("user", payload.data);
 
       return next();
     } catch (error) {

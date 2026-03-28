@@ -1,8 +1,8 @@
 import { addMinutes, addHours } from "date-fns";
 
-export function getExpiryDate(minutes: number, hours: number = 0) {
-  let expiry = new Date();
-  expiry = addHours(expiry, hours);
-  expiry = addMinutes(expiry, minutes);
-  return expiry;
+export function getDate(minutes: number, hours: number = 0) {
+  let date = new Date();
+  date = addHours(date, hours);
+  date = addMinutes(date, minutes);
+  return date;
 }

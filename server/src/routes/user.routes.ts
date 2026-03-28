@@ -17,6 +17,11 @@ import {
   _verifyAccountVerification,
 } from "@controllers/verification.controller";
 
+import {
+  _revokeSession,
+  _refreshSession,
+} from "@controllers/session.controller";
+
 import { authorizeUser } from "@middlewares/authorize.middleware";
 
 import loginUserValidator from "@validators/user/loginUser.validator";
@@ -61,5 +66,10 @@ router
     verifyResetVerificationValidator,
     _verifyResetVerification("user"),
   );
+
+router
+  .basePath("/session")
+  .patch(_refreshSession("user"))
+  .delete(_revokeSession("user"));
 
 export default router;

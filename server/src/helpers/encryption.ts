@@ -1,4 +1,11 @@
 import { password } from "bun";
+import { subtle } from "crypto";
+
+export const hashToken = async (token: string) => {
+  const data = new TextEncoder().encode(token);
+  const hash = await subtle.digest("SHA-256", data);
+  return Buffer.from(hash).toString("hex");
+};
 
 export const hashPassword = async (plain: string) => {
   return await password.hash(plain, {

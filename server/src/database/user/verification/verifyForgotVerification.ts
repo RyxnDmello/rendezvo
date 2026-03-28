@@ -5,7 +5,7 @@ import VerificationModel from "@models/verification.model";
 
 import { VerifyForgotVerificationValidatorSchema } from "@validators/verification/verifyForgotVerification.validator";
 
-import { hashPassword } from "@helpers/password";
+import { hashPassword } from "@helpers/encryption";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";

@@ -11,6 +11,7 @@ import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
 const verifyAccountVerification = async (
+  ip: string,
   id: string,
   data: VerifyAccountVerificationValidatorSchema,
 ) => {
@@ -89,6 +90,7 @@ const verifyAccountVerification = async (
       await session.commitTransaction();
 
       const { accessToken, refreshToken } = await createTokens(
+        ip,
         dbUser._id.toString(),
       );
 

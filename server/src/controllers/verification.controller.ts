@@ -1,4 +1,5 @@
 import { Context } from "hono";
+import { getConnInfo } from "hono/bun";
 
 import createUserResetVerification from "@database/user/verification/createResetVerification";
 import createUserForgotVerification from "@database/user/verification/createForgotVerification";
@@ -134,11 +135,20 @@ export const _createResetVerification = (role: Role) => {
 
 export const _verifyAccountVerification = (role: Role) => {
   return async (ctx: VerifyAccountVerificationContext) => {
+    const ip = getConnInfo(ctx).remote.address;
+
     const id = ctx.req.param("id");
 
     if (!id) {
       return ApiErrorCustomResponse(ctx, {
         error: "User ID Must Be Provided",
+        code: "BAD_REQUEST",
+      });
+    }
+
+    if (!ip) {
+      return ApiErrorCustomResponse(ctx, {
+        error: "User IP Address Must Be Provided",
         code: "BAD_REQUEST",
       });
     }
@@ -150,11 +160,11 @@ export const _verifyAccountVerification = (role: Role) => {
 
       switch (role) {
         case "user":
-          result = await verifyUserAccountVerification(id, data);
+          result = await verifyUserAccountVerification(ip, id, data);
           break;
 
         case "organizer":
-          result = await verifyOrganizerAccountVerification(id, data);
+          result = await verifyOrganizerAccountVerification(ip, id, data);
           break;
 
         default:

@@ -2,14 +2,14 @@ import UserModel from "@models/user.model";
 
 import { LoginUserValidatorSchema } from "@validators/user/loginUser.validator";
 
-import { verifyPassword } from "@helpers/password";
+import { verifyPassword } from "@helpers/encryption";
 
 import { createTokens } from "./helpers/token";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const loginUser = async (data: LoginUserValidatorSchema) => {
+const loginUser = async (ip: string, data: LoginUserValidatorSchema) => {
   try {
     const dbUser = await UserModel.findOne(
       {
@@ -54,6 +54,7 @@ const loginUser = async (data: LoginUserValidatorSchema) => {
     }
 
     const { accessToken, refreshToken } = await createTokens(
+      ip,
       dbUser._id.toString(),
     );
 

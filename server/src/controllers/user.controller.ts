@@ -1,4 +1,5 @@
 import { Context } from "hono";
+import { getConnInfo } from "hono/bun";
 
 import fetchUser from "@database/user/fetchUser";
 import loginUser from "@database/user/loginUser";
@@ -25,10 +26,19 @@ export const _fetchUser = async (ctx: Context) => {
 };
 
 export const _loginUser = async (ctx: LoginUserContext) => {
+  const ip = getConnInfo(ctx).remote.address;
+
   const data = ctx.req.valid("json");
 
+  if (!ip) {
+    return ApiErrorCustomResponse(ctx, {
+      error: "User IP Address Must Be Provided",
+      code: "BAD_REQUEST",
+    });
+  }
+
   try {
-    const { refreshToken, ...organizer } = await loginUser(data);
+    const { refreshToken, ...organizer } = await loginUser(ip, data);
 
     if (refreshToken) {
       await setSessionCookie(ctx, refreshToken);

@@ -8,7 +8,7 @@ import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
 type Filter = {
-  ownerID: string;
+  owner: string;
   mode?: string;
   status?: string;
   visibility?: string;
@@ -21,14 +21,14 @@ type Filter = {
 };
 
 const fetchEvents = async (
-  ownerID: string,
+  owner: string,
   query: FetchEventsValidatorSchema,
   limit: number = 0,
 ) => {
   let cacheable = true;
 
   const filter: Filter = {
-    ownerID,
+    owner,
   };
 
   if (query.mode !== undefined) {
@@ -68,7 +68,7 @@ const fetchEvents = async (
   try {
     if (cacheable) {
       return (
-        ((await getCachedEvents(ownerID)) as unknown as Event[]) ??
+        ((await getCachedEvents(owner)) as unknown as Event[]) ??
         (await getEvents(filter, limit, cacheable))
       );
     }
@@ -110,7 +110,7 @@ const getEvents = async (filter: Filter, limit: number, cacheable: boolean) => {
   });
 
   if (cacheable) {
-    setCachedEvents(filter.ownerID, events);
+    setCachedEvents(filter.owner, events);
   }
 
   return events;

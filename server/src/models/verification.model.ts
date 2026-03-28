@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
 
-import { getExpiryDate } from "@helpers/date";
+import { getDate } from "@helpers/date";
 
 export type Type = "auth" | "reset";
 
@@ -49,13 +49,13 @@ const verificationSchema = new Schema<Verification>(
       default: null,
     },
     expiredAt: {
-      type: Date,
+      type: Schema.Types.Date,
       required: [true, "Expiry Date Must Be Provided"],
       index: {
         expireAfterSeconds: 600,
       },
       default: () => {
-        return getExpiryDate(10);
+        return getDate(10);
       },
     },
   },

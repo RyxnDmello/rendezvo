@@ -2,7 +2,7 @@ import UserModel from "@models/user.model";
 
 import { RegisterUserValidatorSchema } from "@validators/user/registerUser.validator";
 
-import { hashPassword } from "@helpers/password";
+import { hashPassword } from "@helpers/encryption";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
