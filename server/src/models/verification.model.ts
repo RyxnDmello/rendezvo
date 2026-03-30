@@ -9,7 +9,6 @@ export interface Verification {
   user?: string;
   type: Type;
   otp: string;
-  password: string | null;
   expiredAt: Date;
   createdAt?: Date;
   updatedAt?: Date;
@@ -41,12 +40,6 @@ const verificationSchema = new Schema<Verification>(
         values: ["auth", "reset"],
         message: "Invalid Verification Type",
       },
-    },
-    password: {
-      type: Schema.Types.String,
-      required: false,
-      trim: true,
-      default: null,
     },
     expiredAt: {
       type: Schema.Types.Date,

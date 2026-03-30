@@ -11,7 +11,6 @@ import {
 import {
   _createResetVerification,
   _verifyResetVerification,
-  _createForgotVerification,
   _verifyForgotVerification,
   _createAccountVerification,
   _verifyAccountVerification,
@@ -28,7 +27,6 @@ import loginUserValidator from "@validators/user/loginUser.validator";
 import updateUserValidator from "@validators/user/updateUser.validator";
 import registerUserValidator from "@validators/user/registerUser.validator";
 
-import createResetVerificationValidator from "@validators/verification/createResetVerification.validator";
 import verifyResetVerificationValidator from "@validators/verification/verifyResetVerification.validator";
 import verifyForgotVerificationValidator from "@validators/verification/verifyForgotVerification.validator";
 import verifyAccountVerificationValidator from "@validators/verification/verifyAccountVerification.validator";
@@ -52,15 +50,11 @@ router
   );
 router
   .basePath("/:id/forgot")
-  .post(_createForgotVerification("user"))
+  .post(_createResetVerification("user"))
   .patch(verifyForgotVerificationValidator, _verifyForgotVerification("user"));
 router
   .basePath("/reset")
-  .post(
-    authorizeUser,
-    createResetVerificationValidator,
-    _createResetVerification("user"),
-  )
+  .post(authorizeUser, _createResetVerification("user"))
   .patch(
     authorizeUser,
     verifyResetVerificationValidator,
