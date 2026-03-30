@@ -2,14 +2,17 @@ import OrganizerModel from "@models/organizer.model";
 
 import { LoginOrganizerValidatorSchema } from "@validators/organizer/loginOrganizer.validator";
 
-import { verifyPassword } from "@helpers/password";
+import { verifyPassword } from "@helpers/encryption";
 
 import { createTokens } from "./helpers/token";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
+const loginOrganizer = async (
+  ip: string,
+  data: LoginOrganizerValidatorSchema,
+) => {
   try {
     const dbOrganizer = await OrganizerModel.findOne(
       {
@@ -54,6 +57,7 @@ const loginOrganizer = async (data: LoginOrganizerValidatorSchema) => {
     }
 
     const { accessToken, refreshToken } = await createTokens(
+      ip,
       dbOrganizer._id.toString(),
     );
 

@@ -2,7 +2,7 @@ import OrganizerModel from "@models/organizer.model";
 
 import { RegisterOrganizerValidatorSchema } from "@validators/organizer/registerOrganizer.validator";
 
-import { hashPassword } from "@helpers/password";
+import { hashPassword } from "@helpers/encryption";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";

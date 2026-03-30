@@ -1,7 +1,7 @@
 import OrganizerModel from "@models/organizer.model";
 import VerificationModel from "@models/verification.model";
 
-import { getExpiryDate } from "@helpers/date";
+import { getDate } from "@helpers/date";
 import { generateOTP } from "@helpers/generator";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
@@ -25,7 +25,7 @@ const createForgotVerification = async (id: string) => {
 
     const otp = generateOTP();
 
-    const expiry = getExpiryDate(15);
+    const expiry = getDate(15);
 
     if (dbVerification) {
       await VerificationModel.updateOne(

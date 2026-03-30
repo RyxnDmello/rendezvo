@@ -23,6 +23,11 @@ import {
   _verifyAccountVerification,
 } from "@controllers/verification.controller";
 
+import {
+  _revokeSession,
+  _refreshSession,
+} from "@controllers/session.controller";
+
 import { authorizeOrganizer } from "@middlewares/authorize.middleware";
 
 import loginOrganizerValidator from "@validators/organizer/loginOrganizer.validator";
@@ -97,5 +102,10 @@ router
     verifyResetVerificationValidator,
     _verifyResetVerification("organizer"),
   );
+
+router
+  .basePath("/session")
+  .patch(_refreshSession("organizer"))
+  .delete(_revokeSession("organizer"));
 
 export default router;

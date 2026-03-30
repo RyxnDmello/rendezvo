@@ -1,4 +1,5 @@
 import { Context } from "hono";
+import { getConnInfo } from "hono/bun";
 
 import fetchOrganizer from "@database/organizer/fetchOrganizer";
 import loginOrganizer from "@database/organizer/loginOrganizer";
@@ -36,10 +37,19 @@ export const _fetchOrganizer = async (ctx: Context) => {
 };
 
 export const _loginOrganizer = async (ctx: LoginOrganizerContext) => {
+  const ip = getConnInfo(ctx).remote.address;
+
   const data = ctx.req.valid("json");
 
+  if (!ip) {
+    return ApiErrorCustomResponse(ctx, {
+      error: "User IP Address Must Be Provided",
+      code: "BAD_REQUEST",
+    });
+  }
+
   try {
-    const { refreshToken, ...organizer } = await loginOrganizer(data);
+    const { refreshToken, ...organizer } = await loginOrganizer(ip, data);
 
     if (refreshToken) {
       await setSessionCookie(ctx, refreshToken);

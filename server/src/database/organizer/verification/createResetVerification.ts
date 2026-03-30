@@ -3,9 +3,9 @@ import VerificationModel from "@models/verification.model";
 
 import { CreateResetVerificationValidatorSchema } from "@validators/verification/createResetVerification.validator";
 
-import { getExpiryDate } from "@helpers/date";
+import { getDate } from "@helpers/date";
 import { generateOTP } from "@helpers/generator";
-import { hashPassword, verifyPassword } from "@helpers/password";
+import { hashPassword, verifyPassword } from "@helpers/encryption";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
@@ -56,7 +56,7 @@ const createResetVerification = async (
 
     const otp = generateOTP();
 
-    const expiry = getExpiryDate(15);
+    const expiry = getDate(15);
 
     if (dbVerification) {
       await VerificationModel.updateOne(

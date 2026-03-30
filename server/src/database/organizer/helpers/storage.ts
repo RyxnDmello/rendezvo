@@ -6,9 +6,9 @@ import {
   deleteFile,
 } from "@helpers/storage";
 
-import AppwriteError, { isAppwriteError } from "@utils/AppwriteError";
-
 import ApiError from "@utils/ApiError";
+
+import AppwriteError, { isAppwriteError } from "@utils/AppwriteError";
 
 export const getProfileID = (id: string) => {
   return `ORGANIZER_${getID(id)}_PROFILE`;
