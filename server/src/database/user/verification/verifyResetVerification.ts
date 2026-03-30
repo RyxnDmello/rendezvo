@@ -5,6 +5,8 @@ import VerificationModel from "@models/verification.model";
 
 import { VerifyResetVerificationValidatorSchema } from "@validators/verification/verifyResetVerification.validator";
 
+import { hashPassword, verifyPassword } from "@helpers/encryption";
+
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
@@ -13,21 +15,39 @@ const verifyResetVerification = async (
   data: VerifyResetVerificationValidatorSchema,
 ) => {
   try {
-    const dbVerification = await VerificationModel.findOne(
-      {
-        user: id,
-        type: "reset",
-      },
-      {
-        otp: 1,
+    const [dbUser, dbVerification] = await Promise.all([
+      UserModel.findById(id, {
+        verified: 1,
         password: 1,
-        expiredAt: 1,
-      },
-    ).lean({
-      versionKey: false,
-    });
+      }).lean({
+        versionKey: false,
+      }),
+      VerificationModel.findOne(
+        {
+          user: id,
+          type: "reset",
+        },
+        {
+          otp: 1,
+          expiredAt: 1,
+        },
+      ).lean({
+        versionKey: false,
+      }),
+    ]);
 
-    if (!dbVerification || !dbVerification.password) {
+    if (!dbUser) {
+      throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
+    }
+
+    if (!dbUser.verified || !dbUser.password) {
+      throw new ApiError(
+        "You Are Not Authorized To Access This Service",
+        "BAD_REQUEST",
+      );
+    }
+
+    if (!dbVerification) {
       throw new ApiError(
         "Verification For Given User Does Not Exist",
         "BAD_REQUEST",
@@ -44,6 +64,14 @@ const verifyResetVerification = async (
     if (dbVerification.otp !== data.otp) {
       throw new ApiError("Invalid OTP Provided", "INVALID_CREDENTIALS");
     }
+
+    const valid = await verifyPassword(data.password, dbUser.password);
+
+    if (!valid) {
+      throw new ApiError("Invalid Password Provided", "INVALID_CREDENTIALS");
+    }
+
+    const encrypted = await hashPassword(data.newPassword);
 
     const session = await startSession();
 
@@ -63,7 +91,7 @@ const verifyResetVerification = async (
         },
         {
           $set: {
-            password: dbVerification.password,
+            password: encrypted,
           },
         },
       );

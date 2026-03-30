@@ -13,9 +13,9 @@ const app = new Hono();
 connectRedis();
 connectMongoDB();
 
-app.route("/api/event", eventRoutes);
+app.route("/api/events", eventRoutes);
 
-app.route("/api/user", userRoutes);
-app.route("/api/organizer", organizerRoutes);
+app.route("/api/users", userRoutes);
+app.route("/api/organizers", organizerRoutes);
 
 export default app;

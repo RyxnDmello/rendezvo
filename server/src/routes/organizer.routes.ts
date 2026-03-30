@@ -17,7 +17,6 @@ import {
 import {
   _createResetVerification,
   _verifyResetVerification,
-  _createForgotVerification,
   _verifyForgotVerification,
   _createAccountVerification,
   _verifyAccountVerification,
@@ -37,7 +36,6 @@ import uploadOrganizerMediaValidator from "@validators/organizer/media/uploadOrg
 import uploadOrganizerBannerValidator from "@validators/organizer/media/uploadOrganizerBanner.validator";
 import uploadOrganizerProfileValidator from "@validators/organizer/media/uploadOrganizerProfile.validator";
 
-import createResetVerificationValidator from "@validators/verification/createResetVerification.validator";
 import verifyResetVerificationValidator from "@validators/verification/verifyResetVerification.validator";
 import verifyForgotVerificationValidator from "@validators/verification/verifyForgotVerification.validator";
 import verifyAccountVerificationValidator from "@validators/verification/verifyAccountVerification.validator";
@@ -85,18 +83,14 @@ router
   );
 router
   .basePath("/:id/forgot")
-  .post(_createForgotVerification("organizer"))
+  .post(_createResetVerification("organizer"))
   .patch(
     verifyForgotVerificationValidator,
     _verifyForgotVerification("organizer"),
   );
 router
   .basePath("/reset")
-  .post(
-    authorizeOrganizer,
-    createResetVerificationValidator,
-    _createResetVerification("organizer"),
-  )
+  .post(authorizeOrganizer, _createResetVerification("organizer"))
   .patch(
     authorizeOrganizer,
     verifyResetVerificationValidator,
@@ -106,6 +100,6 @@ router
 router
   .basePath("/session")
   .patch(_refreshSession("organizer"))
-  .delete(_revokeSession("organizer"));
+  .delete(authorizeOrganizer, _revokeSession("organizer"));
 
 export default router;

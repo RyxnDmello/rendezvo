@@ -1,26 +1,17 @@
 import OrganizerModel from "@models/organizer.model";
 import VerificationModel from "@models/verification.model";
 
-import { CreateResetVerificationValidatorSchema } from "@validators/verification/createResetVerification.validator";
-
 import { getDate } from "@helpers/date";
 import { generateOTP } from "@helpers/generator";
-import { hashPassword, verifyPassword } from "@helpers/encryption";
 
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 import ApiError, { isApiError } from "@utils/ApiError";
 
-const createResetVerification = async (
-  id: string,
-  data: CreateResetVerificationValidatorSchema,
-) => {
+const createResetVerification = async (id: string) => {
   try {
     const [dbOrganizer, dbVerification] = await Promise.all([
-      OrganizerModel.findById(id, {
-        verified: 1,
-        password: 1,
-      }).lean({
-        versionKey: false,
+      OrganizerModel.exists({
+        _id: id,
       }),
       VerificationModel.exists({
         user: id,
@@ -31,28 +22,6 @@ const createResetVerification = async (
     if (!dbOrganizer) {
       throw new ApiError("User With Given ID Does Not Exist", "BAD_REQUEST");
     }
-
-    if (!dbOrganizer.verified) {
-      throw new ApiError(
-        "Unable To Proceed Since User Has Not Been Verified",
-        "BAD_REQUEST",
-      );
-    }
-
-    if (!dbOrganizer.password) {
-      throw new ApiError(
-        "You Have Opted For A Different Authentication Method",
-        "BAD_REQUEST",
-      );
-    }
-
-    const valid = await verifyPassword(data.password, dbOrganizer.password);
-
-    if (!valid) {
-      throw new ApiError("Invalid Password", "INVALID_CREDENTIALS");
-    }
-
-    const encrypted = await hashPassword(data.newPassword);
 
     const otp = generateOTP();
 
@@ -66,7 +35,6 @@ const createResetVerification = async (
         {
           $set: {
             otp,
-            password: encrypted,
             expiredAt: expiry,
           },
         },
@@ -84,7 +52,6 @@ const createResetVerification = async (
       user: id,
       type: "reset",
       otp,
-      password: encrypted,
       expiredAt: expiry,
     });
 

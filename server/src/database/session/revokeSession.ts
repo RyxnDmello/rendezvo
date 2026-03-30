@@ -1,5 +1,7 @@
 import { Context } from "hono";
 
+import SessionModel from "@models/session.model";
+
 import { verifyRefreshToken as verifyUserRefreshToken } from "@database/user/helpers/token";
 import { verifyRefreshToken as verifyOrganizerRefreshToken } from "@database/organizer/helpers/token";
 
@@ -19,7 +21,6 @@ import ApiError, { isApiError } from "@utils/ApiError";
 import MongooseError, { isMongooseError } from "@utils/MongooseError";
 
 import { Role } from "@constants/user";
-import SessionModel from "@models/session.model";
 
 const revokeSession = async (ctx: Context, role: Role) => {
   try {

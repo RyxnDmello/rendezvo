@@ -2,10 +2,8 @@ import { Context } from "hono";
 import { getConnInfo } from "hono/bun";
 
 import createUserResetVerification from "@database/user/verification/createResetVerification";
-import createUserForgotVerification from "@database/user/verification/createForgotVerification";
 import createUserAccountVerification from "@database/user/verification/createAccountVerification";
 import createOrganizerResetVerification from "@database/organizer/verification/createResetVerification";
-import createOrganizerForgotVerification from "@database/organizer/verification/createForgotVerification";
 import createOrganizerAccountVerification from "@database/organizer/verification/createAccountVerification";
 
 import verifyUserResetVerification from "@database/user/verification/verifyResetVerification";
@@ -15,7 +13,6 @@ import verifyOrganizerResetVerification from "@database/organizer/verification/v
 import verifyOrganizerForgotVerification from "@database/organizer/verification/verifyForgotVerification";
 import verifyOrganizerAccountVerification from "@database/organizer/verification/verifyAccountVerification";
 
-import { CreateResetVerificationContext } from "@validators/verification/createResetVerification.validator";
 import { VerifyResetVerificationContext } from "@validators/verification/verifyResetVerification.validator";
 import { VerifyForgotVerificationContext } from "@validators/verification/verifyForgotVerification.validator";
 import { VerifyAccountVerificationContext } from "@validators/verification/verifyAccountVerification.validator";
@@ -64,59 +61,20 @@ export const _createAccountVerification = (role: Role) => {
   };
 };
 
-export const _createForgotVerification = (role: Role) => {
-  return async (ctx: Context) => {
-    const id = ctx.req.param("id");
-
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    try {
-      let result = null;
-
-      switch (role) {
-        case "user":
-          result = await createUserForgotVerification(id);
-          break;
-
-        case "organizer":
-          result = await createOrganizerForgotVerification(id);
-          break;
-
-        default:
-          return ApiErrorCustomResponse(ctx, {
-            error: "Invalid User Role Provided",
-            code: "BAD_REQUEST",
-          });
-      }
-
-      return ctx.json(result, 200);
-    } catch (error) {
-      return ApiErrorResponse(ctx, error);
-    }
-  };
-};
-
 export const _createResetVerification = (role: Role) => {
-  return async (ctx: CreateResetVerificationContext) => {
+  return async (ctx: Context) => {
     const user = ctx.get("user");
 
-    const data = ctx.req.valid("json");
-
     try {
       let result = null;
 
       switch (role) {
         case "user":
-          result = await createUserResetVerification(user.id, data);
+          result = await createUserResetVerification(user.id);
           break;
 
         case "organizer":
-          result = await createOrganizerResetVerification(user.id, data);
+          result = await createOrganizerResetVerification(user.id);
           break;
 
         default:
