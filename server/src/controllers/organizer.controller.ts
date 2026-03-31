@@ -1,18 +1,18 @@
 import { Context } from "hono";
 import { getConnInfo } from "hono/bun";
 
-import fetchOrganizer from "@database/organizer/fetchOrganizer";
-import loginOrganizer from "@database/organizer/loginOrganizer";
-import updateOrganizer from "@database/organizer/updateOrganizer";
-import registerOrganizer from "@database/organizer/registerOrganizer";
+import fetchOrganizer from "@services/organizer/fetchOrganizer";
+import loginOrganizer from "@services/organizer/loginOrganizer";
+import updateOrganizer from "@services/organizer/updateOrganizer";
+import registerOrganizer from "@services/organizer/registerOrganizer";
 
-import uploadOrganizerMedia from "@database/organizer/media/uploadOrganizerMedia";
-import uploadOrganizerBanner from "@database/organizer/media/uploadOrganizerBanner";
-import uploadOrganizerProfile from "@database/organizer/media/uploadOrganizerProfile";
+import uploadOrganizerMedia from "@services/organizer/media/uploadOrganizerMedia";
+import uploadOrganizerBanner from "@services/organizer/media/uploadOrganizerBanner";
+import uploadOrganizerProfile from "@services/organizer/media/uploadOrganizerProfile";
 
-import deleteOrganizerMedia from "@database/organizer/media/deleteOrganizerMedia";
-import deleteOrganizerBanner from "@database/organizer/media/deleteOrganizerBanner";
-import deleteOrganizerProfile from "@database/organizer/media/deleteOrganizerProfile";
+import deleteOrganizerMedia from "@services/organizer/media/deleteOrganizerMedia";
+import deleteOrganizerBanner from "@services/organizer/media/deleteOrganizerBanner";
+import deleteOrganizerProfile from "@services/organizer/media/deleteOrganizerProfile";
 
 import { LoginOrganizerContext } from "@validators/organizer/loginOrganizer.validator";
 import { UpdateOrganizerContext } from "@validators/organizer/updateOrganizer.validator";
@@ -21,19 +21,15 @@ import { UploadOrganizerMediaContext } from "@validators/organizer/media/uploadO
 import { UploadOrganizerBannerContext } from "@validators/organizer/media/uploadOrganizerBanner.validator";
 import { UploadOrganizerProfileContext } from "@validators/organizer/media/uploadOrganizerProfile.validator";
 
-import { setSessionCookie } from "@database/organizer/helpers/cookie";
+import { setSessionCookie } from "@services/organizer/helpers/cookie";
 
-import { ApiErrorCustomResponse, ApiErrorResponse } from "@utils/ApiError";
+import ApiError from "@utils/ApiError";
 
 export const _fetchOrganizer = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  try {
-    const organizer = await fetchOrganizer(user.id);
-    return ctx.json(organizer, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
-  }
+  const organizer = await fetchOrganizer(user.id);
+  return ctx.json(organizer, 200);
 };
 
 export const _loginOrganizer = async (ctx: LoginOrganizerContext) => {
@@ -42,34 +38,23 @@ export const _loginOrganizer = async (ctx: LoginOrganizerContext) => {
   const data = ctx.req.valid("json");
 
   if (!ip) {
-    return ApiErrorCustomResponse(ctx, {
-      error: "User IP Address Must Be Provided",
-      code: "BAD_REQUEST",
-    });
+    throw new ApiError("User IP Address Must Be Provided", "BAD_REQUEST");
   }
 
-  try {
-    const { refreshToken, ...organizer } = await loginOrganizer(ip, data);
+  const { refreshToken, ...organizer } = await loginOrganizer(ip, data);
 
-    if (refreshToken) {
-      await setSessionCookie(ctx, refreshToken);
-    }
-
-    return ctx.json(organizer, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (refreshToken) {
+    await setSessionCookie(ctx, refreshToken);
   }
+
+  return ctx.json(organizer, 200);
 };
 
 export const _registerOrganizer = async (ctx: RegisterOrganizerContext) => {
   const data = ctx.req.valid("json");
 
-  try {
-    const organizer = await registerOrganizer(data);
-    return ctx.json(organizer, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
-  }
+  const organizer = await registerOrganizer(data);
+  return ctx.json(organizer, 200);
 };
 
 export const _updateOrganizer = async (ctx: UpdateOrganizerContext) => {
@@ -77,19 +62,12 @@ export const _updateOrganizer = async (ctx: UpdateOrganizerContext) => {
 
   const data = ctx.req.valid("json");
 
-  try {
-    if (!user.id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await updateOrganizer(user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!user.id) {
+    throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await updateOrganizer(user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _uploadOrganizerMedia = async (
@@ -99,19 +77,12 @@ export const _uploadOrganizerMedia = async (
 
   const data = ctx.req.valid("form");
 
-  try {
-    if (!user.id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await uploadOrganizerMedia(user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!user.id) {
+    throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await uploadOrganizerMedia(user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _uploadOrganizerBanner = async (
@@ -121,19 +92,12 @@ export const _uploadOrganizerBanner = async (
 
   const data = ctx.req.valid("form");
 
-  try {
-    if (!user.id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await uploadOrganizerBanner(user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!user.id) {
+    throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await uploadOrganizerBanner(user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _uploadOrganizerProfile = async (
@@ -143,73 +107,45 @@ export const _uploadOrganizerProfile = async (
 
   const data = ctx.req.valid("form");
 
-  try {
-    if (!user.id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await uploadOrganizerProfile(user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!user.id) {
+    throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await uploadOrganizerProfile(user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _deleteOrganizerMedia = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  try {
-    if (!user.id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await deleteOrganizerMedia(user.id);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!user.id) {
+    throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await deleteOrganizerMedia(user.id);
+  return ctx.json(result, 200);
 };
 
 export const _deleteOrganizerBanner = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  try {
-    if (!user.id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await deleteOrganizerBanner(user.id);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!user.id) {
+    throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await deleteOrganizerBanner(user.id);
+  return ctx.json(result, 200);
 };
 
 export const _deleteOrganizerProfile = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  try {
-    if (!user.id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await deleteOrganizerProfile(user.id);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!user.id) {
+    throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await deleteOrganizerProfile(user.id);
+  return ctx.json(result, 200);
 };
 
 export const _removeOrganizer = (ctx: Context) => {

@@ -32,11 +32,11 @@
       "@schemas/*": ["./src/models/schemas/*"],
       "@validators/*": ["./src/validators/*"],
       "@constants/*": ["./src/constants/*"],
-      "@database/*": ["./src/database/*"],
       "@services/*": ["./src/services/*"],
       "@helpers/*": ["./src/helpers/*"],
       "@routes/*": ["./src/routes/*"],
       "@models/*": ["./src/models/*"],
+      "@config/*": ["./src/config/*"],
       "@utils/*": ["./src/utils/*"]
     }
   },

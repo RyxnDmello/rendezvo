@@ -1,6 +1,6 @@
-import { storage, buffer } from "@services/appwrite.service";
-
 import { env } from "@constants/env";
+
+import { storage, buffer } from "@config/appwrite.config";
 
 const { APPWRITE_STORAGE_ID } = env.APPWRITE;
 

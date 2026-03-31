@@ -1,28 +1,24 @@
 import { Context } from "hono";
 import { getConnInfo } from "hono/bun";
 
-import fetchUser from "@database/user/fetchUser";
-import loginUser from "@database/user/loginUser";
-import updateUser from "@database/user/updateUser";
-import registerUser from "@database/user/registerUser";
+import fetchUser from "@services/user/fetchUser";
+import loginUser from "@services/user/loginUser";
+import updateUser from "@services/user/updateUser";
+import registerUser from "@services/user/registerUser";
 
 import { LoginUserContext } from "@validators/user/loginUser.validator";
 import { UpdateUserContext } from "@validators/user/updateUser.validator";
 import { RegisterUserContext } from "@validators/user/registerUser.validator";
 
-import { setSessionCookie } from "@database/user/helpers/cookie";
+import { setSessionCookie } from "@services/user/helpers/cookie";
 
-import { ApiErrorCustomResponse, ApiErrorResponse } from "@utils/ApiError";
+import ApiError from "@utils/ApiError";
 
 export const _fetchUser = async (ctx: Context) => {
   const user = ctx.get("user");
 
-  try {
-    const organizer = await fetchUser(user.id);
-    return ctx.json(organizer, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
-  }
+  const organizer = await fetchUser(user.id);
+  return ctx.json(organizer, 200);
 };
 
 export const _loginUser = async (ctx: LoginUserContext) => {
@@ -31,34 +27,23 @@ export const _loginUser = async (ctx: LoginUserContext) => {
   const data = ctx.req.valid("json");
 
   if (!ip) {
-    return ApiErrorCustomResponse(ctx, {
-      error: "User IP Address Must Be Provided",
-      code: "BAD_REQUEST",
-    });
+    throw new ApiError("User IP Address Must Be Provided", "BAD_REQUEST");
   }
 
-  try {
-    const { refreshToken, ...organizer } = await loginUser(ip, data);
+  const { refreshToken, ...organizer } = await loginUser(ip, data);
 
-    if (refreshToken) {
-      await setSessionCookie(ctx, refreshToken);
-    }
-
-    return ctx.json(organizer, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (refreshToken) {
+    await setSessionCookie(ctx, refreshToken);
   }
+
+  return ctx.json(organizer, 200);
 };
 
 export const _registerUser = async (ctx: RegisterUserContext) => {
   const data = ctx.req.valid("json");
 
-  try {
-    const organizer = await registerUser(data);
-    return ctx.json(organizer, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
-  }
+  const organizer = await registerUser(data);
+  return ctx.json(organizer, 200);
 };
 
 export const _updateUser = async (ctx: UpdateUserContext) => {
@@ -66,19 +51,12 @@ export const _updateUser = async (ctx: UpdateUserContext) => {
 
   const data = ctx.req.valid("json");
 
-  try {
-    if (!user.id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await updateUser(user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!user.id) {
+    throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await updateUser(user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _removeUser = (ctx: Context) => {
