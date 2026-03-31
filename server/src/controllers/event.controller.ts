@@ -1,21 +1,21 @@
 import { Context } from "hono";
 
-import fetchEvent from "@database/event/fetchEvent";
-import fetchEvents from "@database/event/fetchEvents";
-import createEvent from "@database/event/createEvent";
-import updateEvent from "@database/event/updateEvent";
+import fetchEvent from "@services/event/fetchEvent";
+import fetchEvents from "@services/event/fetchEvents";
+import createEvent from "@services/event/createEvent";
+import updateEvent from "@services/event/updateEvent";
 
-import uploadEventMedia from "@database/event/media/uploadEventMedia";
-import uploadEventCover from "@database/event/media/uploadEventCover";
-import uploadEventImage from "@database/event/media/uploadEventImage";
-import uploadEventVideo from "@database/event/media/uploadEventVideo";
-import uploadEventBanner from "@database/event/media/uploadEventBanner";
+import uploadEventMedia from "@services/event/media/uploadEventMedia";
+import uploadEventCover from "@services/event/media/uploadEventCover";
+import uploadEventImage from "@services/event/media/uploadEventImage";
+import uploadEventVideo from "@services/event/media/uploadEventVideo";
+import uploadEventBanner from "@services/event/media/uploadEventBanner";
 
-import deleteEventMedia from "@database/event/media/deleteEventMedia";
-import deleteEventCover from "@database/event/media/deleteEventCover";
-import deleteEventImage from "@database/event/media/deleteEventImage";
-import deleteEventVideo from "@database/event/media/deleteEventVideo";
-import deleteEventBanner from "@database/event/media/deleteEventBanner";
+import deleteEventMedia from "@services/event/media/deleteEventMedia";
+import deleteEventCover from "@services/event/media/deleteEventCover";
+import deleteEventImage from "@services/event/media/deleteEventImage";
+import deleteEventVideo from "@services/event/media/deleteEventVideo";
+import deleteEventBanner from "@services/event/media/deleteEventBanner";
 
 import { FetchEventsContext } from "@validators/event/fetchEvents.validator";
 import { CreateEventContext } from "@validators/event/createEvent.validator";
@@ -30,26 +30,19 @@ import { UploadEventBannerContext } from "@validators/event/media/uploadEventBan
 import { DeleteEventImageContext } from "@validators/event/media/deleteEventImage.validator";
 import { DeleteEventVideoContext } from "@validators/event/media/deleteEventVideo.validator";
 
-import { ApiErrorResponse, ApiErrorCustomResponse } from "@utils/ApiError";
+import ApiError from "@utils/ApiError";
 
 export const _fetchEvent = async (ctx: Context) => {
   const user = ctx.get("user");
 
   const id = ctx.req.param("id");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const event = await fetchEvent(id, user.id);
-    return ctx.json(event, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const event = await fetchEvent(id, user.id);
+  return ctx.json(event, 200);
 };
 
 export const _fetchEvents = async (ctx: FetchEventsContext) => {
@@ -57,12 +50,8 @@ export const _fetchEvents = async (ctx: FetchEventsContext) => {
 
   const query = ctx.req.valid("query");
 
-  try {
-    const events = await fetchEvents(user.id, query);
-    return ctx.json(events, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
-  }
+  const events = await fetchEvents(user.id, query);
+  return ctx.json(events, 200);
 };
 
 export const _createEvent = async (ctx: CreateEventContext) => {
@@ -70,12 +59,8 @@ export const _createEvent = async (ctx: CreateEventContext) => {
 
   const data = ctx.req.valid("json");
 
-  try {
-    const result = await createEvent(user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
-  }
+  const result = await createEvent(user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _updateEvent = async (ctx: UpdateEventContext) => {
@@ -85,19 +70,12 @@ export const _updateEvent = async (ctx: UpdateEventContext) => {
 
   const data = ctx.req.valid("json");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await updateEvent(id, user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await updateEvent(id, user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _uploadEventMedia = async (ctx: UploadEventMediaContext) => {
@@ -107,19 +85,12 @@ export const _uploadEventMedia = async (ctx: UploadEventMediaContext) => {
 
   const data = ctx.req.valid("form");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await uploadEventMedia(id, user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await uploadEventMedia(id, user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _uploadEventCover = async (ctx: UploadEventCoverContext) => {
@@ -129,19 +100,12 @@ export const _uploadEventCover = async (ctx: UploadEventCoverContext) => {
 
   const data = ctx.req.valid("form");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await uploadEventCover(id, user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await uploadEventCover(id, user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _uploadEventBanner = async (ctx: UploadEventBannerContext) => {
@@ -151,19 +115,12 @@ export const _uploadEventBanner = async (ctx: UploadEventBannerContext) => {
 
   const data = ctx.req.valid("form");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await uploadEventBanner(id, user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await uploadEventBanner(id, user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _uploadEventImage = async (ctx: UploadEventImageContext) => {
@@ -173,19 +130,12 @@ export const _uploadEventImage = async (ctx: UploadEventImageContext) => {
 
   const data = ctx.req.valid("form");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await uploadEventImage(id, user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await uploadEventImage(id, user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _uploadEventVideo = async (ctx: UploadEventVideoContext) => {
@@ -195,19 +145,12 @@ export const _uploadEventVideo = async (ctx: UploadEventVideoContext) => {
 
   const data = ctx.req.valid("form");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await uploadEventVideo(id, user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await uploadEventVideo(id, user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _deleteEventMedia = async (ctx: Context) => {
@@ -215,19 +158,12 @@ export const _deleteEventMedia = async (ctx: Context) => {
 
   const id = ctx.req.param("id");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await deleteEventMedia(id, user.id);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await deleteEventMedia(id, user.id);
+  return ctx.json(result, 200);
 };
 
 export const _deleteEventCover = async (ctx: Context) => {
@@ -235,19 +171,12 @@ export const _deleteEventCover = async (ctx: Context) => {
 
   const id = ctx.req.param("id");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await deleteEventCover(id, user.id);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await deleteEventCover(id, user.id);
+  return ctx.json(result, 200);
 };
 
 export const _deleteEventBanner = async (ctx: Context) => {
@@ -255,19 +184,12 @@ export const _deleteEventBanner = async (ctx: Context) => {
 
   const id = ctx.req.param("id");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await deleteEventBanner(id, user.id);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await deleteEventBanner(id, user.id);
+  return ctx.json(result, 200);
 };
 
 export const _deleteEventImage = async (ctx: DeleteEventImageContext) => {
@@ -277,19 +199,12 @@ export const _deleteEventImage = async (ctx: DeleteEventImageContext) => {
 
   const data = ctx.req.valid("json");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await deleteEventImage(id, user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await deleteEventImage(id, user.id, data);
+  return ctx.json(result, 200);
 };
 
 export const _deleteEventVideo = async (ctx: DeleteEventVideoContext) => {
@@ -299,17 +214,10 @@ export const _deleteEventVideo = async (ctx: DeleteEventVideoContext) => {
 
   const data = ctx.req.valid("json");
 
-  try {
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "Event ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
-    const result = await deleteEventVideo(id, user.id, data);
-    return ctx.json(result, 200);
-  } catch (error) {
-    return ApiErrorResponse(ctx, error);
+  if (!id) {
+    throw new ApiError("Event ID Must Be Provided", "BAD_REQUEST");
   }
+
+  const result = await deleteEventVideo(id, user.id, data);
+  return ctx.json(result, 200);
 };

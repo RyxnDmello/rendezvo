@@ -1,17 +1,20 @@
 import { Hono } from "hono";
 
-import connectRedis from "@services/redis.service";
-import connectMongoDB from "@services/mongodb.service";
+import onError from "@middlewares/onError.middleware";
+import notFound from "@middlewares/notFound.middleware";
+import initialize from "@middlewares/initialize.middleware";
 
 import eventRoutes from "@routes/event.routes";
 
 import userRoutes from "@routes/user.routes";
 import organizerRoutes from "@routes/organizer.routes";
 
+await initialize();
+
 const app = new Hono();
 
-connectRedis();
-connectMongoDB();
+app.onError(onError);
+app.notFound(notFound);
 
 app.route("/api/events", eventRoutes);
 

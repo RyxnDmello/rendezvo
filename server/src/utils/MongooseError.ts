@@ -1,8 +1,6 @@
 import { Error, mongo } from "mongoose";
 
-import { ContentfulStatusCode } from "hono/utils/http-status";
-
-import { ErrorCode, status } from "@utils/ApiError";
+import ApiError from "@utils/ApiError";
 
 export type MongooseErrorTypes =
   | Error.CastError
@@ -10,64 +8,49 @@ export type MongooseErrorTypes =
   | mongo.MongoServerError;
 
 export const isMongooseError = (error: unknown) => {
-  return (
+  return Boolean(
     error instanceof Error.CastError ||
     error instanceof Error.ValidationError ||
-    error instanceof mongo.MongoServerError
+    error instanceof mongo.MongoServerError,
   );
 };
 
-export default class MongooseError extends Error {
-  public readonly code: ErrorCode;
-  public readonly status: ContentfulStatusCode;
-
+export default class MongooseError extends ApiError {
   constructor(error: MongooseErrorTypes) {
     if (error instanceof Error.ValidationError) {
       const instance = Object.values(error.errors)[0];
 
       if (instance) {
-        super(instance.message);
-        this.code = "VALIDATION_ERROR";
-        this.status = status[this.code];
+        super(instance.message, "VALIDATION_ERROR");
         return;
       }
 
-      super("An Unexpected Validation Error Has Occurred");
-      this.code = "VALIDATION_ERROR";
-      this.status = status[this.code];
+      super("An Unexpected Validation Error Has Occurred", "VALIDATION_ERROR");
       return;
     }
 
     if (error instanceof Error.CastError) {
-      super("A Field Has Been Assigned An Invalid Value");
-      this.code = "CAST_ERROR";
-      this.status = status[this.code];
+      super("A Field Has Been Assigned An Invalid Value", "CAST_ERROR");
       return;
     }
 
     if (error instanceof mongo.MongoServerError && error.code === 11000) {
-      super("A Duplicate Field Has Been Detected");
-      this.code = "DUPLICATE_KEY_ERROR";
-      this.status = status[this.code];
+      super("A Duplicate Field Has Been Detected", "DUPLICATE_KEY_ERROR");
       return;
     }
 
     if (error instanceof mongo.MongoServerError) {
-      super("An Internal Database Server Error Has Occurred");
-      this.code = "DATABASE_SERVER_ERROR";
-      this.status = status[this.code];
+      super(
+        "An Internal Database Server Error Has Occurred",
+        "DATABASE_SERVER_ERROR",
+      );
+
       return;
     }
 
-    super("An Unexpected Database Server Error Has Occurred");
-    this.code = "DATABASE_SERVER_ERROR";
-    this.status = status[this.code];
-  }
-
-  toJSON() {
-    return {
-      error: this.message,
-      code: this.code,
-    };
+    super(
+      "An Unexpected Database Server Error Has Occurred",
+      "DATABASE_SERVER_ERROR",
+    );
   }
 }

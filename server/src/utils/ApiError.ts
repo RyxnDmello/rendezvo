@@ -2,9 +2,6 @@ import { Context } from "hono";
 
 import { ContentfulStatusCode } from "hono/utils/http-status";
 
-import AppwriteError from "./AppwriteError";
-import MongooseError from "./MongooseError";
-
 export interface CustomError {
   error: string;
   code: ErrorCode;
@@ -92,11 +89,7 @@ export const status: Record<ErrorCode, ContentfulStatusCode> = {
 };
 
 export const isApiError = (error: unknown) => {
-  return (
-    error instanceof ApiError ||
-    error instanceof AppwriteError ||
-    error instanceof MongooseError
-  );
+  return Boolean(error instanceof ApiError);
 };
 
 export default class ApiError extends Error {
@@ -104,7 +97,10 @@ export default class ApiError extends Error {
   public readonly status: ContentfulStatusCode;
 
   constructor(message: string, code: ErrorCode) {
-    super(message);
+    super(message, {
+      cause: message,
+    });
+
     this.code = code;
     this.status = status[code];
   }
@@ -117,28 +113,6 @@ export default class ApiError extends Error {
   }
 }
 
-export const ApiErrorResponse = (ctx: Context, error: unknown) => {
-  if (error instanceof ApiError) {
-    return ctx.json(error.toJSON(), error.status);
-  }
-
-  if (error instanceof AppwriteError) {
-    return ctx.json(error.toJSON(), error.status);
-  }
-
-  if (error instanceof MongooseError) {
-    return ctx.json(error.toJSON(), error.status);
-  }
-
-  return ctx.json(
-    {
-      error: "An Unexpected Error Occurred",
-      code: "INTERNAL_SERVER_ERROR",
-    },
-    500,
-  );
-};
-
-export const ApiErrorCustomResponse = (ctx: Context, error: CustomError) => {
+export const ApiErrorResponse = (ctx: Context, error: CustomError) => {
   return ctx.json(error, status[error.code]);
 };

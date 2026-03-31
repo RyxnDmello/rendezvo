@@ -1,63 +1,53 @@
 import { Context } from "hono";
 import { getConnInfo } from "hono/bun";
 
-import createUserResetVerification from "@database/user/verification/createResetVerification";
-import createUserAccountVerification from "@database/user/verification/createAccountVerification";
-import createOrganizerResetVerification from "@database/organizer/verification/createResetVerification";
-import createOrganizerAccountVerification from "@database/organizer/verification/createAccountVerification";
+import { Role } from "@constants/user";
 
-import verifyUserResetVerification from "@database/user/verification/verifyResetVerification";
-import verifyUserForgotVerification from "@database/user/verification/verifyForgotVerification";
-import verifyUserAccountVerification from "@database/user/verification/verifyAccountVerification";
-import verifyOrganizerResetVerification from "@database/organizer/verification/verifyResetVerification";
-import verifyOrganizerForgotVerification from "@database/organizer/verification/verifyForgotVerification";
-import verifyOrganizerAccountVerification from "@database/organizer/verification/verifyAccountVerification";
+import createUserResetVerification from "@services/user/verification/createResetVerification";
+import createUserAccountVerification from "@services/user/verification/createAccountVerification";
+import createOrganizerResetVerification from "@services/organizer/verification/createResetVerification";
+import createOrganizerAccountVerification from "@services/organizer/verification/createAccountVerification";
+
+import verifyUserResetVerification from "@services/user/verification/verifyResetVerification";
+import verifyUserForgotVerification from "@services/user/verification/verifyForgotVerification";
+import verifyUserAccountVerification from "@services/user/verification/verifyAccountVerification";
+import verifyOrganizerResetVerification from "@services/organizer/verification/verifyResetVerification";
+import verifyOrganizerForgotVerification from "@services/organizer/verification/verifyForgotVerification";
+import verifyOrganizerAccountVerification from "@services/organizer/verification/verifyAccountVerification";
 
 import { VerifyResetVerificationContext } from "@validators/verification/verifyResetVerification.validator";
 import { VerifyForgotVerificationContext } from "@validators/verification/verifyForgotVerification.validator";
 import { VerifyAccountVerificationContext } from "@validators/verification/verifyAccountVerification.validator";
 
-import { setSessionCookie as setUserSessionCookie } from "@database/user/helpers/cookie";
-import { setSessionCookie as setOrganizerSessionCookie } from "@database/organizer/helpers/cookie";
+import { setSessionCookie as setUserSessionCookie } from "@services/user/helpers/cookie";
+import { setSessionCookie as setOrganizerSessionCookie } from "@services/organizer/helpers/cookie";
 
-import { ApiErrorResponse, ApiErrorCustomResponse } from "@utils/ApiError";
-
-import { Role } from "@constants/user";
+import ApiError from "@utils/ApiError";
 
 export const _createAccountVerification = (role: Role) => {
   return async (ctx: Context) => {
     const id = ctx.req.param("id");
 
     if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
+      throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
     }
 
-    try {
-      let result = null;
+    let result = null;
 
-      switch (role) {
-        case "user":
-          result = await createUserAccountVerification(id);
-          break;
+    switch (role) {
+      case "user":
+        result = await createUserAccountVerification(id);
+        break;
 
-        case "organizer":
-          result = await createOrganizerAccountVerification(id);
-          break;
+      case "organizer":
+        result = await createOrganizerAccountVerification(id);
+        break;
 
-        default:
-          return ApiErrorCustomResponse(ctx, {
-            error: "Invalid User Role Provided",
-            code: "BAD_REQUEST",
-          });
-      }
-
-      return ctx.json(result, 200);
-    } catch (error) {
-      return ApiErrorResponse(ctx, error);
+      default:
+        throw new ApiError("Invalid User Role Provided", "BAD_REQUEST");
     }
+
+    return ctx.json(result, 200);
   };
 };
 
@@ -65,29 +55,22 @@ export const _createResetVerification = (role: Role) => {
   return async (ctx: Context) => {
     const user = ctx.get("user");
 
-    try {
-      let result = null;
+    let result = null;
 
-      switch (role) {
-        case "user":
-          result = await createUserResetVerification(user.id);
-          break;
+    switch (role) {
+      case "user":
+        result = await createUserResetVerification(user.id);
+        break;
 
-        case "organizer":
-          result = await createOrganizerResetVerification(user.id);
-          break;
+      case "organizer":
+        result = await createOrganizerResetVerification(user.id);
+        break;
 
-        default:
-          return ApiErrorCustomResponse(ctx, {
-            error: "Invalid User Role Provided",
-            code: "BAD_REQUEST",
-          });
-      }
-
-      return ctx.json(result, 200);
-    } catch (error) {
-      return ApiErrorResponse(ctx, error);
+      default:
+        throw new ApiError("Invalid User Role Provided", "BAD_REQUEST");
     }
+
+    return ctx.json(result, 200);
   };
 };
 
@@ -97,63 +80,47 @@ export const _verifyAccountVerification = (role: Role) => {
 
     const id = ctx.req.param("id");
 
+    const data = ctx.req.valid("json");
+
     if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
+      throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
     }
 
     if (!ip) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User IP Address Must Be Provided",
-        code: "BAD_REQUEST",
-      });
+      throw new ApiError("User IP Address Must Be Provided", "BAD_REQUEST");
     }
 
-    const data = ctx.req.valid("json");
+    let result = null;
 
-    try {
-      let result = null;
+    switch (role) {
+      case "user":
+        result = await verifyUserAccountVerification(ip, id, data);
+        break;
 
-      switch (role) {
-        case "user":
-          result = await verifyUserAccountVerification(ip, id, data);
-          break;
+      case "organizer":
+        result = await verifyOrganizerAccountVerification(ip, id, data);
+        break;
 
-        case "organizer":
-          result = await verifyOrganizerAccountVerification(ip, id, data);
-          break;
-
-        default:
-          return ApiErrorCustomResponse(ctx, {
-            error: "Invalid User Role Provided",
-            code: "BAD_REQUEST",
-          });
-      }
-
-      const { refreshToken, ...payload } = result;
-
-      switch (role) {
-        case "user":
-          await setUserSessionCookie(ctx, refreshToken);
-          break;
-
-        case "organizer":
-          await setOrganizerSessionCookie(ctx, refreshToken);
-          break;
-
-        default:
-          return ApiErrorCustomResponse(ctx, {
-            error: "Invalid User Role Provided",
-            code: "BAD_REQUEST",
-          });
-      }
-
-      return ctx.json(payload, 200);
-    } catch (error) {
-      return ApiErrorResponse(ctx, error);
+      default:
+        throw new ApiError("Invalid User Role Provided", "BAD_REQUEST");
     }
+
+    const { refreshToken, ...payload } = result;
+
+    switch (role) {
+      case "user":
+        await setUserSessionCookie(ctx, refreshToken);
+        break;
+
+      case "organizer":
+        await setOrganizerSessionCookie(ctx, refreshToken);
+        break;
+
+      default:
+        throw new ApiError("Invalid User Role Provided", "BAD_REQUEST");
+    }
+
+    return ctx.json(payload, 200);
   };
 };
 
@@ -161,38 +128,28 @@ export const _verifyForgotVerification = (role: Role) => {
   return async (ctx: VerifyForgotVerificationContext) => {
     const id = ctx.req.param("id");
 
-    if (!id) {
-      return ApiErrorCustomResponse(ctx, {
-        error: "User ID Must Be Provided",
-        code: "BAD_REQUEST",
-      });
-    }
-
     const data = ctx.req.valid("json");
 
-    try {
-      let result = null;
-
-      switch (role) {
-        case "user":
-          result = await verifyUserForgotVerification(id, data);
-          break;
-
-        case "organizer":
-          result = await verifyOrganizerForgotVerification(id, data);
-          break;
-
-        default:
-          return ApiErrorCustomResponse(ctx, {
-            error: "Invalid User Role Provided",
-            code: "BAD_REQUEST",
-          });
-      }
-
-      return ctx.json(result, 200);
-    } catch (error) {
-      return ApiErrorResponse(ctx, error);
+    if (!id) {
+      throw new ApiError("User ID Must Be Provided", "BAD_REQUEST");
     }
+
+    let result = null;
+
+    switch (role) {
+      case "user":
+        result = await verifyUserForgotVerification(id, data);
+        break;
+
+      case "organizer":
+        result = await verifyOrganizerForgotVerification(id, data);
+        break;
+
+      default:
+        throw new ApiError("Invalid User Role Provided", "BAD_REQUEST");
+    }
+
+    return ctx.json(result, 200);
   };
 };
 
@@ -202,28 +159,21 @@ export const _verifyResetVerification = (role: Role) => {
 
     const data = ctx.req.valid("json");
 
-    try {
-      let result = null;
+    let result = null;
 
-      switch (role) {
-        case "user":
-          result = await verifyUserResetVerification(user.id, data);
-          break;
+    switch (role) {
+      case "user":
+        result = await verifyUserResetVerification(user.id, data);
+        break;
 
-        case "organizer":
-          result = await verifyOrganizerResetVerification(user.id, data);
-          break;
+      case "organizer":
+        result = await verifyOrganizerResetVerification(user.id, data);
+        break;
 
-        default:
-          return ApiErrorCustomResponse(ctx, {
-            error: "Invalid User Role Provided",
-            code: "BAD_REQUEST",
-          });
-      }
-
-      return ctx.json(result, 200);
-    } catch (error) {
-      return ApiErrorResponse(ctx, error);
+      default:
+        throw new ApiError("Invalid User Role Provided", "BAD_REQUEST");
     }
+
+    return ctx.json(result, 200);
   };
 };

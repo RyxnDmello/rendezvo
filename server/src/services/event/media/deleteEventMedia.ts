@@ -1,0 +1,68 @@
+import EventModel from "@models/event.model";
+
+import { deleteCover, deleteBanner } from "../helpers/storage";
+
+import ApiError from "@utils/ApiError";
+
+const deleteEventMedia = async (id: string, ownerID: string) => {
+  const dbEvent = await EventModel.findById(id, {
+    owner: 1,
+    album: 1,
+  }).lean({
+    versionKey: false,
+  });
+
+  if (!dbEvent) {
+    throw new ApiError("Event With Given ID Does Not Exist", "BAD_REQUEST");
+  }
+
+  if (dbEvent.owner.toString() !== ownerID) {
+    throw new ApiError(
+      "You Are Not Authorized To Update This Event",
+      "FORBIDDEN",
+    );
+  }
+
+  if (!dbEvent.album?.cover && !dbEvent.album?.banner) {
+    return {
+      success: true,
+    };
+  }
+
+  const [{ acknowledged, modifiedCount }, _] = await Promise.all([
+    EventModel.updateOne(
+      {
+        _id: id,
+      },
+      {
+        $set: {
+          album: {
+            ...dbEvent.album,
+            cover: null,
+            banner: null,
+          },
+        },
+      },
+      {
+        runValidators: true,
+      },
+    ),
+    Promise.all([
+      dbEvent.album?.cover ? deleteCover(id) : undefined,
+      dbEvent.album?.banner ? deleteBanner(id) : undefined,
+    ]),
+  ]);
+
+  if (!acknowledged || modifiedCount !== 1) {
+    throw new ApiError(
+      "Unable To Delete Media Due To Server Error",
+      "INTERNAL_SERVER_ERROR",
+    );
+  }
+
+  return {
+    success: true,
+  };
+};
+
+export default deleteEventMedia;
