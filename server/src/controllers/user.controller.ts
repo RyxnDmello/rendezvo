@@ -14,6 +14,13 @@ import { setSessionCookie } from "@services/user/helpers/cookie";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A controller function that retrieves the authenticated user.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A response of the retrieved user.
+ */
 export const _fetchUser = async (ctx: Context) => {
   const user = ctx.get("user");
 
@@ -21,6 +28,17 @@ export const _fetchUser = async (ctx: Context) => {
   return ctx.json(organizer, 200);
 };
 
+/**
+ * A controller function that logs in a user.
+ *
+ * @param {LoginUserContext} ctx - A hono context with LoginUserContext type support.
+ *
+ * @returns
+ * - A response of the logged in user, if the user is verified.
+ * - The ID of the user, if the user is not verified.
+ *
+ * @throws An ApiError if user IP address is not provided.
+ */
 export const _loginUser = async (ctx: LoginUserContext) => {
   const ip = getConnInfo(ctx).remote.address;
 
@@ -39,6 +57,13 @@ export const _loginUser = async (ctx: LoginUserContext) => {
   return ctx.json(organizer, 200);
 };
 
+/**
+ * A controller function that registers a new user.
+ *
+ * @param {RegisterUserContext} ctx - A hono context with RegisterUserContext type support.
+ *
+ * @returns An acknowledgement response of the created user.
+ */
 export const _registerUser = async (ctx: RegisterUserContext) => {
   const data = ctx.req.valid("json");
 
@@ -46,6 +71,15 @@ export const _registerUser = async (ctx: RegisterUserContext) => {
   return ctx.json(organizer, 200);
 };
 
+/**
+ * A controller function that updates the authenticated user.
+ *
+ * @param {UpdateUserContext} ctx - A hono context with UpdateUserContext type support.
+ *
+ * @returns A success response if the user is updated.
+ *
+ * @throws An ApiError if user ID is not provided.
+ */
 export const _updateUser = async (ctx: UpdateUserContext) => {
   const user = ctx.get("user");
 
@@ -59,6 +93,13 @@ export const _updateUser = async (ctx: UpdateUserContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that removes the authenticated user.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A success response if the user is removed.
+ */
 export const _removeUser = (ctx: Context) => {
   return ctx.json({});
 };

@@ -24,6 +24,17 @@ import { setSessionCookie as setOrganizerSessionCookie } from "@services/organiz
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A controller function that creates an account verification.
+ *
+ * @param {Role} role - The role of the user.
+ *
+ * @returns A success response if the account verification is created.
+ *
+ * @throws
+ * - An ApiError if user ID is not provided.
+ * - An ApiError if invalid user role is provided.
+ */
 export const _createAccountVerification = (role: Role) => {
   return async (ctx: Context) => {
     const id = ctx.req.param("id");
@@ -51,6 +62,15 @@ export const _createAccountVerification = (role: Role) => {
   };
 };
 
+/**
+ * A controller function that creates a password reset verification for the authenticated user.
+ *
+ * @param {Role} role - The role of the user.
+ *
+ * @returns A success response if the password reset verification is created.
+ *
+ * @throws An ApiError if invalid user role is provided.
+ */
 export const _createResetVerification = (role: Role) => {
   return async (ctx: Context) => {
     const user = ctx.get("user");
@@ -74,6 +94,18 @@ export const _createResetVerification = (role: Role) => {
   };
 };
 
+/**
+ * A controller function that verifies an account verification.
+ *
+ * @param {Role} role - The role of the user.
+ *
+ * @returns A success response if the account verification is verified.
+ *
+ * @throws
+ * - An ApiError if user ID is not provided.
+ * - An ApiError if invalid user role is provided.
+ * - An ApiError if user IP address is not provided.
+ */
 export const _verifyAccountVerification = (role: Role) => {
   return async (ctx: VerifyAccountVerificationContext) => {
     const ip = getConnInfo(ctx).remote.address;
@@ -124,6 +156,17 @@ export const _verifyAccountVerification = (role: Role) => {
   };
 };
 
+/**
+ * A controller function that verifies a password forgot verification.
+ *
+ * @param {Role} role - The role of the user.
+ *
+ * @returns A success response if the password forgot verification is verified.
+ *
+ * @throws
+ * - An ApiError if user ID is not provided.
+ * - An ApiError if invalid user role is provided.
+ */
 export const _verifyForgotVerification = (role: Role) => {
   return async (ctx: VerifyForgotVerificationContext) => {
     const id = ctx.req.param("id");
@@ -153,6 +196,15 @@ export const _verifyForgotVerification = (role: Role) => {
   };
 };
 
+/**
+ * A controller function that verifies a password reset verification for the authenticated user.
+ *
+ * @param {Role} role - The role of the user.
+ *
+ * @returns A success response if the password reset verification is verified.
+ *
+ * @throws An ApiError if invalid user role is provided.
+ */
 export const _verifyResetVerification = (role: Role) => {
   return async (ctx: VerifyResetVerificationContext) => {
     const user = ctx.get("user");

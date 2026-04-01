@@ -13,6 +13,17 @@ import { UpdateTicketContext } from "@validators/ticket/updateTicket.validator";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A controller function that fetches a ticket of an event.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A response of the retrieved ticket.
+ *
+ * @throws
+ * - An ApiError if event ID is not provided.
+ * - An ApiError if ticket ID is not provided.
+ */
 export const _fetchTicket = async (ctx: Context) => {
   const user = ctx.get("user");
 
@@ -31,6 +42,15 @@ export const _fetchTicket = async (ctx: Context) => {
   return ctx.json(ticket, 200);
 };
 
+/**
+ * A controller function that fetches all the tickets of an event.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A response of all the retrieved tickets.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _fetchTickets = async (ctx: Context) => {
   const user = ctx.get("user");
 
@@ -44,6 +64,15 @@ export const _fetchTickets = async (ctx: Context) => {
   return ctx.json(ticket, 200);
 };
 
+/**
+ * A controller function that adds a new ticket to an event.
+ *
+ * @param {AddTicketContext} ctx - A hono context with AddTicketContext type support.
+ *
+ * @returns A success response if the ticket is added.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _addTicket = async (ctx: AddTicketContext) => {
   const user = ctx.get("user");
 
@@ -59,6 +88,17 @@ export const _addTicket = async (ctx: AddTicketContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that updates a ticket of an event.
+ *
+ * @param {UpdateTicketContext} ctx - A hono context with UpdateTicketContext type support.
+ *
+ * @returns A success response if the ticket is updated.
+ *
+ * @throws
+ * - An ApiError if event ID is not provided.
+ * - An ApiError if ticket ID is not provided.
+ */
 export const _updateTicket = async (ctx: UpdateTicketContext) => {
   const user = ctx.get("user");
 
@@ -79,6 +119,17 @@ export const _updateTicket = async (ctx: UpdateTicketContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that toggles a ticket of an event.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A success response if the ticket is toggled.
+ *
+ * @throws
+ * - An ApiError if event ID is not provided.
+ * - An ApiError if ticket ID is not provided.
+ */
 export const _toggleTicket = async (ctx: Context) => {
   const user = ctx.get("user");
 
@@ -97,6 +148,17 @@ export const _toggleTicket = async (ctx: Context) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that deletes a ticket of an event.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A success response if the ticket is deleted.
+ *
+ * @throws
+ * - An ApiError if event ID is not provided.
+ * - An ApiError if ticket ID is not provided.
+ */
 export const _deleteTicket = async (ctx: Context) => {
   const user = ctx.get("user");
 
