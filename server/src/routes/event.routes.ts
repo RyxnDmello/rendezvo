@@ -35,6 +35,9 @@ import uploadEventBannerValidator from "@validators/event/media/uploadEventBanne
 import deleteEventImageValidator from "@validators/event/media/deleteEventImage.validator";
 import deleteEventVideoValidator from "@validators/event/media/deleteEventVideo.validator";
 
+/**
+ * The event router.
+ */
 const router = new Hono();
 
 router

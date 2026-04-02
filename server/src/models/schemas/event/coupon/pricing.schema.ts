@@ -1,7 +1,16 @@
 import { Schema } from "mongoose";
 
+/**
+ * A type that represents a coupon's pricing type.
+ *
+ * - "fixed" - charged a fixed discount.
+ * - "percentage" - charged a discount percentage with limits.
+ */
 export type Type = "fixed" | "percentage";
 
+/**
+ * An interface that represents a coupon's pricing details.
+ */
 export interface Pricing {
   type: Type;
   amount: number;

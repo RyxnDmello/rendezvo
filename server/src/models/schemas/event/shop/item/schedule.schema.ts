@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents the item's schedule details.
+ */
 export interface Schedule {
   startDate: Date;
   startTime: string;

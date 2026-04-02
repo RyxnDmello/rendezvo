@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents the organizer's profile's social details.
+ */
 export interface Social {
   url: string;
   name: string;

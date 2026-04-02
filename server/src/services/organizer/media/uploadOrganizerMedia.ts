@@ -11,6 +11,22 @@ import {
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that uploads an organizer's profile and banner image.
+ *
+ * This function checks if the organizer exists. It uploads or updates
+ * both profile image and banner in storage and updates the database
+ * with new media references.
+ *
+ * @param {string} id - The ID of the organizer.
+ * @param {UploadOrganizerMediaValidatorSchema} data - The validated upload media payload.
+ *
+ * @returns A success response if the media is uploaded.
+ *
+ * @throws
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if upload operation fails.
+ */
 const uploadOrganizerMedia = async (
   id: string,
   data: UploadOrganizerMediaValidatorSchema,

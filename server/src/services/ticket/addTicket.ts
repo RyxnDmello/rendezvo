@@ -16,6 +16,29 @@ import { AddTicketValidatorSchema } from "@validators/ticket/addTicket.validator
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that adds a ticket to an event's ticket list.
+ *
+ * This function validates the event's existence and the organizer's authorization.
+ * It ensures ticket limits and uniqueness constraints are satisfied. It validates
+ * the ticket schedule against the event's schedule. It creates and sorts the new
+ * ticket, updates the event, and clears related cache.
+ *
+ * @param {string} eventID - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {AddTicketValidatorSchema} data - The validated ticket payload.
+ *
+ * @returns A success response if the ticket is added.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if ticket limit is exceeded.
+ * - An ApiError if ticket with same name already exists.
+ * - An ApiError if schedule validation fails.
+ * - An ApiError if database update fails.
+ */
 const addTicket = async (
   eventID: string,
   ownerID: string,

@@ -7,6 +7,21 @@ import { hashToken } from "@helpers/encryption";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that validates an authenticated session.
+ *
+ * This function verifies that the session exists in the database using the
+ * refresh token payload. It ensures the session matches the stored token by
+ * comparing the hashed value. If the session is invalid or does not exist,
+ * it invalidates all sessions for the account.
+ *
+ * @param {string} token - The raw refresh token.
+ * @param {OrganizerRefreshTokenPayload | UserRefreshTokenPayload} payload - The decoded refresh token payload.
+ *
+ * @throws
+ * - An ApiError if session does not exist.
+ * - An ApiError if token does not match the stored session.
+ */
 const validateSession = async (
   token: string,
   payload: OrganizerRefreshTokenPayload | UserRefreshTokenPayload,

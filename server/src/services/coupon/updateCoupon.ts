@@ -14,6 +14,32 @@ import { UpdateCouponValidatorSchema } from "@validators/coupon/updateCoupon.val
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that updates a coupon in an event's coupon list.
+ *
+ * This function validates the event's existence and the organizer's authorization.
+ * It ensures the coupon exists and applies updates based on the specified action.
+ * It validates constraints such as name uniqueness, quantity rules, and schedule
+ * validity. It updates the event and clears related cache.
+ *
+ * @param {string} id - The ID of the coupon.
+ * @param {string} eventID - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {UpdateCouponValidatorSchema} data - The validated update coupon payload.
+ *
+ * @returns A success response if the coupon is updated.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if event has no coupons.
+ * - An ApiError if coupon does not exist.
+ * - An ApiError if coupon name already exists.
+ * - An ApiError if quantity constraints fail.
+ * - An ApiError if schedule validation fails.
+ * - An ApiError if database update fails.
+ */
 const updateCoupon = async (
   id: string,
   eventID: string,

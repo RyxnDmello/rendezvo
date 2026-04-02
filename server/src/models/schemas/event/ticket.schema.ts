@@ -4,8 +4,17 @@ import pricingSchema, { Pricing } from "./ticket/pricing.schema";
 import quantitySchema, { Quantity } from "./ticket/quantity.schema";
 import scheduleSchema, { Schedule } from "./ticket/schedule.schema";
 
+/**
+ * A type that represents the ticket type.
+ *
+ * - "free" - a free ticket.
+ * - "paid" - a paid ticket.
+ */
 export type Type = "free" | "paid";
 
+/**
+ * An interface that represents a ticket.
+ */
 export interface Ticket {
   id: string;
   type: Type;

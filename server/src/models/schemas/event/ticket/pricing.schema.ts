@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents a ticket's pricing details.
+ */
 export interface Pricing {
   entry: number;
   cover: number;

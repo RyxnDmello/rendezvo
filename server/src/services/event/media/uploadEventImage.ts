@@ -6,6 +6,25 @@ import { uploadImage } from "../helpers/storage";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that uploads an event image.
+ *
+ * This function validates event existence and organizer authorization.
+ * It ensures the maximum image limit is not exceeded, uploads the image,
+ * and updates the album in the database.
+ *
+ * @param {string} id - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {UploadEventImageValidatorSchema} data - The validated upload image payload.
+ *
+ * @returns A success response if the image is uploaded.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if image limit is exceeded.
+ * - An ApiError if upload operation fails.
+ */
 const uploadEventImage = async (
   id: string,
   ownerID: string,

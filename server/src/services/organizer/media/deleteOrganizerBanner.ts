@@ -4,6 +4,20 @@ import { deleteBanner } from "../helpers/storage";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that deletes an organizer's banner image.
+ *
+ * This function checks if the organizer exists. It removes the banner
+ * reference from the database and deletes the stored banner file if present.
+ *
+ * @param {string} id - The ID of the organizer.
+ *
+ * @returns A success response if the banner is deleted.
+ *
+ * @throws
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if delete operation fails.
+ */
 const deleteOrganizerBanner = async (id: string) => {
   const dbOrganizer = await OrganizerModel.findById(id, {
     profile: 1,

@@ -2,6 +2,9 @@ import mongoose, { connect, disconnect } from "mongoose";
 
 import { env } from "@constants/env";
 
+/**
+ * A config function that sets default configurations and safely connects to MongoDB.
+ */
 const connectMongo = async () => {
   if (mongoose.connection.readyState === 1) return;
 

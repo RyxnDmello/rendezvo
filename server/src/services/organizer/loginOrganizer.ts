@@ -8,6 +8,22 @@ import { createTokens } from "./helpers/token";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that logs in an organizer.
+ *
+ * This function validates organizer credentials, checks verification status,
+ * and generates authentication tokens if applicable.
+ *
+ * @param {string} ip - The IP address of the organizer.
+ * @param {LoginUserValidatorSchema} data - The validated login organizer payload.
+ *
+ * @returns A response containing organizer details and tokens if login is successful.
+ *
+ * @throws
+ * - An ApiError if password is not set.
+ * - An ApiError if password is invalid.
+ * - An ApiError if organizer does not exist.
+ */
 const loginOrganizer = async (
   ip: string,
   data: LoginOrganizerValidatorSchema,

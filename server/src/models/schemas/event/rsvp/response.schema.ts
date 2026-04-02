@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents an RSVP response.
+ */
 export interface Response {
   userID: string;
   orderID: string;
@@ -7,6 +10,9 @@ export interface Response {
   date: Date;
 }
 
+/**
+ * An interface that represents an RSVP response's data.
+ */
 interface Data {
   name: string;
   value: string | number | Date;

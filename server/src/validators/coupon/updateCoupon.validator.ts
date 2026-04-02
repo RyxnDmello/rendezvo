@@ -61,12 +61,23 @@ const updateCouponValidatorSchema = z
     }
   });
 
+/**
+ * A validator middleware for update coupon requests.
+ *
+ * This middleware validates the request body against the update coupon schema.
+ */
 const updateCouponValidator = validator("json", updateCouponValidatorSchema);
 
+/**
+ * A type that represents the validated update coupon payload.
+ */
 export type UpdateCouponValidatorSchema = z.infer<
   typeof updateCouponValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated update coupon data.
+ */
 export type UpdateCouponContext = ValidatorContext<
   typeof updateCouponValidator
 >;

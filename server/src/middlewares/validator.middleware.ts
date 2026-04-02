@@ -20,6 +20,21 @@ type ValidatorMiddleware<
   }
 >;
 
+/**
+ * A type that resolves Zod validators into a compatible Hono context.
+ *
+ * The ValidatorContext takes a zod validator as its generic type and
+ * resolves a context type that is compatible with Hono.
+ *
+ * @example
+ * import * as z from "zod";
+ *
+ * const someValidatorSchema = z.strictObject({});
+ *
+ * const someValidator = validator("body", someValidatorSchema);
+ *
+ * const SchemaContext = ValidatorContext<typeof someValidator>;
+ */
 export type ValidatorContext<T> = T extends (
   ...args: any[]
 ) => Promise<any> | void
@@ -36,6 +51,22 @@ export type ValidatorContext<T> = T extends (
         : never
       : never;
 
+/**
+ * A middleware that validates hono requests such as the request
+ * header, params, queries, body, form, or cookies.
+ *
+ * @param {Target} t - The target where zod needs to validate.
+ * @param {z.ZodType} s - The zod validator schema to be be used.
+ *
+ * @returns The context with proper type support based on the zod validator schema.
+ *
+ * @example
+ * import * as z from "zod";
+ *
+ * const someValidatorSchema = z.strictObject({});
+ *
+ * const someValidator = validator("body", someValidatorSchema);
+ */
 const validator = <T extends Target, S extends z.ZodType>(t: T, s: S) => {
   const handler = zValidator(t, s, (result, _) => {
     if (result.success) return;

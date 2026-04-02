@@ -10,6 +10,9 @@ export const couponQuantityValidatorSchema = z.strictObject(
   "Coupon Quantity Details Must Be Provided",
 );
 
+/**
+ * A type that represents the validated coupon quantity details payload.
+ */
 export type CouponQuantityValidatorSchema = z.infer<
   typeof couponQuantityValidatorSchema
 >;

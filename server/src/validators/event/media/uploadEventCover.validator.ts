@@ -24,15 +24,26 @@ const uploadEventCoverValidatorSchema = z.strictObject(
   "Only Event Cover Image Must Be Provided",
 );
 
+/**
+ * A validator middleware for event cover image upload requests.
+ *
+ * This middleware validates the request form data against the event cover image upload schema.
+ */
 const uploadEventCoverValidator = validator(
   "form",
   uploadEventCoverValidatorSchema,
 );
 
+/**
+ * A type that represents the validated event cover image upload payload.
+ */
 export type UploadEventCoverValidatorSchema = z.infer<
   typeof uploadEventCoverValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated event cover image upload data.
+ */
 export type UploadEventCoverContext = ValidatorContext<
   typeof uploadEventCoverValidator
 >;

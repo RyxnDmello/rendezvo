@@ -6,6 +6,25 @@ import { uploadVideo } from "../helpers/storage";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that uploads an event video.
+ *
+ * This function validates event existence and organizer authorization.
+ * It ensures the maximum video limit is not exceeded, uploads the video,
+ * and updates the album in the database.
+ *
+ * @param {string} id - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {UploadEventVideoValidatorSchema} data - The validated upload video payload.
+ *
+ * @returns A success response if the video is uploaded.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if video limit is exceeded.
+ * - An ApiError if upload operation fails.
+ */
 const uploadEventVideo = async (
   id: string,
   ownerID: string,

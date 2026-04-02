@@ -7,6 +7,27 @@ import { getCachedTicket, setCachedTicket } from "./helpers/redis";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that retrieves a ticket from an event's ticket list.
+ *
+ * This function attempts to fetch the ticket from cache first. If not
+ * available, it retrieves the ticket from the database. It validates
+ * the event's existence and the organizer's authorization. It caches
+ * the result for future requests.
+ *
+ * @param {string} id - The ID of the ticket.
+ * @param {string} eventID - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ *
+ * @returns The retrieved ticket.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if event has no tickets.
+ * - An ApiError if ticket does not exist.
+ */
 const fetchTicket = async (id: string, eventID: string, ownerID: string) => {
   const ticket =
     (await getCachedTicket(id, eventID, ownerID)) ??

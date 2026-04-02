@@ -3,6 +3,9 @@ import { Schema } from "mongoose";
 import fieldSchema, { Field } from "./rsvp/field.schema";
 import responseSchema, { Response } from "./rsvp/response.schema";
 
+/**
+ * An interface that represents the event's RSVP details.
+ */
 export interface Rsvp {
   fields: Field[];
   responses: Response[];

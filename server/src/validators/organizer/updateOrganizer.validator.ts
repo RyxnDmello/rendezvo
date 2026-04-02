@@ -78,7 +78,7 @@ const billingValidatorSchema = z.strictObject(
   "Invalid Or Unsupported Billing Properties Provided",
 );
 
-export const updateOrganizerValidatorSchema = z.strictObject(
+const updateOrganizerValidatorSchema = z.strictObject(
   {
     name: z
       .string("Name Must Be A Valid First, Middle, And Last Name")
@@ -103,15 +103,26 @@ export const updateOrganizerValidatorSchema = z.strictObject(
   "Invalid Or Unsupported Properties Provided",
 );
 
+/**
+ * A validator middleware for organizer update requests.
+ *
+ * This middleware validates the request body against the update schema.
+ */
 const updateOrganizerValidator = validator(
   "json",
   updateOrganizerValidatorSchema,
 );
 
+/**
+ * A type that represents the validated update organizer payload.
+ */
 export type UpdateOrganizerValidatorSchema = z.infer<
   typeof updateOrganizerValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated update organizer data.
+ */
 export type UpdateOrganizerContext = ValidatorContext<
   typeof updateOrganizerValidator
 >;

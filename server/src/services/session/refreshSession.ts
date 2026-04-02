@@ -22,6 +22,24 @@ import validateSession from "./helpers/validateSession";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that refreshes an authenticated session.
+ *
+ * This function determines the role and refreshes the session accordingly. It validates
+ * the refresh token, verifies the session, and generates a new access token. It retrieves
+ * the associated account details and returns them with the new token.
+ *
+ * @param {Context} ctx - The hono context.
+ * @param {Role} role - The role of the requester.
+ *
+ * @returns The account data along with a new access token.
+ *
+ * @throws
+ * - An ApiError if role is invalid.
+ * - An ApiError if refresh token is missing.
+ * - An ApiError if refresh token is invalid or expired.
+ * - An ApiError if account does not exist.
+ */
 const refreshSession = async (ctx: Context, role: Role) => {
   switch (role) {
     case "user":

@@ -4,6 +4,9 @@ import { getDate } from "@helpers/date";
 
 export type Type = "auth" | "reset";
 
+/**
+ * An interface that represents a verification.
+ */
 export interface Verification {
   id?: string;
   user?: string;
@@ -57,6 +60,11 @@ const verificationSchema = new Schema<Verification>(
   },
 );
 
+/**
+ * The Verification Mongoose Model.
+ *
+ * This model is used as an interface to interact with verification documents in MongoDB.
+ */
 const VerificationModel = model("verification", verificationSchema);
 
 export default VerificationModel;

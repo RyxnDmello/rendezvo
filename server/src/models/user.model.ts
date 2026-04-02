@@ -2,6 +2,9 @@ import { Schema, model } from "mongoose";
 
 import preferenceSchema, { Preference } from "@schemas/user/preference.schema";
 
+/**
+ * An interface that represents a user.
+ */
 export interface User {
   id?: string;
   verified: boolean;
@@ -73,6 +76,11 @@ const userSchema = new Schema<User>(
   },
 );
 
+/**
+ * The User Mongoose Model.
+ *
+ * This model is used as an interface to interact with user documents in MongoDB.
+ */
 const UserModel = model("user", userSchema);
 
 export default UserModel;

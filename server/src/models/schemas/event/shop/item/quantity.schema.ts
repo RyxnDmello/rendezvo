@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents the item's quantity details.
+ */
 export interface Quantity {
   sold: number;
   total: number;

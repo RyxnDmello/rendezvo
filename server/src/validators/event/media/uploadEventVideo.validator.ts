@@ -26,15 +26,26 @@ const uploadEventVideoValidatorSchema = z.strictObject(
   "Only Event Video Must Be Provided",
 );
 
+/**
+ * A validator middleware for event video upload requests.
+ *
+ * This middleware validates the request form data against the event video upload schema.
+ */
 const uploadEventVideoValidator = validator(
   "form",
   uploadEventVideoValidatorSchema,
 );
 
+/**
+ * A type that represents the validated event video upload payload.
+ */
 export type UploadEventVideoValidatorSchema = z.infer<
   typeof uploadEventVideoValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated event video upload data.
+ */
 export type UploadEventVideoContext = ValidatorContext<
   typeof uploadEventVideoValidator
 >;

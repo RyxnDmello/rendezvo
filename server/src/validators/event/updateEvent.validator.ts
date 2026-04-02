@@ -56,12 +56,23 @@ const updateEventValidatorSchema = z
     }
   });
 
+/**
+ * A validator middleware for event update requests.
+ *
+ * This middleware validates the request body against the event update schema.
+ */
 const updateEventValidator = validator("json", updateEventValidatorSchema);
 
+/**
+ * A type that represents the validated event update payload.
+ */
 export type UpdateEventValidatorSchema = z.infer<
   typeof updateEventValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated event updated data.
+ */
 export type UpdateEventContext = ValidatorContext<typeof updateEventValidator>;
 
 export default updateEventValidator;

@@ -3,6 +3,9 @@ import { Schema } from "mongoose";
 import termsSchema, { Terms } from "./policy/terms.schema";
 import refundSchema, { Refund } from "./policy/refund.schema";
 
+/**
+ * An interface that represents an event's policies.
+ */
 export interface Policy {
   terms: Terms;
   refund: Refund;

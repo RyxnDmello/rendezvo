@@ -6,6 +6,23 @@ import { clearCachedEvent, clearCachedEvents } from "./helpers/redis";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that updates an organizer's event.
+ *
+ * This function validates event existence and access permissions.
+ * It updates event data based on the provided action and clears related cache.
+ *
+ * @param {string} id - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {UpdateEventValidatorSchema} data - The validated update event payload.
+ *
+ * @returns A success response if the event is updated.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if access is not authorized.
+ * - An ApiError if update operation fails.
+ */
 const updateEvent = async (
   id: string,
   ownerID: string,
@@ -94,6 +111,19 @@ const updateEvent = async (
   };
 };
 
+/**
+ * A service helper function that updates RSVP configuration for an event.
+ *
+ * This function merges existing and new RSVP fields and updates them in the database.
+ *
+ * @param {string} id - The ID of the event.
+ * @param {Event} event - The existing event data.
+ * @param {UpdateEventValidatorSchema} data - The validated update payload.
+ *
+ * @returns A success response if RSVP is updated.
+ *
+ * @throws An ApiError if update operation fails.
+ */
 const updateRsvp = async (
   id: string,
   event: Event,
@@ -159,6 +189,19 @@ const updateRsvp = async (
   };
 };
 
+/**
+ * A service helper function that updates security configuration for an event.
+ *
+ * This function merges existing and new security codes and updates them in the database.
+ *
+ * @param {string} id - The ID of the event.
+ * @param {Event} event - The existing event data.
+ * @param {UpdateEventValidatorSchema} data - The validated update payload.
+ *
+ * @returns A success response if security is updated.
+ *
+ * @throws An ApiError if update operation fails.
+ */
 const updateSecurity = async (
   id: string,
   event: Event,

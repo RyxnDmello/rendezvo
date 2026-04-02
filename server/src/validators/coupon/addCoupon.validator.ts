@@ -52,10 +52,21 @@ const addCouponValidatorSchema = z
     }
   });
 
+/**
+ * A validator middleware for add coupon requests.
+ *
+ * This middleware validates the request body against the add coupon schema.
+ */
 const addCouponValidator = validator("json", addCouponValidatorSchema);
 
+/**
+ * A type that represents the validated add coupon payload.
+ */
 export type AddCouponValidatorSchema = z.infer<typeof addCouponValidatorSchema>;
 
+/**
+ * A type that represents the Hono context with validated add coupon data.
+ */
 export type AddCouponContext = ValidatorContext<typeof addCouponValidator>;
 
 export default addCouponValidator;

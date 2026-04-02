@@ -11,6 +11,9 @@ import organizerRoutes from "@routes/organizer.routes";
 
 await initialize();
 
+/**
+ * The root router.
+ */
 const app = new Hono();
 
 app.onError(onError);

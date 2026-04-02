@@ -56,6 +56,9 @@ export const couponScheduleValidatorSchema = z
     }
   });
 
+/**
+ * A type that represents the validated coupon schedule details payload.
+ */
 export type CouponScheduleValidatorSchema = z.infer<
   typeof couponScheduleValidatorSchema
 >;

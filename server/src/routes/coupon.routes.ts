@@ -14,6 +14,9 @@ import { authorizeOrganizer } from "@middlewares/authorize.middleware";
 import addCouponValidator from "@validators/coupon/addCoupon.validator";
 import updateCouponValidator from "@validators/coupon/updateCoupon.validator";
 
+/**
+ * The coupon router.
+ */
 const router = new Hono();
 
 router

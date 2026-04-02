@@ -9,6 +9,23 @@ import { hashPassword } from "@helpers/encryption";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that verifies an organizer password forgot verification.
+ *
+ * This function validates the verification record and OTP. It updates the
+ * organizer password and removes the verification entry within a transaction.
+ *
+ * @param {string} id - The ID of the organizer.
+ * @param {VerifyForgotVerificationValidatorSchema} data - The validated verification payload.
+ *
+ * @returns A success response if the password is updated.
+ *
+ * @throws
+ * - An ApiError if verification does not exist.
+ * - An ApiError if verification has expired.
+ * - An ApiError if OTP is invalid.
+ * - An ApiError if update operation fails.
+ */
 const verifyForgotVerification = async (
   id: string,
   data: VerifyForgotVerificationValidatorSchema,

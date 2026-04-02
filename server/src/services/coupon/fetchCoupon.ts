@@ -7,6 +7,27 @@ import { getCachedCoupon, setCachedCoupon } from "./helpers/redis";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that retrieves a coupon from an event's coupon list.
+ *
+ * This function attempts to fetch the coupon from cache first. If not
+ * available, it retrieves the coupon from the database. It validates
+ * the event's existence and the organizer's authorization. It caches
+ * the result for future requests.
+ *
+ * @param {string} id - The ID of the coupon.
+ * @param {string} eventID - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ *
+ * @returns The retrieved coupon.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if event has no coupons.
+ * - An ApiError if coupon does not exist.
+ */
 const fetchCoupon = async (id: string, eventID: string, ownerID: string) => {
   const coupon =
     (await getCachedCoupon(id, eventID, ownerID)) ??

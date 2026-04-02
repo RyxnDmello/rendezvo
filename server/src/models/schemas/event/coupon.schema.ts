@@ -4,8 +4,17 @@ import pricingSchema, { Pricing } from "./coupon/pricing.schema";
 import quantitySchema, { Quantity } from "./coupon/quantity.schema";
 import scheduleSchema, { Schedule } from "./coupon/schedule.schema";
 
+/**
+ * A type that represents the coupon type.
+ *
+ * - "general" - available to all tickets.
+ * - "targeted" - available to a targeted ticket.
+ */
 export type Type = "general" | "targeted";
 
+/**
+ * An interface that represents a coupon.
+ */
 export interface Coupon {
   id: string;
   ticketID: string | null;

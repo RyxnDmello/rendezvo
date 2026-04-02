@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents the event's address.
+ */
 export interface Address {
   url: string | null;
   firstLine: string;

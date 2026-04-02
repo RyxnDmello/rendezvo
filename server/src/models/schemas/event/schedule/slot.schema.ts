@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents an event's time slot.
+ */
 export interface Slot {
   active: boolean;
   startTime: string;

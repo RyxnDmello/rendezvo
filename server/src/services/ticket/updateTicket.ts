@@ -14,6 +14,32 @@ import { UpdateTicketValidatorSchema } from "@validators/ticket/updateTicket.val
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that updates a ticket in an event's ticket list.
+ *
+ * This function validates the event's existence and the organizer's authorization.
+ * It ensures the ticket exists and applies updates based on the specified action.
+ * It validates constraints such as name uniqueness, quantity rules, and schedule
+ * validity. It updates the event and clears related cache.
+ *
+ * @param {string} id - The ID of the ticket.
+ * @param {string} eventID - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {UpdateTicketValidatorSchema} data - The validated update ticket payload.
+ *
+ * @returns A success response if the ticket is updated.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if event has no tickets.
+ * - An ApiError if ticket does not exist.
+ * - An ApiError if ticket name already exists.
+ * - An ApiError if quantity constraints fail.
+ * - An ApiError if schedule validation fails.
+ * - An ApiError if database update fails.
+ */
 const updateTicket = async (
   id: string,
   eventID: string,

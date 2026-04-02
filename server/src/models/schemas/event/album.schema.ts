@@ -2,6 +2,9 @@ import { Schema } from "mongoose";
 
 import mediaSchema, { Media } from "@schemas/media.schema";
 
+/**
+ * An interface that represents the event's album.
+ */
 export interface Album {
   cover: Media | null;
   banner: Media | null;

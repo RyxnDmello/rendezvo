@@ -6,6 +6,20 @@ import { hashPassword } from "@helpers/encryption";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that registers a new user.
+ *
+ * This function checks for existing users with the same email or mobile,
+ * encrypts the password, creates a new user, and saves it to the database.
+ *
+ * @param {RegisterOrganizerValidatorSchema} data - The validated register user payload.
+ *
+ * @returns A response containing the user ID and verification status.
+ *
+ * @throws
+ * - An ApiError if user with the given email already exists.
+ * - An ApiError if user with the given mobile number already exists.
+ */
 const registerUser = async (data: RegisterUserValidatorSchema) => {
   const [dbUserWithEmail, dbUserWithMobile] = await Promise.all([
     await UserModel.exists({

@@ -6,6 +6,25 @@ import { UpdateOrganizerValidatorSchema } from "@validators/organizer/updateOrga
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that updates an organizer.
+ *
+ * This function validates the organizer's existence and verification status.
+ * It checks for mobile number conflicts if the mobile field is being updated.
+ * It updates the organizer data in the database. It clears the cached
+ * organizer data after a successful update.
+ *
+ * @param {string} id - The ID of the organizer.
+ * @param {UpdateOrganizerValidatorSchema} data - The validated update organizer payload.
+ *
+ * @returns A success response if the organizer is updated.
+ *
+ * @throws
+ * - An ApiError if update operation fails.
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if organizer is not verified.
+ * - An ApiError if mobile number already exists.
+ */
 const updateOrganizer = async (
   id: string,
   data: UpdateOrganizerValidatorSchema,

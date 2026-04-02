@@ -14,15 +14,26 @@ const uploadOrganizerBannerValidatorSchema = z.strictObject(
   "Only Organizer Banner Image Must Be Provided",
 );
 
+/**
+ * A validator middleware for the organizer's banner image upload requests.
+ *
+ * This middleware validates the request form data against the banner upload schema.
+ */
 const uploadOrganizerBannerValidator = validator(
   "form",
   uploadOrganizerBannerValidatorSchema,
 );
 
+/**
+ * A type that represents the organizer's banner image payload.
+ */
 export type UploadOrganizerBannerValidatorSchema = z.infer<
   typeof uploadOrganizerBannerValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with the organizer's banner image data.
+ */
 export type UploadOrganizerBannerContext = ValidatorContext<
   typeof uploadOrganizerBannerValidator
 >;

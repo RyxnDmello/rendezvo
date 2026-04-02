@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents a coupon's quantity details.
+ */
 export interface Quantity {
   used: number;
   total: number;

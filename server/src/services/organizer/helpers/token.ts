@@ -15,6 +15,12 @@ import { createToken, verifyToken, Payload } from "@helpers/token";
 
 import ApiError, { isApiError } from "@utils/ApiError";
 
+/**
+ * An interface that represents the payload of an organizer's access token.
+ *
+ * This interface extends the global Payload type, which must be respected.
+ * The data of the access token includes the ID and role of "organizer".
+ */
 export interface AccessTokenPayload extends Payload {
   data: {
     id: string;
@@ -22,6 +28,13 @@ export interface AccessTokenPayload extends Payload {
   };
 }
 
+/**
+ * An interface that represents the payload of an organizer's refresh token.
+ *
+ * This interface extends the global Payload type, which must be respected.
+ * The data of the refresh token includes the ID, IP address, device ID,
+ * and role of "organizer".
+ */
 export interface RefreshTokenPayload extends Payload {
   data: {
     id: string;
@@ -40,6 +53,16 @@ const {
   ORGANIZER_REFRESH_TOKEN_EXPIRY,
 } = env.SECRET;
 
+/**
+ * A service helper function that creates an organizer's access token.
+ *
+ * This function generates a signed JWT containing the
+ * organizer ID and role using configured secrets and expiry.
+ *
+ * @param {string} id - The ID of the organizer.
+ *
+ * @returns The generated access token.
+ */
 export const createAccessToken = async (id: string) => {
   const data: AccessTokenPayload["data"] = {
     id,
@@ -56,6 +79,18 @@ export const createAccessToken = async (id: string) => {
   return token;
 };
 
+/**
+ * A service helper function that creates an organizer's refresh token.
+ *
+ * This function generates a device ID, creates a signed JWT,
+ * hashes the token, stores a session in the database, and
+ * returns the raw token.
+ *
+ * @param {string} ip - The IP address of the organizer.
+ * @param {string} id - The ID of the organizer.
+ *
+ * @returns The generated refresh token.
+ */
 export const createRefreshToken = async (ip: string, id: string) => {
   const di = generateDeviceID();
 
@@ -93,6 +128,16 @@ export const createRefreshToken = async (ip: string, id: string) => {
   return token;
 };
 
+/**
+ * A service helper function that creates an organizer's access and refresh tokens.
+ *
+ * This function generates both tokens in parallel and returns them together.
+ *
+ * @param {string} ip - The IP address of the organizer.
+ * @param {string} id - The ID of the organizer.
+ *
+ * @returns An object containing the accessToken and refreshToken.
+ */
 export const createTokens = async (ip: string, id: string) => {
   const [accessToken, refreshToken] = await Promise.all([
     createAccessToken(id),
@@ -105,6 +150,21 @@ export const createTokens = async (ip: string, id: string) => {
   };
 };
 
+/**
+ * A service helper function that verifies an organizer's access token.
+ *
+ * This function validates the token signature, issuer, and
+ * expiry, and maps known JWT errors to standardized API errors.
+ *
+ * @param {string} token - The access token to verify.
+ *
+ * @returns The decoded access token payload.
+ *
+ * @throws
+ * - An ApiError if token is invalid.
+ * - An ApiError if token is expired.
+ * - An ApiError if token is revoked or mismatched.
+ */
 export const verifyAccessToken = async (token: string) => {
   try {
     const payload = await verifyToken<AccessTokenPayload>(
@@ -154,6 +214,21 @@ export const verifyAccessToken = async (token: string) => {
   }
 };
 
+/**
+ * A service helper function that verifies an organizer's refresh token.
+ *
+ * This function validates the token signature, issuer, and
+ * expiry, and maps known JWT errors to standardized API errors.
+ *
+ * @param {string} token - The refresh token to verify.
+ *
+ * @returns The decoded refresh token payload.
+ *
+ * @throws
+ * - An ApiError if token is invalid.
+ * - An ApiError if token is expired.
+ * - An ApiError if token is revoked or mismatched.
+ */
 export const verifyRefreshToken = async (token: string) => {
   try {
     const payload = await verifyToken<RefreshTokenPayload>(

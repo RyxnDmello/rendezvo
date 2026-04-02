@@ -56,6 +56,9 @@ export const ticketScheduleValidatorSchema = z
     }
   });
 
+/**
+ * A type that represents the validated ticket schedule details payload.
+ */
 export type TicketScheduleValidatorSchema = z.infer<
   typeof ticketScheduleValidatorSchema
 >;

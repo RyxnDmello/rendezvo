@@ -4,6 +4,9 @@ import { env } from "@constants/env";
 
 const { REDIS_PORT, REDIS_HOST, REDIS_USERNAME, REDIS_PASSWORD } = env.REDIS;
 
+/**
+ * A Redis client, used to perform Redis operations.
+ */
 export const client = createClient({
   username: REDIS_USERNAME,
   password: REDIS_PASSWORD,
@@ -20,6 +23,9 @@ client.on("error", () => {
   process.exit(0);
 });
 
+/**
+ * A config function that sets default configurations and safely connects to Redis.
+ */
 const connectRedis = async () => {
   try {
     await client.connect();

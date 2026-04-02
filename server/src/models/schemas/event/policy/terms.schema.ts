@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents an event's terms and conditions policy.
+ */
 export interface Terms {
   title: string;
   description: string;

@@ -12,6 +12,9 @@ export const ticketPricingValidatorSchema = z.strictObject(
   "Ticket Pricing Details Must Be Provided",
 );
 
+/**
+ * A type that represents the validated ticket pricing details payload.
+ */
 export type TicketPricingValidatorSchema = z.infer<
   typeof ticketPricingValidatorSchema
 >;

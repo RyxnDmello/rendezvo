@@ -2,13 +2,42 @@ import { AppwriteException } from "node-appwrite";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A type that represents common Appwrite error types.
+ *
+ * This type includes errors thrown by the Appwrite SDK.
+ */
 export type AppwriteErrorTypes = AppwriteException;
 
+/**
+ * A helper function that checks if an error is an AppwriteError.
+ *
+ * @param {unknown} error - The error to be checked.
+ *
+ * @returns True if the error is an AppwriteError, otherwise false.
+ */
 export const isAppwriteError = (error: unknown) => {
   return Boolean(error instanceof AppwriteException);
 };
 
+/**
+ * A class that represents an Appwrite API error.
+ *
+ * This class extends the ApiError class and converts Appwrite errors into
+ * standardized API errors with meaningful messages and error codes.
+ *
+ * @example
+ * throw new AppwriteError(error as AppwriteErrorTypes);
+ */
 export default class AppwriteError extends ApiError {
+  /**
+   * A constructor that creates a new API error.
+   *
+   * @param {AppwriteErrorTypes} error - The original Appwrite error.
+   *
+   * @example
+   * throw new AppwriteError(error as AppwriteErrorTypes);
+   */
   constructor(error: AppwriteErrorTypes) {
     if (error.code === 400) {
       if (error.type === "storage_file_empty") {

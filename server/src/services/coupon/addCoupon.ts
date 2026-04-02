@@ -16,6 +16,31 @@ import { AddCouponValidatorSchema } from "@validators/coupon/addCoupon.validator
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that adds a coupon to an event's coupon list.
+ *
+ * This function validates the event's existence and the organizer's authorization.
+ * It ensures coupon limits and uniqueness constraints are satisfied. It validates
+ * the coupon schedule against the event's schedule. It optionally validates the
+ * associated ticket. It creates and sorts the new coupon, updates the event,
+ * and clears related cache.
+ *
+ * @param {string} eventID - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {AddCouponValidatorSchema} data - The validated coupon payload.
+ *
+ * @returns A success response if the coupon is added.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if coupon limit is exceeded.
+ * - An ApiError if associated ticket is invalid.
+ * - An ApiError if coupon with same name already exists.
+ * - An ApiError if schedule validation fails.
+ * - An ApiError if database update fails.
+ */
 const addCoupon = async (
   eventID: string,
   ownerID: string,

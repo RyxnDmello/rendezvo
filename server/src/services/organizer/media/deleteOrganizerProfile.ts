@@ -4,6 +4,20 @@ import { deleteProfile } from "../helpers/storage";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that deletes an organizer's profile image.
+ *
+ * This function checks if the organizer exists. It removes the profile image
+ * reference from the database and deletes the stored image if present.
+ *
+ * @param {string} id - The ID of the organizer.
+ *
+ * @returns A success response if the profile image is deleted.
+ *
+ * @throws
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if delete operation fails.
+ */
 const deleteOrganizerProfile = async (id: string) => {
   const dbOrganizer = await OrganizerModel.findById(id, {
     profile: 1,

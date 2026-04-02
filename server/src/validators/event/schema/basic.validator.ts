@@ -41,6 +41,9 @@ export const eventBasicValidatorSchema = z.strictObject(
   "Event Basic Details Must Be Provided",
 );
 
+/**
+ * A type that represents the validated event basic details payload.
+ */
 export type EventBasicValidatorSchema = z.infer<
   typeof eventBasicValidatorSchema
 >;

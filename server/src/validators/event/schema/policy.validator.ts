@@ -45,6 +45,9 @@ export const eventPolicyValidatorSchema = z.strictObject(
   "Event Policy Details Must Be Provided",
 );
 
+/**
+ * A type that represents the validated event policy details payload.
+ */
 export type EventPolicyValidatorSchema = z.infer<
   typeof eventPolicyValidatorSchema
 >;

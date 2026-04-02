@@ -146,10 +146,20 @@ const envValidatorSchema = z
     }
   });
 
+/**
+ * A helper function to validate environment variables based on a zod validator schema.
+ *
+ * @param {Record<string, unknown>} variables - The environment variables.
+ *
+ * @returns The validated and parsed environment variables.
+ */
 const envValidator = (variables: Record<string, unknown>) => {
   return envValidatorSchema.parse(variables);
 };
 
+/**
+ * A type that represents the validated environment variables.
+ */
 export type EnvValidatorSchema = z.infer<typeof envValidatorSchema>;
 
 export default envValidator;

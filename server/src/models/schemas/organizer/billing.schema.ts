@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents the organizer's billing details.
+ */
 export interface Billing {
   bankName: string | null;
   bankBranch: string | null;

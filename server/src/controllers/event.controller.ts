@@ -32,6 +32,16 @@ import { DeleteEventVideoContext } from "@validators/event/media/deleteEventVide
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A controller function that fetches an event of the organizer.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A response of the retrieved event.
+ *
+ * @throws
+ * - An ApiError if event ID is not provided.
+ */
 export const _fetchEvent = async (ctx: Context) => {
   const user = ctx.get("user");
 
@@ -45,6 +55,13 @@ export const _fetchEvent = async (ctx: Context) => {
   return ctx.json(event, 200);
 };
 
+/**
+ * A controller function that fetches all the events of the organizer.
+ *
+ * @param {FetchEventsContext} ctx - A hono context with FetchEventsContext type support.
+ *
+ * @returns A response of all the retrieved events.
+ */
 export const _fetchEvents = async (ctx: FetchEventsContext) => {
   const user = ctx.get("user");
 
@@ -54,6 +71,13 @@ export const _fetchEvents = async (ctx: FetchEventsContext) => {
   return ctx.json(events, 200);
 };
 
+/**
+ * A controller function that adds a new event under the organizer.
+ *
+ * @param {CreateEventContext} ctx - A hono context with CreateEventContext type support.
+ *
+ * @returns A success response if the event is added.
+ */
 export const _createEvent = async (ctx: CreateEventContext) => {
   const user = ctx.get("user");
 
@@ -63,6 +87,15 @@ export const _createEvent = async (ctx: CreateEventContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that updates an event of the organizer.
+ *
+ * @param {UpdateEventContext} ctx - A hono context with UpdateEventContext type support.
+ *
+ * @returns A success response if the event is updated.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _updateEvent = async (ctx: UpdateEventContext) => {
   const user = ctx.get("user");
 
@@ -78,6 +111,15 @@ export const _updateEvent = async (ctx: UpdateEventContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that uploads the cover and banner image of an event of the organizer.
+ *
+ * @param {UploadEventMediaContext} ctx - A hono context with UploadEventMediaContext type support.
+ *
+ * @returns A success response if the media is uploaded.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _uploadEventMedia = async (ctx: UploadEventMediaContext) => {
   const user = ctx.get("user");
 
@@ -93,6 +135,15 @@ export const _uploadEventMedia = async (ctx: UploadEventMediaContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that uploads the cover image of an event of the organizer.
+ *
+ * @param {UploadEventCoverContext} ctx - A hono context with UploadEventCoverContext type support.
+ *
+ * @returns A success response if the cover is uploaded.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _uploadEventCover = async (ctx: UploadEventCoverContext) => {
   const user = ctx.get("user");
 
@@ -108,6 +159,15 @@ export const _uploadEventCover = async (ctx: UploadEventCoverContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that uploads the banner image of an event of the organizer.
+ *
+ * @param {UploadEventBannerContext} ctx - A hono context with UploadEventBannerContext type support.
+ *
+ * @returns A success response if the banner is uploaded.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _uploadEventBanner = async (ctx: UploadEventBannerContext) => {
   const user = ctx.get("user");
 
@@ -123,6 +183,15 @@ export const _uploadEventBanner = async (ctx: UploadEventBannerContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that uploads an image of an event of the organizer.
+ *
+ * @param {UploadEventImageContext} ctx - A hono context with UploadEventImageContext type support.
+ *
+ * @returns A success response if the image is uploaded.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _uploadEventImage = async (ctx: UploadEventImageContext) => {
   const user = ctx.get("user");
 
@@ -138,6 +207,15 @@ export const _uploadEventImage = async (ctx: UploadEventImageContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that uploads a video of an event of the organizer.
+ *
+ * @param {UploadEventVideoContext} ctx - A hono context with UploadEventVideoContext type support.
+ *
+ * @returns A success response if the video is uploaded.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _uploadEventVideo = async (ctx: UploadEventVideoContext) => {
   const user = ctx.get("user");
 
@@ -153,6 +231,15 @@ export const _uploadEventVideo = async (ctx: UploadEventVideoContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that deletes the cover and banner image of an event of the organizer.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A success response if the media is deleted.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _deleteEventMedia = async (ctx: Context) => {
   const user = ctx.get("user");
 
@@ -166,6 +253,15 @@ export const _deleteEventMedia = async (ctx: Context) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that deletes the cover image of an event of the organizer.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A success response if the cover is deleted.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _deleteEventCover = async (ctx: Context) => {
   const user = ctx.get("user");
 
@@ -179,6 +275,15 @@ export const _deleteEventCover = async (ctx: Context) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that deletes the banner image of an event of the organizer.
+ *
+ * @param {Context} ctx - A hono context.
+ *
+ * @returns A success response if the banner is deleted.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _deleteEventBanner = async (ctx: Context) => {
   const user = ctx.get("user");
 
@@ -192,6 +297,15 @@ export const _deleteEventBanner = async (ctx: Context) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that deletes an image of an event of the organizer.
+ *
+ * @param {DeleteEventImageContext} ctx - A hono context with DeleteEventImageContext type support.
+ *
+ * @returns A success response if the image is deleted.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _deleteEventImage = async (ctx: DeleteEventImageContext) => {
   const user = ctx.get("user");
 
@@ -207,6 +321,15 @@ export const _deleteEventImage = async (ctx: DeleteEventImageContext) => {
   return ctx.json(result, 200);
 };
 
+/**
+ * A controller function that deletes a video of an event of the organizer.
+ *
+ * @param {DeleteEventVideoContext} ctx - A hono context with DeleteEventVideoContext type support.
+ *
+ * @returns A success response if the video is deleted.
+ *
+ * @throws An ApiError if event ID is not provided.
+ */
 export const _deleteEventVideo = async (ctx: DeleteEventVideoContext) => {
   const user = ctx.get("user");
 

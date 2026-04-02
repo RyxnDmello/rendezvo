@@ -24,15 +24,26 @@ const uploadEventImageValidatorSchema = z.strictObject(
   "Only Event Image Must Be Provided",
 );
 
+/**
+ * A validator middleware for event image upload requests.
+ *
+ * This middleware validates the request form data against the event image upload schema.
+ */
 const uploadEventImageValidator = validator(
   "form",
   uploadEventImageValidatorSchema,
 );
 
+/**
+ * A type that represents the validated event image upload payload.
+ */
 export type UploadEventImageValidatorSchema = z.infer<
   typeof uploadEventImageValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated event image upload data.
+ */
 export type UploadEventImageContext = ValidatorContext<
   typeof uploadEventImageValidator
 >;

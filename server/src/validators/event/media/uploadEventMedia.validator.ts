@@ -28,15 +28,26 @@ const uploadEventMediaValidatorSchema = z.strictObject(
   "Only Organizer Media Must Be Provided",
 );
 
+/**
+ * A validator middleware for event cover and banner image upload requests.
+ *
+ * This middleware validates the request form data against the event cover and banner image upload schema.
+ */
 const uploadEventMediaValidator = validator(
   "form",
   uploadEventMediaValidatorSchema,
 );
 
+/**
+ * A type that represents the validated event cover and banner image upload payload.
+ */
 export type UploadEventMediaValidatorSchema = z.infer<
   typeof uploadEventMediaValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated event cover and banner image upload data.
+ */
 export type UploadEventMediaContext = ValidatorContext<
   typeof uploadEventMediaValidator
 >;

@@ -4,11 +4,35 @@ import { getCachedUser, setCachedUser } from "./helpers/redis";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that retrieves a user.
+ *
+ * The data is stored in cache, for a period of time, after the first call.
+ * Every subsequent request returns the cached data.
+ *
+ * @param {string} id - The ID of the user.
+ *
+ * @returns The user data.
+ */
 const fetchUser = async (id: string) => {
   const user = (await getCachedUser(id)) ?? (await getUser(id));
   return user as User;
 };
 
+/**
+ * A service helper function that retrieves a user from the database.
+ *
+ * This function fetches the user, validates its existence and verification status,
+ * transforms the response, and stores it in cache.
+ *
+ * @param {string} id - The ID of the user.
+ *
+ * @returns The user data.
+ *
+ * @throws
+ * - An ApiError if user does not exist.
+ * - An ApiError if user is not verified.
+ */
 const getUser = async (id: string) => {
   const dbUser = await UserModel.findById(id, {
     password: 0,

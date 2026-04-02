@@ -2,7 +2,7 @@ import * as z from "zod";
 
 import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
-export const updateUserValidatorSchema = z.strictObject(
+const updateUserValidatorSchema = z.strictObject(
   {
     name: z
       .string("Name Must Be A Valid First, Middle, And Last Name")
@@ -25,12 +25,23 @@ export const updateUserValidatorSchema = z.strictObject(
   "Only Name Or Mobile Number Can Be Provided",
 );
 
+/**
+ * A validator middleware for user update requests.
+ *
+ * This middleware validates the request body against the update schema.
+ */
 const updateUserValidator = validator("json", updateUserValidatorSchema);
 
+/**
+ * A type that represents the validated update user payload.
+ */
 export type UpdateUserValidatorSchema = z.infer<
   typeof updateUserValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated update user data.
+ */
 export type UpdateUserContext = ValidatorContext<typeof updateUserValidator>;
 
 export default updateUserValidator;

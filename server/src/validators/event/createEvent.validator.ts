@@ -56,12 +56,23 @@ const createEventValidatorSchema = z
     }
   });
 
+/**
+ * A validator middleware for event creation requests.
+ *
+ * This middleware validates the request body against the create event schema.
+ */
 const createEventValidator = validator("json", createEventValidatorSchema);
 
+/**
+ * A type that represents the validated create event payload.
+ */
 export type CreateEventValidatorSchema = z.infer<
   typeof createEventValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated create event data.
+ */
 export type CreateEventContext = ValidatorContext<typeof createEventValidator>;
 
 export default createEventValidator;

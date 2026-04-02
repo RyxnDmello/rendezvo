@@ -2,7 +2,7 @@ import * as z from "zod";
 
 import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
-export const registerOrganizerValidatorSchema = z.strictObject(
+const registerOrganizerValidatorSchema = z.strictObject(
   {
     name: z
       .string("Name Must Be A Valid First, Middle, And Last Name")
@@ -38,15 +38,26 @@ export const registerOrganizerValidatorSchema = z.strictObject(
   "Only Name, Email, Mobile, And Password Must Be Provided",
 );
 
+/**
+ * A validator middleware for organizer registration requests.
+ *
+ * This middleware validates the request body against the register schema.
+ */
 const registerOrganizerValidator = validator(
   "json",
   registerOrganizerValidatorSchema,
 );
 
+/**
+ * A type that represents the validated register organizer payload.
+ */
 export type RegisterOrganizerValidatorSchema = z.infer<
   typeof registerOrganizerValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated register organizer data.
+ */
 export type RegisterOrganizerContext = ValidatorContext<
   typeof registerOrganizerValidator
 >;
