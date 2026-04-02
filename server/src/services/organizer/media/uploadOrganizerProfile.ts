@@ -6,6 +6,21 @@ import { uploadProfile, updateProfile } from "../helpers/storage";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that uploads an organizer's profile image.
+ *
+ * This function checks if the organizer exists. It uploads or updates the
+ * profile image in storage and updates the database with the new image reference.
+ *
+ * @param {string} id - The ID of the organizer.
+ * @param {UploadOrganizerProfileValidatorSchema} data - The validated upload profile payload.
+ *
+ * @returns A success response if the profile image is uploaded.
+ *
+ * @throws
+ * - An ApiError if organizer does not exist.
+ * - An ApiError if upload operation fails.
+ */
 const uploadOrganizerProfile = async (
   id: string,
   data: UploadOrganizerProfileValidatorSchema,

@@ -4,6 +4,22 @@ import { deleteCover, deleteBanner } from "../helpers/storage";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that deletes event's cover and banner images.
+ *
+ * This function validates event existence and organizer authorization.
+ * It removes both cover and banner from the database and deletes the stored files.
+ *
+ * @param {string} id - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ *
+ * @returns A success response if the media is deleted.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if delete operation fails.
+ */
 const deleteEventMedia = async (id: string, ownerID: string) => {
   const dbEvent = await EventModel.findById(id, {
     owner: 1,

@@ -6,6 +6,21 @@ import { generateOTP } from "@helpers/generator";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that creates a user account verification.
+ *
+ * This function checks if the user exists and is not already
+ * verified. It generates a new OTP and expiry time. It updates the
+ * existing verification if present or creates a new one.
+ *
+ * @param {string} id - The ID of the user.
+ *
+ * @returns A success response if the verification is created.
+ *
+ * @throws
+ * - An ApiError if user does not exist.
+ * - An ApiError if user is already verified.
+ */
 const createAccountVerification = async (id: string) => {
   const [dbUser, dbVerification] = await Promise.all([
     UserModel.findById(id, {

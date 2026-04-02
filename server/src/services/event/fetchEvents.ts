@@ -17,6 +17,18 @@ type Filter = {
   };
 };
 
+/**
+ * A service function that retrieves multiple events of an organizer.
+ *
+ * This function builds a filter based on query parameters. It uses
+ * cache when no filters are applied, otherwise queries the database.
+ *
+ * @param {string} owner - The ID of the organizer.
+ * @param {FetchEventsValidatorSchema} query - The validated query parameters.
+ * @param {number} [limit=0] - The maximum number of events to retrieve.
+ *
+ * @returns A list of events.
+ */
 const fetchEvents = async (
   owner: string,
   query: FetchEventsValidatorSchema,
@@ -73,6 +85,18 @@ const fetchEvents = async (
   return await getEvents(filter, limit, false);
 };
 
+/**
+ * A service helper function that retrieves events or an organizer, from the database.
+ *
+ * This function executes the database query, transforms
+ * the results, and optionally stores them in cache.
+ *
+ * @param {Filter} filter - The query filter.
+ * @param {number} limit - The maximum number of events to retrieve.
+ * @param {boolean} cacheable - Indicates if results should be cached.
+ *
+ * @returns A list of events.
+ */
 const getEvents = async (filter: Filter, limit: number, cacheable: boolean) => {
   const dbEvents = await EventModel.find(filter, {
     createdAt: 0,

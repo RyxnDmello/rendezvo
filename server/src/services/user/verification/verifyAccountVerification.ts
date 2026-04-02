@@ -9,6 +9,25 @@ import { createTokens } from "@services/organizer/helpers/token";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that verifies a user account verification.
+ *
+ * This function validates the verification record and OTP. It deletes the
+ * verification entry and updates the user as verified within a transaction.
+ * It generates authentication tokens after successful verification.
+ *
+ * @param {string} ip - The IP address of the user.
+ * @param {string} id - The ID of the user.
+ * @param {VerifyAccountVerificationValidatorSchema} data - The validated verification payload.
+ *
+ * @returns A response containing user details and tokens after successful verification.
+ *
+ * @throws
+ * - An ApiError if verification does not exist.
+ * - An ApiError if verification has expired.
+ * - An ApiError if OTP is invalid.
+ * - An ApiError if verification update fails.
+ */
 const verifyAccountVerification = async (
   ip: string,
   id: string,

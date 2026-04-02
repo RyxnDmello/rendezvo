@@ -9,6 +9,25 @@ import { createTokens } from "@services/organizer/helpers/token";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that verifies an organizer account verification.
+ *
+ * This function validates the verification record and OTP. It deletes the
+ * verification entry and updates the organizer as verified within a transaction.
+ * It generates authentication tokens after successful verification.
+ *
+ * @param {string} ip - The IP address of the organizer.
+ * @param {string} id - The ID of the organizer.
+ * @param {VerifyAccountVerificationValidatorSchema} data - The validated verification payload.
+ *
+ * @returns A response containing organizer details and tokens after successful verification.
+ *
+ * @throws
+ * - An ApiError if verification does not exist.
+ * - An ApiError if verification has expired.
+ * - An ApiError if OTP is invalid.
+ * - An ApiError if verification update fails.
+ */
 const verifyAccountVerification = async (
   ip: string,
   id: string,

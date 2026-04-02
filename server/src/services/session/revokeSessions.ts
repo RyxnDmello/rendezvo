@@ -21,6 +21,24 @@ import validateSession from "./helpers/validateSession";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that revokes all authenticated sessions.
+ *
+ * This function determines the role and revokes all sessions accordingly. It validates
+ * the refresh token, verifies the session, and deletes all sessions associated with the
+ * account. It also removes the session cookie from the client.
+ *
+ * @param {Context} ctx - The hono context.
+ * @param {Role} role - The role of the requester.
+ *
+ * @returns A success response if all sessions are revoked.
+ *
+ * @throws
+ * - An ApiError if role is invalid.
+ * - An ApiError if refresh token is missing.
+ * - An ApiError if refresh token is invalid or expired.
+ * - An ApiError if session deletion fails.
+ */
 const revokeSessions = async (ctx: Context, role: Role) => {
   switch (role) {
     case "user":

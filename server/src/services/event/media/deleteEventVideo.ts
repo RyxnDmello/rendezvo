@@ -6,6 +6,24 @@ import { getVideoID, deleteVideo } from "../helpers/storage";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that deletes an event's video.
+ *
+ * This function validates event existence and organizer authorization.
+ * It removes the specified video from the album and deletes the stored file.
+ *
+ * @param {string} id - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {DeleteEventVideoValidatorSchema} data - The validated delete video payload.
+ *
+ * @returns A success response if the video is deleted.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if video does not exist.
+ * - An ApiError if delete operation fails.
+ */
 const deleteEventVideo = async (
   id: string,
   ownerID: string,

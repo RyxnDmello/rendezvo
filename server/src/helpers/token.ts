@@ -6,7 +6,16 @@ import { getDate } from "@helpers/date";
 import { generateTokenID } from "@helpers/generator";
 
 /**
- * The payload type of every JWT token. Must be respected.
+ * The JWT encryption algorithm. Used as HS512.
+ */
+export const ALGORITHM: SignatureAlgorithm = "HS512";
+
+/**
+ * A type that represents the payload of every JWT token. Must be respected.
+ *
+ * Every JWT token must have a unique ID, referenced as `jti`. The issuer or origin
+ * of the token must be assigned, referenced as `iss`. A token can additionally store
+ * some data, that can be referenced later, during verification.
  */
 export type Payload = {
   data: Record<string, any>;
@@ -14,11 +23,6 @@ export type Payload = {
   iss: string;
   exp: number;
 };
-
-/**
- * The JWT encryption algorithm. Used as HS512.
- */
-export const ALGORITHM: SignatureAlgorithm = "HS512";
 
 /**
  * A helper function to create a JWT token. A token can also store some data.

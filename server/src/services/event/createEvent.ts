@@ -7,6 +7,19 @@ import { CreateEventValidatorSchema } from "@validators/event/createEvent.valida
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that creates an event under an organizer.
+ *
+ * This function validates the organizer existence, creates a new event,
+ * stores it in the database, and clears related cached data.
+ *
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {CreateEventValidatorSchema} data - The validated create event payload.
+ *
+ * @returns A success response if the event is created.
+ *
+ * @throws An ApiError if organizer does not exist.
+ */
 const createEvent = async (
   ownerID: string,
   data: CreateEventValidatorSchema,

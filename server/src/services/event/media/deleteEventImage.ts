@@ -6,6 +6,24 @@ import { getImageID, deleteImage } from "../helpers/storage";
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that deletes an event's image.
+ *
+ * This function validates event existence and organizer authorization.
+ * It removes the specified image from the album and deletes the stored file.
+ *
+ * @param {string} id - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {DeleteEventImageValidatorSchema} data - The validated delete image payload.
+ *
+ * @returns A success response if the image is deleted.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if image does not exist.
+ * - An ApiError if delete operation fails.
+ */
 const deleteEventImage = async (
   id: string,
   ownerID: string,

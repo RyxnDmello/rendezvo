@@ -11,6 +11,23 @@ import {
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that uploads event's cover and banner image.
+ *
+ * This function validates event existence and organizer authorization.
+ * It uploads or updates both cover and banner in storage and updates the database.
+ *
+ * @param {string} id - The ID of the event.
+ * @param {string} ownerID - The ID of the organizer.
+ * @param {UploadEventMediaValidatorSchema} data - The validated upload media payload.
+ *
+ * @returns A success response if the media is uploaded.
+ *
+ * @throws
+ * - An ApiError if event does not exist.
+ * - An ApiError if organizer is not authorized.
+ * - An ApiError if upload operation fails.
+ */
 const uploadEventMedia = async (
   id: string,
   ownerID: string,

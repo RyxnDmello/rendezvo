@@ -6,6 +6,25 @@ import { UpdateUserValidatorSchema } from "@validators/user/updateUser.validator
 
 import ApiError from "@utils/ApiError";
 
+/**
+ * A service function that updates a user.
+ *
+ * This function validates the users's existence and verification status. It
+ * checks for mobile number conflicts if the mobile field is being updated.
+ * It updates the user data in the database. It clears the cached user data
+ * after a successful update.
+ *
+ * @param {string} id - The ID of the user.
+ * @param {UpdateUserValidatorSchema} data - The validated update user payload.
+ *
+ * @returns A success response if the user is updated.
+ *
+ * @throws
+ * - An ApiError if user does not exist.
+ * - An ApiError if user is not verified.
+ * - An ApiError if update operation fails.
+ * - An ApiError if mobile number already exists.
+ */
 const updateUser = async (id: string, data: UpdateUserValidatorSchema) => {
   const dbUser = await UserModel.findOne(
     {
