@@ -6,6 +6,9 @@ import envValidator, {
 
 const { ...variables } = process.env;
 
+/**
+ * A global constant that holds all the environment variables.
+ */
 let env: EnvValidatorSchema;
 
 try {

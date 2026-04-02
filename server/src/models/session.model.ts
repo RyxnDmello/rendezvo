@@ -2,6 +2,9 @@ import { Schema, Types, model } from "mongoose";
 
 import { Role } from "@constants/user";
 
+/**
+ * An interface that represents a session.
+ */
 export interface Session {
   id?: string;
   user: Types.ObjectId;
@@ -81,6 +84,11 @@ const sessionSchema = new Schema<Session>(
   },
 );
 
+/**
+ * The Session Mongoose Model.
+ *
+ * This model is used as an interface to interact with session documents in MongoDB.
+ */
 const SessionModel = model("session", sessionSchema);
 
 export default SessionModel;

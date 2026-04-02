@@ -69,6 +69,9 @@ export const eventSecurityValidatorSchema = z.strictObject(
   "Event Security Codes Must Be Provided",
 );
 
+/**
+ * A type that represents the validated event security details payload.
+ */
 export type EventSecurityValidatorSchema = z.infer<
   typeof eventSecurityValidatorSchema
 >;

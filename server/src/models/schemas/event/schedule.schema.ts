@@ -2,9 +2,32 @@ import { Schema } from "mongoose";
 
 import slotSchema, { Slot } from "./schedule/slot.schema";
 
+/**
+ * A type that represents an event's schedule type.
+ *
+ * - "single" - single occurring events.
+ * - "daily" - daily occurring events.
+ * - "weekly" - weekly occurring events.
+ * - "custom" - custom occurring events.
+ */
 export type Type = "single" | "daily" | "weekly" | "custom";
+
+/**
+ * A type that represents a weekly occurring event's selected days of the week.
+ *
+ * - "MON" - Monday.
+ * - "TUE" - Tuesday.
+ * - "WED" - Wednesday.
+ * - "THU" - Thursday.
+ * - "FRI" - Friday.
+ * - "SAT" - Saturday.
+ * - "SUN" - Sunday.
+ */
 export type Weekly = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
 
+/**
+ * An interface that represents an event's schedule details.
+ */
 export interface Schedule {
   type: Type;
   startDate: Date | null;

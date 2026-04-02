@@ -10,6 +10,9 @@ export const ticketQuantityValidatorSchema = z.strictObject(
   "Ticket Quantity Details Must Be Provided",
 );
 
+/**
+ * A type that represents the validated ticket quantity details payload.
+ */
 export type TicketQuantityValidatorSchema = z.infer<
   typeof ticketQuantityValidatorSchema
 >;

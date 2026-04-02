@@ -2,7 +2,7 @@ import * as z from "zod";
 
 import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
-export const loginOrganizerValidatorSchema = z.strictObject(
+const loginOrganizerValidatorSchema = z.strictObject(
   {
     email: z
       .email("Email Must Be A Valid Email Address")
@@ -23,15 +23,26 @@ export const loginOrganizerValidatorSchema = z.strictObject(
   "Only Email And Password Must Be Provided",
 );
 
+/**
+ * A validator middleware for organizer login requests.
+ *
+ * This middleware validates the request body against the login schema.
+ */
 const loginOrganizerValidator = validator(
   "json",
   loginOrganizerValidatorSchema,
 );
 
+/**
+ * A type that represents the validated login organizer payload.
+ */
 export type LoginOrganizerValidatorSchema = z.infer<
   typeof loginOrganizerValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated login organizer data.
+ */
 export type LoginOrganizerContext = ValidatorContext<
   typeof loginOrganizerValidator
 >;

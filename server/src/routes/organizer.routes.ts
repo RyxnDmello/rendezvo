@@ -40,6 +40,9 @@ import verifyResetVerificationValidator from "@validators/verification/verifyRes
 import verifyForgotVerificationValidator from "@validators/verification/verifyForgotVerification.validator";
 import verifyAccountVerificationValidator from "@validators/verification/verifyAccountVerification.validator";
 
+/**
+ * The organizer router.
+ */
 const router = new Hono();
 
 router.post("/login", loginOrganizerValidator, _loginOrganizer);

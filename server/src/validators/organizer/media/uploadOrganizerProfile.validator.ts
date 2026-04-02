@@ -14,15 +14,26 @@ const uploadOrganizerProfileValidatorSchema = z.strictObject(
   "Only Organizer Profile Image Must Be Provided",
 );
 
+/**
+ * A validator middleware for the organizer's profile image upload requests.
+ *
+ * This middleware validates the request form data against the profile upload schema.
+ */
 const uploadOrganizerProfileValidator = validator(
   "form",
   uploadOrganizerProfileValidatorSchema,
 );
 
+/**
+ * A type that represents the organizer's profile image payload.
+ */
 export type UploadOrganizerProfileValidatorSchema = z.infer<
   typeof uploadOrganizerProfileValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with the organizer's profile image data.
+ */
 export type UploadOrganizerProfileContext = ValidatorContext<
   typeof uploadOrganizerProfileValidator
 >;

@@ -4,6 +4,9 @@ import socialSchema, { Social } from "./profile/socials.schema";
 
 import mediaSchema, { Media } from "@schemas/media.schema";
 
+/**
+ * An interface that represents the organizer's profile details.
+ */
 export interface Profile {
   bio: string | null;
   image: Media | null;

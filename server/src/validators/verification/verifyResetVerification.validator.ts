@@ -2,7 +2,7 @@ import * as z from "zod";
 
 import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
-export const verifyResetVerificationValidatorSchema = z
+const verifyResetVerificationValidatorSchema = z
   .strictObject(
     {
       otp: z
@@ -35,15 +35,26 @@ export const verifyResetVerificationValidatorSchema = z
     return data.password !== data.newPassword;
   }, "Password And New Password Must Be Different");
 
+/**
+ * A validator middleware for password reset verification requests.
+ *
+ * This middleware validates the request body against the password reset verification schema.
+ */
 const verifyResetVerificationValidator = validator(
   "json",
   verifyResetVerificationValidatorSchema,
 );
 
+/**
+ * A type that represents the validated password reset verification payload.
+ */
 export type VerifyResetVerificationValidatorSchema = z.infer<
   typeof verifyResetVerificationValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated password reset verification data.
+ */
 export type VerifyResetVerificationContext = ValidatorContext<
   typeof verifyResetVerificationValidator
 >;

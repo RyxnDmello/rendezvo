@@ -1,7 +1,20 @@
 import { Schema } from "mongoose";
 
+/**
+ * A type that represents the type of media stored.
+ *
+ * - "image" - used for all image files.
+ * - "video" - used for all video files.
+ * - "file" - used for all non image and video files.
+ */
 export type Type = "image" | "video" | "file";
 
+/**
+ * An interface that represents a media.
+ *
+ * Since Appwrite is being used for file storage, we
+ * only need to store the ID and type of the file.
+ */
 export interface Media {
   id: string;
   type: Type;

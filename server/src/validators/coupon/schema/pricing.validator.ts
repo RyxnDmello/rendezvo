@@ -46,6 +46,9 @@ export const couponPricingValidatorSchema = z
     }
   });
 
+/**
+ * A type that represents the validated coupon pricing details payload.
+ */
 export type CouponPricingValidatorSchema = z.infer<
   typeof couponPricingValidatorSchema
 >;

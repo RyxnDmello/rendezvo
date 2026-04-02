@@ -1,7 +1,17 @@
 import { Schema, Types } from "mongoose";
 
+/**
+ * A type that represents the user's preferred website theme.
+ *
+ * - "dark" - the dark theme of the website.
+ * - "light" - the light theme of the website.
+ * - "default" - the default theme of the system.
+ */
 export type Theme = "light" | "dark" | "default";
 
+/**
+ * An interface that represents the user's preferences.
+ */
 export interface Preference {
   theme: Theme;
   events: Types.ObjectId[] | null;

@@ -2,6 +2,9 @@ import { Schema } from "mongoose";
 
 import itemSchema, { Item } from "./shop/item.schema";
 
+/**
+ * An interface that represents the event's shop details.
+ */
 export interface Shop {
   name: string;
   description: string;

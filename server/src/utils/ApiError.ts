@@ -2,11 +2,24 @@ import { Context } from "hono";
 
 import { ContentfulStatusCode } from "hono/utils/http-status";
 
+/**
+ * An interface that represents a custom error message structure.
+ *
+ * This interface is used within the exception class, ApiError, and
+ * every other exception class that extends it. The goal is to have
+ * a unified structure for error responses. Every error returned by
+ * the server must describe a useful message and an error code.
+ */
 export interface CustomError {
   error: string;
   code: ErrorCode;
 }
 
+/**
+ * A type that represents common error codes.
+ *
+ * This type describes common error codes thrown by every server.
+ */
 export type CommonErrorCode =
   | "CONFLICT"
   | "NOT_FOUND"
@@ -14,6 +27,11 @@ export type CommonErrorCode =
   | "UNPROCESSABLE_ENTITY"
   | "INTERNAL_SERVER_ERROR";
 
+/**
+ * A type that represents authentication error codes.
+ *
+ * This type describes error codes thrown during authentication and authorization.
+ */
 export type AuthErrorCode =
   | "FORBIDDEN"
   | "UNAUTHORIZED"
@@ -30,12 +48,22 @@ export type AuthErrorCode =
   | "REFRESH_TOKEN_EXPIRED"
   | "REFRESH_TOKEN_REVOKED";
 
+/**
+ * A type that represents common database error codes.
+ *
+ * This type describes error codes thrown during common database operations.
+ */
 export type DatabaseErrorCode =
   | "CAST_ERROR"
   | "VALIDATION_ERROR"
   | "DUPLICATE_KEY_ERROR"
   | "DATABASE_SERVER_ERROR";
 
+/**
+ * A type that represents common file storage error codes.
+ *
+ * This type describes error codes thrown during common file storage operations.
+ */
 export type StorageErrorCode =
   | "FILE_NOT_FOUND"
   | "INVALID_FILE_ID"
@@ -45,12 +73,25 @@ export type StorageErrorCode =
   | "FILE_ALREADY_EXISTS"
   | "STORAGE_SERVER_ERROR";
 
+/**
+ * A type that represents error codes.
+ *
+ * This type describes error codes thrown by the server during operations
+ * such as authentication, authorization, database, file storage, and basic
+ * operations handled by most servers.
+ */
 export type ErrorCode =
   | AuthErrorCode
   | CommonErrorCode
   | StorageErrorCode
   | DatabaseErrorCode;
 
+/**
+ * A record that maps error codes to HTTP status codes.
+ *
+ * This record describes various error codes and their equivalent HTTP status
+ * codes that the server responds with when an error is caught and thrown.
+ */
 export const status: Record<ErrorCode, ContentfulStatusCode> = {
   CONFLICT: 409,
   NOT_FOUND: 404,
@@ -88,14 +129,40 @@ export const status: Record<ErrorCode, ContentfulStatusCode> = {
   STORAGE_SERVER_ERROR: 500,
 };
 
+/**
+ * A helper function that checks if an error is an ApiError.
+ *
+ * @param {unknown} error - The error to be checked.
+ *
+ * @returns True if the error is an ApiError, otherwise false.
+ */
 export const isApiError = (error: unknown) => {
   return Boolean(error instanceof ApiError);
 };
 
+/**
+ * A class that represents a custom API error.
+ *
+ * This class extends the native Error class and provides extra metadata such as
+ * an error code and status. When an operation fails, we can use the ApiError to
+ * return a structured error response.
+ *
+ * @example
+ * throw new ApiError("Useful Message", "INTERNAL_SERVER_ERROR");
+ */
 export default class ApiError extends Error {
   public readonly code: ErrorCode;
   public readonly status: ContentfulStatusCode;
 
+  /**
+   * A constructor that creates a new API error.
+   *
+   * @param {string} message - A useful error message.
+   * @param {ErrorCode} code - A useful error code.
+   *
+   * @example
+   * throw new ApiError("Useful Message", "INTERNAL_SERVER_ERROR");
+   */
   constructor(message: string, code: ErrorCode) {
     super(message, {
       cause: message,
@@ -105,6 +172,11 @@ export default class ApiError extends Error {
     this.status = status[code];
   }
 
+  /**
+   * Converts the error into a JSON response.
+   *
+   * @returns Serialized error object.
+   */
   toJSON() {
     return {
       error: this.message,
@@ -113,6 +185,20 @@ export default class ApiError extends Error {
   }
 }
 
+/**
+ * A helper function that returns a standardized API error response.
+ *
+ * @param {Context} ctx - A hono context.
+ * @param {CustomError} error - The error to be returned in the response.
+ *
+ * @returns A JSON response containing the error details.
+ *
+ * @example
+ * return ApiErrorResponse(ctx, {
+ *   error: "Useful Message",
+ *   code: "INTERNAL_SERVER_ERROR",
+ * });
+ */
 export const ApiErrorResponse = (ctx: Context, error: CustomError) => {
   return ctx.json(error, status[error.code]);
 };

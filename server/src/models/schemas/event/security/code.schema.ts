@@ -1,7 +1,16 @@
 import { Schema } from "mongoose";
 
+/**
+ * A type that represents the type of security code.
+ *
+ * - "single" - can be used only once.
+ * - "multiple" - can be used multiple times.
+ */
 export type Type = "single" | "multiple";
 
+/**
+ * An interface that represents an event's security code.
+ */
 export interface Code {
   type: Type;
   active: boolean;

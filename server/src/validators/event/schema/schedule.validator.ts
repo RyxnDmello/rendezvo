@@ -277,6 +277,9 @@ export const eventScheduleValidatorSchema = z
     }
   });
 
+/**
+ * A type that represents the validated event schedule details payload.
+ */
 export type EventScheduleValidatorSchema = z.infer<
   typeof eventScheduleValidatorSchema
 >;

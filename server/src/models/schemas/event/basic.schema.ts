@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents the event's basic details.
+ */
 export interface Basic {
   title: string;
   category: string;

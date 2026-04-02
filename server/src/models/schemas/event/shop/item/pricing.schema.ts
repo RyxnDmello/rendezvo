@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents the item's pricing details.
+ */
 export interface Pricing {
   amount: number;
   original: number;

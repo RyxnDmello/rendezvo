@@ -4,6 +4,9 @@ import pricingSchema, { Pricing } from "./item/pricing.schema";
 import quantitySchema, { Quantity } from "./item/quantity.schema";
 import scheduleSchema, { Schedule } from "./item/schedule.schema";
 
+/**
+ * An interface that represents an item.
+ */
 export interface Item {
   id: string;
   name: string;

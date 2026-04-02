@@ -2,7 +2,7 @@ import * as z from "zod";
 
 import validator, { ValidatorContext } from "@middlewares/validator.middleware";
 
-export const verifyForgotVerificationValidatorSchema = z.strictObject(
+const verifyForgotVerificationValidatorSchema = z.strictObject(
   {
     otp: z
       .string("OTP Must Be A 6 Digit String")
@@ -22,15 +22,26 @@ export const verifyForgotVerificationValidatorSchema = z.strictObject(
   "Only OTP And Password Must Be Provided",
 );
 
+/**
+ * A validator middleware for password forgot verification requests.
+ *
+ * This middleware validates the request body against the password forgot verification schema.
+ */
 const verifyForgotVerificationValidator = validator(
   "json",
   verifyForgotVerificationValidatorSchema,
 );
 
+/**
+ * A type that represents the validated password forgot verification payload.
+ */
 export type VerifyForgotVerificationValidatorSchema = z.infer<
   typeof verifyForgotVerificationValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated password forgot verification data.
+ */
 export type VerifyForgotVerificationContext = ValidatorContext<
   typeof verifyForgotVerificationValidator
 >;

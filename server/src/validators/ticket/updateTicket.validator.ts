@@ -61,12 +61,23 @@ const updateTicketValidatorSchema = z
     }
   });
 
+/**
+ * A validator middleware for update ticket requests.
+ *
+ * This middleware validates the request body against the update ticket schema.
+ */
 const updateTicketValidator = validator("json", updateTicketValidatorSchema);
 
+/**
+ * A type that represents the validated update ticket payload.
+ */
 export type UpdateTicketValidatorSchema = z.infer<
   typeof updateTicketValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated update ticket data.
+ */
 export type UpdateTicketContext = ValidatorContext<
   typeof updateTicketValidator
 >;

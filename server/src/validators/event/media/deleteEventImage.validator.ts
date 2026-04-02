@@ -12,15 +12,26 @@ const deleteEventImageValidatorSchema = z.strictObject(
   "Only Event Event Image Index Must Be Provided",
 );
 
+/**
+ * A validator middleware for event image deletion requests.
+ *
+ * This middleware validates the request body against the event image deletion schema.
+ */
 const deleteEventImageValidator = validator(
   "json",
   deleteEventImageValidatorSchema,
 );
 
+/**
+ * A type that represents the validated event image deletion payload.
+ */
 export type DeleteEventImageValidatorSchema = z.infer<
   typeof deleteEventImageValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated event image deletion data.
+ */
 export type DeleteEventImageContext = ValidatorContext<
   typeof deleteEventImageValidator
 >;

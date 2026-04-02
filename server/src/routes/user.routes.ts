@@ -31,6 +31,9 @@ import verifyResetVerificationValidator from "@validators/verification/verifyRes
 import verifyForgotVerificationValidator from "@validators/verification/verifyForgotVerification.validator";
 import verifyAccountVerificationValidator from "@validators/verification/verifyAccountVerification.validator";
 
+/**
+ * The user router.
+ */
 const router = new Hono();
 
 router.post("/login", loginUserValidator, _loginUser);

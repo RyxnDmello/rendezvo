@@ -3,6 +3,9 @@ import { Schema, model } from "mongoose";
 import profileSchema, { Profile } from "@schemas/organizer/profile.schema";
 import billingSchema, { Billing } from "@schemas/organizer/billing.schema";
 
+/**
+ * An interface that represents an organizer.
+ */
 export interface Organizer {
   id?: string;
   artistID: string | null;
@@ -89,6 +92,11 @@ const organizerSchema = new Schema<Organizer>(
   },
 );
 
+/**
+ * The Organizer Mongoose Model.
+ *
+ * This model is used as an interface to interact with organizer documents in MongoDB.
+ */
 const OrganizerModel = model("organizer", organizerSchema);
 
 export default OrganizerModel;

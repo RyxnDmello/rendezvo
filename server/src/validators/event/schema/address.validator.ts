@@ -38,6 +38,9 @@ export const eventAddressValidatorSchema = z.strictObject(
   "Event Address Details Must Be Provided",
 );
 
+/**
+ * A type that represents the validated event address payload.
+ */
 export type EventAddressValidatorSchema = z.infer<
   typeof eventAddressValidatorSchema
 >;

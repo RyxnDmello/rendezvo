@@ -14,6 +14,9 @@ import { authorizeOrganizer } from "@middlewares/authorize.middleware";
 import addTicketValidator from "@validators/ticket/addTicket.validator";
 import updateTicketValidator from "@validators/ticket/updateTicket.validator";
 
+/**
+ * The ticket router.
+ */
 const router = new Hono();
 
 router

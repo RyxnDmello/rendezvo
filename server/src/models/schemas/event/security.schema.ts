@@ -3,6 +3,9 @@ import { Schema } from "mongoose";
 import codeSchema, { Code } from "./security/code.schema";
 import recordSchema, { Record } from "./security/record.schema";
 
+/**
+ * An interface that represents an event's security details.
+ */
 export interface Security {
   codes: Code[];
   records: Record[];

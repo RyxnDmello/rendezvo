@@ -24,15 +24,26 @@ const uploadEventBannerValidatorSchema = z.strictObject(
   "Only Event Banner Image Must Be Provided",
 );
 
+/**
+ * A validator middleware for event banner image upload requests.
+ *
+ * This middleware validates the request form data against the event banner image upload schema.
+ */
 const uploadEventBannerValidator = validator(
   "form",
   uploadEventBannerValidatorSchema,
 );
 
+/**
+ * A type that represents the validated event banner image upload payload.
+ */
 export type UploadEventBannerValidatorSchema = z.infer<
   typeof uploadEventBannerValidatorSchema
 >;
 
+/**
+ * A type that represents the Hono context with validated event banner image upload data.
+ */
 export type UploadEventBannerContext = ValidatorContext<
   typeof uploadEventBannerValidator
 >;

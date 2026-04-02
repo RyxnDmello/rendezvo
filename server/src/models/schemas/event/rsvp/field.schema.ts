@@ -1,7 +1,18 @@
 import { Schema } from "mongoose";
 
+/**
+ * A type that represents the RSVP form field types.
+ *
+ * - "date" - a date input field.
+ * - "text" - a string input field.
+ * - "number" - a number input field.
+ * - "dropdown" - a string-based dropdown field.
+ */
 export type Type = "text" | "number" | "date" | "dropdown";
 
+/**
+ * An interface that represents the RSVP form field.
+ */
 export interface Field {
   type: Type;
   name: string;
@@ -12,6 +23,9 @@ export interface Field {
   validator: Validator;
 }
 
+/**
+ * An interface that represents the RSVP form field's validation rules.
+ */
 export interface Validator {
   required: boolean;
   min: number | null;

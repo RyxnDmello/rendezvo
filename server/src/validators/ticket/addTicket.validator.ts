@@ -62,10 +62,21 @@ const addTicketValidatorSchema = z
     }
   });
 
+/**
+ * A validator middleware for add ticket requests.
+ *
+ * This middleware validates the request body against the add ticket schema.
+ */
 const addTicketValidator = validator("json", addTicketValidatorSchema);
 
+/**
+ * A type that represents the validated add ticket payload.
+ */
 export type AddTicketValidatorSchema = z.infer<typeof addTicketValidatorSchema>;
 
+/**
+ * A type that represents the Hono context with validated add ticket data.
+ */
 export type AddTicketContext = ValidatorContext<typeof addTicketValidator>;
 
 export default addTicketValidator;

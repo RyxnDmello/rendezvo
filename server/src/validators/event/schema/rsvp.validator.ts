@@ -207,4 +207,7 @@ export const eventRsvpValidatorSchema = z.strictObject(
   "Event RSVP Details Must Be Provided",
 );
 
+/**
+ * A type that represents the validated event RSVP form details payload.
+ */
 export type EventRsvpValidatorSchema = z.infer<typeof eventRsvpValidatorSchema>;

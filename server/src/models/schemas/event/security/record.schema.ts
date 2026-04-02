@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents an event's security records.
+ */
 export interface Record {
   userID: string;
   orderID: string;

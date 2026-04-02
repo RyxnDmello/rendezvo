@@ -11,12 +11,41 @@ import addressSchema, { Address } from "@schemas/event/address.schema";
 import scheduleSchema, { Schedule } from "@schemas/event/schedule.schema";
 import securitySchema, { Security } from "@schemas/event/security.schema";
 
+/**
+ * A type that represents the event's mode.
+ *
+ * - "online" - virtual events.
+ * - "offline" - physical events.
+ */
 export type Mode = "online" | "offline";
+
+/**
+ * A type that represents the event's status.
+ *
+ * - "active" - currently live.
+ * - "inactive" - currently not live.
+ */
 export type Status = "active" | "inactive";
 
+/**
+ * A type that represents the event's attendance type.
+ *
+ * - "open" - does not require RSVP details.
+ * - "rsvp" - strictly requires RSVP details.
+ */
 export type Attendance = "open" | "rsvp";
+
+/**
+ * A type that represents the event's visibility.
+ *
+ * - "public" - event will be listed publicly to all users.
+ * - "private" - event can only be shared to select users.
+ */
 export type Visibility = "public" | "private";
 
+/**
+ * An interface that represents an event.
+ */
 export interface Event {
   id?: string;
   owner: Types.ObjectId;
@@ -186,6 +215,11 @@ const eventSchema = new Schema<Event>(
   },
 );
 
+/**
+ * The Event Mongoose Model.
+ *
+ * This model is used as an interface to interact with event documents in MongoDB.
+ */
 const EventModel = model("event", eventSchema);
 
 export default EventModel;

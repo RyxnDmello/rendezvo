@@ -1,5 +1,8 @@
 import { Schema } from "mongoose";
 
+/**
+ * An interface that represents an event's refund policy.
+ */
 export interface Refund {
   title: string;
   duration: number;
