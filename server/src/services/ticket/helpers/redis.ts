@@ -1,6 +1,6 @@
 import { client } from "@config/redis.config";
 
-import { Ticket } from "@schemas/event/ticket.schema";
+import { EventTicket } from "@schemas/event/ticket.schema";
 
 /**
  * Expiry configuration for ticket cache.
@@ -94,7 +94,7 @@ export const getCachedTickets = async (eventID: string, ownerID: string) => {
  * @param {string} id - The ID of the ticket.
  * @param {string} eventID - The ID of the event.
  * @param {string} ownerID - The ID of the organizer.
- * @param {Ticket} ticket - The ticket data to be cached.
+ * @param {EventTicket} ticket - The ticket data to be cached.
  *
  * @returns True if the cache is successfully set, otherwise false.
  */
@@ -102,7 +102,7 @@ export const setCachedTicket = async (
   id: string,
   eventID: string,
   ownerID: string,
-  ticket: Ticket,
+  ticket: EventTicket,
 ) => {
   const key = ticketCacheKey(id, eventID, ownerID);
 
@@ -122,14 +122,14 @@ export const setCachedTicket = async (
  *
  * @param {string} eventID - The ID of the event.
  * @param {string} ownerID - The ID of the organizer.
- * @param {Ticket[]} tickets - The tickets data to be cached.
+ * @param {EventTicket[]} tickets - The tickets data to be cached.
  *
  * @returns True if the cache is successfully set, otherwise false.
  */
 export const setCachedTickets = async (
   eventID: string,
   ownerID: string,
-  tickets: Ticket[],
+  tickets: EventTicket[],
 ) => {
   const key = ticketsCacheKey(eventID, ownerID);
 

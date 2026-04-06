@@ -1,280 +1,116 @@
 import * as z from "zod";
 
-export const eventScheduleValidatorSchema = z
+export const slotSchema = z
   .strictObject(
     {
-      type: z.enum(
-        ["single", "daily", "weekly", "custom"],
-        "Invalid Event Schedule Type",
-      ),
-      startDate: z
-        .string("Event Start Date Must Be YYYY-MM-DD Format")
-        .regex(
-          /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-          "Event Start Date Must Be In YYYY-MM-DD Format",
-        )
-        .refine((val) => {
-          const date = new Date(val);
-          return !isNaN(date.getTime()) && date > new Date();
-        }, "Event Start Date Must Be A Future Date")
-        .trim()
-        .optional(),
+      active: z
+        .boolean("Time Slot Must Either Be Enabled Or Disabled")
+        .optional()
+        .default(true),
       startTime: z
-        .string("Event Start Time Must Be In The 24 Hour Format")
+        .string("Slot Start Time Must Be In The 24 Hour Format")
         .regex(
-          /^([01]\d|2[0-3]):([0-5]\d)$/,
-          "Event Start Time Must Be In The 24 Hour Format",
+          /^([01][0-9]|2[0-3]):([0-5][0-9])$/,
+          "Slot Start Time Must Be In The 24 Hour Format",
         )
-        .optional(),
-      endDate: z
-        .string("Event End Date Must Be YYYY-MM-DD Format")
-        .regex(
-          /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-          "Event End Date Must Be In YYYY-MM-DD Format",
-        )
-        .refine((val) => {
-          const date = new Date(val);
-          return !isNaN(date.getTime()) && date > new Date();
-        }, "Event End Date Must Be A Future Date")
-        .trim()
-        .optional(),
+        .trim(),
       endTime: z
-        .string("Event End Time Must Be In The 24 Hour Format")
+        .string("Slot Start Time Must Be In The 24 Hour Format")
         .regex(
-          /^([01]\d|2[0-3]):([0-5]\d)$/,
-          "Event End Time Must Be In The 24 Hour Format",
+          /^([01][0-9]|2[0-3]):([0-5][0-9])$/,
+          "Slot Start Time Must Be In The 24 Hour Format",
         )
-        .optional(),
-      dates: z
-        .array(
-          z
-            .string("Custom Date Must Be YYYY-MM-DD Format")
-            .regex(
-              /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-              "Custom Date Must Be In YYYY-MM-DD Format",
-            )
-            .refine((val) => {
-              const date = new Date(val);
-              return !isNaN(date.getTime()) && date > new Date();
-            }, "Custom Date Must Be A Future Date")
-            .trim(),
-          "Custom Dates Must Be A List Of Valid Dates",
-        )
-        .min(2, "At Least 2 Event Dates Must Be Provided")
-        .max(30, "At Most 30 Event Dates Must Be Provided")
-        .refine((dates) => {
-          const unique = new Set(dates);
-          return unique.size === dates.length;
-        }, "Duplicate Dates Are Not Allowed")
-        .optional(),
-      slots: z
-        .array(
-          z.strictObject(
-            {
-              startTime: z
-                .string("Slot Start Time Must Be In The 24 Hour Format")
-                .regex(
-                  /^([01]\d|2[0-3]):([0-5]\d)$/,
-                  "Slot Start Time Must Be In The 24 Hour Format",
-                )
-                .trim(),
-              endTime: z
-                .string("Slot End Time Must Be In The 24 Hour Format")
-                .regex(
-                  /^([01]\d|2[0-3]):([0-5]\d)$/,
-                  "Slot End Time Must Be In The 24 Hour Format",
-                )
-                .trim(),
-            },
-            "Slot Start And Time Time Must Be Provided",
-          ),
-          "Time Slots Must Be A List Of Valid Time Slots",
-        )
-        .min(2, "At Least 2 Time Slots Must Be Provided")
-        .max(10, "At Most 10 Time Slots Must Be Provided")
-        .optional(),
-      weekly: z
-        .array(
-          z.enum(
-            ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"],
-            "Invalid Day Of The Week Provided",
-          ),
-          "Weekly Must Be A List Of The Selected Days Of The Week",
-        )
-        .refine((weekly) => {
-          const unique = new Set(weekly);
-          return unique.size === weekly.length;
-        }, "Duplicate Days Of The Week Are Not Allowed")
-        .min(1, "At Least 1 Day Of The Week Must Be Provided")
-        .max(7, "At Most All Days Of The Week Must Be Provided")
-        .optional(),
-      exceptions: z
-        .array(
-          z
-            .string("Exception Date Must Be YYYY-MM-DD Format")
-            .regex(
-              /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
-              "Exception Date Must Be YYYY-MM-DD Format",
-            )
-            .refine((val) => {
-              const date = new Date(val);
-              return !isNaN(date.getTime()) && date > new Date();
-            }, "Exception Date Must Be A Future Date")
-            .trim(),
-          "Exception Dates Must Be A List Of Valid Dates",
-        )
-        .min(1, "At Least 1 Exception Date Must Be Provided")
-        .max(30, "At Most 30 Exception Dates Must Be Provided")
-        .refine((dates) => {
-          const unique = new Set(dates);
-          return unique.size === dates.length;
-        }, "Duplicate Exception Dates Are Not Allowed")
-        .optional(),
+        .trim(),
     },
-    "Event Schedule Details Must Be Provided",
+    "Only Slot Start And End Time Must Be Provided",
   )
-  .superRefine((data, ctx) => {
-    const {
-      type,
-      slots,
-      dates,
-      weekly,
-      endDate,
-      endTime,
-      startDate,
-      startTime,
-      exceptions,
-    } = data;
+  .superRefine((value, ctx) => {
+    const toMinutes = (time: string) => {
+      const [hours, minutes] = time.split(":").map(Number);
+      return hours! * 60 + minutes!;
+    };
 
-    if (startTime || endTime) {
-      if (slots) {
-        return ctx.addIssue({
-          code: "custom",
-          message: "An Event Can Either Have A Fixed Time Or Slots, Not Both",
-        });
-      }
+    const startTime = toMinutes(value.startTime);
+    const endTime = toMinutes(value.endTime);
 
-      if (!startTime) {
-        return ctx.addIssue({
-          code: "custom",
-          message: "Please Provide An Event Start Time",
-        });
-      }
-
-      if (!endTime) {
-        return ctx.addIssue({
-          code: "custom",
-          message: "Please Provide An Event End Time",
-        });
-      }
-    }
-
-    if (!startTime && !endTime && !slots) {
-      return ctx.addIssue({
+    if (startTime >= endTime) {
+      ctx.addIssue({
         code: "custom",
-        message: "An Event Must Have Either A Fixed Time Or Slots",
+        message: "Slot Start Time Must Be Less Than The End Time",
       });
     }
 
-    if (type === "custom") {
-      if (startDate || endDate) {
-        return ctx.addIssue({
-          code: "custom",
-          message: "Start And End Date Are Not Allowed For Custom Events",
-        });
-      }
-
-      if (weekly) {
-        return ctx.addIssue({
-          code: "custom",
-          message: "Days Of The Week Are Not Allowed For Custom Events",
-        });
-      }
-
-      if (!dates) {
-        return ctx.addIssue({
-          code: "custom",
-          message: "Event Dates Must Be Provided For Custom Events",
-        });
-      }
-
-      return;
+    if (endTime - startTime < 15) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Slot Duration Must Be At Least 15 Minutes",
+      });
     }
+  });
 
-    const _type = type[0]?.toUpperCase() + type.substring(1);
+export const dateSchema = z.strictObject(
+  {
+    active: z
+      .boolean("Event Date Must Either Be Enabled Or Disabled")
+      .optional()
+      .default(true),
+    date: z
+      .string("Event Date Must Be In The YYYY-MM-DD Format")
+      .regex(
+        /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
+        "Event Date Must Be In The YYYY-MM-DD Format",
+      )
+      .refine((value) => {
+        const date = new Date(value);
+        return !isNaN(date.getTime()) && date > new Date();
+      }, "Event Date Must Be A Future Date")
+      .trim(),
+    slots: z
+      .array(slotSchema, "Slots Must Be A Valid List Of Time Slots")
+      .min(1, "At Least 1 Time Slot Must Be Provided")
+      .max(10, "At Most 10 Time Slots Must Be Provided"),
+  },
+  "Only Event Date And Time Slots Must Be Provided",
+);
 
-    if (dates) {
+export const eventScheduleValidatorSchema = z
+  .array(dateSchema, "Event Schedule Must Be A List Of Valid Event Dates")
+  .min(1, "At Least 1 Event Date Must Be Provided")
+  .max(30, "At Most 30 Event Dates Must Be Provided")
+  .superRefine((values, ctx) => {
+    const dates = values.map((value) => value.date);
+
+    if (new Set(dates).size !== dates.length) {
       return ctx.addIssue({
         code: "custom",
-        message: `Custom Dates Are Not Allowed For ${_type} Events`,
+        message: "Event Dates Must Be Unique",
       });
     }
 
-    if (!startDate) {
-      return ctx.addIssue({
-        code: "custom",
-        message: "Event Start Date Must Be Provided",
-      });
-    }
-
-    if (!endDate) {
-      return ctx.addIssue({
-        code: "custom",
-        message: "Event End Date Must Be Provided",
-      });
-    }
-
-    let _startDate = new Date(startDate);
-    let _endDate = new Date(endDate);
-
-    if (startDate && endDate) {
-      _startDate = new Date(`${startDate}T${startTime}:00`);
-      _endDate = new Date(`${endDate}T${endTime}:00`);
-    }
-
-    if (type === "single") {
-      if (_startDate > _endDate) {
-        return ctx.addIssue({
+    for (let i = 1; i < dates.length; i++) {
+      if (dates[i]! <= dates[i - 1]!) {
+        ctx.addIssue({
           code: "custom",
-          message: "Event Start Date Must Be Set Before The End Date",
-        });
-      }
-
-      if (exceptions) {
-        return ctx.addIssue({
-          code: "custom",
-          message: `Schedule Exception Dates Are Not Allowed`,
-        });
-      }
-    } else {
-      if (startDate === endDate) {
-        return ctx.addIssue({
-          code: "custom",
-          message: `Start And End Date Cannot Be The Same For ${_type} Events`,
-        });
-      }
-
-      if (_startDate >= _endDate) {
-        return ctx.addIssue({
-          code: "custom",
-          message: "Event Start Date Must Be Set On Or Before The End Date",
+          message: "Event Dates Must Strictly Be In The Ascending Order",
         });
       }
     }
 
-    if (type === "weekly" && !weekly) {
-      return ctx.addIssue({
-        code: "custom",
-        message: "Weekly Events Must Provide The Selected Days Of The Week",
-      });
-    }
+    values.forEach((dateItem) => {
+      const slots = dateItem.slots;
 
-    if (type !== "weekly" && weekly) {
-      return ctx.addIssue({
-        code: "custom",
-        message: `Custom Days Of The Week Are Not Allowed For ${_type} Events`,
-      });
-    }
+      for (let i = 1; i < slots.length; i++) {
+        const prev = slots[i - 1]!.startTime;
+        const current = slots[i]!.startTime;
+
+        if (current <= prev) {
+          ctx.addIssue({
+            code: "custom",
+            message: "Event Time Slots Must Strictly Be In The Ascending Order",
+          });
+        }
+      }
+    });
   });
 
 /**

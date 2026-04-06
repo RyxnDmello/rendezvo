@@ -1,30 +1,36 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
-import profileSchema, { Profile } from "@schemas/organizer/profile.schema";
-import billingSchema, { Billing } from "@schemas/organizer/billing.schema";
+import organizerProfileSchema, {
+  OrganizerProfile,
+} from "@schemas/organizer/profile.schema";
+
+import organizerBillingSchema, {
+  OrganizerBilling,
+} from "@schemas/organizer/billing.schema";
 
 /**
  * An interface that represents an organizer.
  */
 export interface Organizer {
   id?: string;
-  artistID: string | null;
+  artist: Types.ObjectId;
   verified: boolean;
   name: string;
   email: string;
   mobile: number | null;
   password: string | null;
-  profile: Profile | null;
-  billing: Billing | null;
+  profile: OrganizerProfile | null;
+  billing: OrganizerBilling | null;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 const organizerSchema = new Schema<Organizer>(
   {
-    artistID: {
-      type: Schema.Types.String,
+    artist: {
+      type: Schema.Types.ObjectId,
       required: false,
+      ref: "artist",
       index: true,
       trim: true,
       default: null,
@@ -76,13 +82,13 @@ const organizerSchema = new Schema<Organizer>(
     },
     profile: {
       _id: false,
-      type: profileSchema,
+      type: organizerProfileSchema,
       required: false,
       default: {},
     },
     billing: {
       _id: false,
-      type: billingSchema,
+      type: organizerBillingSchema,
       required: false,
       default: {},
     },

@@ -1,4 +1,4 @@
-import { Ticket } from "@schemas/event/ticket.schema";
+import { EventTicket } from "@schemas/event/ticket.schema";
 
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
@@ -29,7 +29,7 @@ const fetchTickets = async (eventID: string, ownerID: string) => {
     (await getCachedTickets(eventID, ownerID)) ??
     (await getTickets(eventID, ownerID));
 
-  return tickets as Ticket[];
+  return tickets as EventTicket[];
 };
 
 const getTickets = async (eventID: string, ownerID: string) => {

@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-import { Schedule } from "@schemas/event/schedule.schema";
+import { EventSchedule } from "@schemas/event/schedule.schema";
 
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
@@ -13,6 +13,8 @@ import {
 } from "@services/event/helpers/redis";
 
 import { AddTicketValidatorSchema } from "@validators/ticket/addTicket.validator";
+
+import { getCombinedDate } from "./helpers/date";
 
 import ApiError from "@utils/ApiError";
 
@@ -154,78 +156,28 @@ const addTicket = async (
 };
 
 const validateSchedule = (
-  eventSchedule: Schedule,
+  eventSchedule: EventSchedule[],
   ticketSchedule: AddTicketValidatorSchema["schedule"],
 ) => {
-  const ticketStartDate = combine(
+  const ticketStartDate = getCombinedDate(
     new Date(ticketSchedule.startDate),
     ticketSchedule.startTime,
   );
 
-  const ticketEndDate = combine(
+  const ticketEndDate = getCombinedDate(
     new Date(ticketSchedule.endDate),
     ticketSchedule.endTime,
   );
 
-  if (eventSchedule.type === "custom") {
-    const dates = eventSchedule.dates!;
-
-    const eventStartDate = new Date(dates[0]!);
-    const eventEndDate = new Date(dates[dates.length - 1]!);
-
-    if (ticketStartDate > eventStartDate) {
-      throw new ApiError(
-        "Ticket Sales Start Date Must Be Set Before The Event Start Date",
-        "VALIDATION_ERROR",
-      );
-    }
-
-    if (ticketEndDate > eventEndDate) {
-      throw new ApiError(
-        "Ticket Sales End Date Must Be Set Before The Event End Date",
-        "VALIDATION_ERROR",
-      );
-    }
-
-    return;
-  }
-
-  if (!eventSchedule.slots) {
-    const eventStartDate = combine(
-      eventSchedule.startDate!,
-      eventSchedule.startTime!,
-    );
-
-    const eventEndDate = combine(
-      eventSchedule.endDate!,
-      eventSchedule.endTime!,
-    );
-
-    if (ticketStartDate > eventStartDate) {
-      throw new ApiError(
-        "Ticket Sales Start Date Must Be Set Before The Event Start Date",
-        "VALIDATION_ERROR",
-      );
-    }
-
-    if (ticketEndDate > eventEndDate) {
-      throw new ApiError(
-        "Ticket Sales End Date Must Be Set Before The Event End Date",
-        "VALIDATION_ERROR",
-      );
-    }
-
-    return;
-  }
-
-  const eventStartDate = combine(
-    eventSchedule.startDate!,
-    eventSchedule.slots[0]!.startTime,
+  const eventStartDate = getCombinedDate(
+    new Date(eventSchedule[0]!.date),
+    eventSchedule[0]!.slots[0]!.startTime,
   );
 
-  const eventEndDate = combine(
-    eventSchedule.endDate!,
-    eventSchedule.slots[eventSchedule.slots.length - 1]!.endTime,
+  const eventEndDate = getCombinedDate(
+    new Date(eventSchedule[eventSchedule.length - 1]!.date),
+    eventSchedule[eventSchedule.length - 1]!.slots[eventSchedule.length - 1]!
+      .endTime,
   );
 
   if (ticketStartDate > eventStartDate) {
@@ -241,13 +193,6 @@ const validateSchedule = (
       "VALIDATION_ERROR",
     );
   }
-};
-
-const combine = (date: Date, time: String) => {
-  const [h, m] = time.split(":").map(Number);
-  const d = new Date(date);
-  d.setHours(h!, m!, 0, 0);
-  return d;
 };
 
 export default addTicket;

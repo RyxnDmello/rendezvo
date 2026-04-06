@@ -1,15 +1,24 @@
 import { Schema, Types, model } from "mongoose";
 
-import shopSchema, { Shop } from "@schemas/event/shop.schema";
-import rsvpSchema, { Rsvp } from "@schemas/event/rsvp.schema";
-import albumSchema, { Album } from "@schemas/event/album.schema";
-import basicSchema, { Basic } from "@schemas/event/basic.schema";
-import policySchema, { Policy } from "@schemas/event/policy.schema";
-import ticketSchema, { Ticket } from "@schemas/event/ticket.schema";
-import couponSchema, { Coupon } from "@schemas/event/coupon.schema";
-import addressSchema, { Address } from "@schemas/event/address.schema";
-import scheduleSchema, { Schedule } from "@schemas/event/schedule.schema";
-import securitySchema, { Security } from "@schemas/event/security.schema";
+import eventShopSchema, { EventShop } from "@schemas/event/shop.schema";
+import eventRsvpSchema, { EventRsvp } from "@schemas/event/rsvp.schema";
+import eventAlbumSchema, { EventAlbum } from "@schemas/event/album.schema";
+import eventBasicSchema, { EventBasic } from "@schemas/event/basic.schema";
+import eventPolicySchema, { EventPolicy } from "@schemas/event/policy.schema";
+import eventTicketSchema, { EventTicket } from "@schemas/event/ticket.schema";
+import eventCouponSchema, { EventCoupon } from "@schemas/event/coupon.schema";
+
+import eventScheduleSchema, {
+  EventSchedule,
+} from "@schemas/event/schedule.schema";
+
+import eventAddressSchema, {
+  EventAddress,
+} from "@schemas/event/address.schema";
+
+import eventSecuritySchema, {
+  EventSecurity,
+} from "@schemas/event/security.schema";
 
 /**
  * A type that represents the event's mode.
@@ -17,7 +26,7 @@ import securitySchema, { Security } from "@schemas/event/security.schema";
  * - "online" - virtual events.
  * - "offline" - physical events.
  */
-export type Mode = "online" | "offline";
+export type EventMode = "online" | "offline";
 
 /**
  * A type that represents the event's status.
@@ -25,7 +34,7 @@ export type Mode = "online" | "offline";
  * - "active" - currently live.
  * - "inactive" - currently not live.
  */
-export type Status = "active" | "inactive";
+export type EventStatus = "active" | "inactive";
 
 /**
  * A type that represents the event's attendance type.
@@ -33,7 +42,7 @@ export type Status = "active" | "inactive";
  * - "open" - does not require RSVP details.
  * - "rsvp" - strictly requires RSVP details.
  */
-export type Attendance = "open" | "rsvp";
+export type EventAttendance = "open" | "rsvp";
 
 /**
  * A type that represents the event's visibility.
@@ -41,7 +50,7 @@ export type Attendance = "open" | "rsvp";
  * - "public" - event will be listed publicly to all users.
  * - "private" - event can only be shared to select users.
  */
-export type Visibility = "public" | "private";
+export type EventVisibility = "public" | "private";
 
 /**
  * An interface that represents an event.
@@ -49,23 +58,23 @@ export type Visibility = "public" | "private";
 export interface Event {
   id?: string;
   owner: Types.ObjectId;
-  mode: Mode;
-  status: Status;
-  visibility: Visibility;
-  attendance: Attendance;
+  mode: EventMode;
+  status: EventStatus;
+  visibility: EventVisibility;
+  attendance: EventAttendance;
   approved: boolean;
-  basic: Basic;
-  address: Address;
-  schedule: Schedule;
-  policy: Policy;
-  rsvp: Rsvp | null;
-  security: Security | null;
-  tickets: Ticket[] | null;
-  coupons: Coupon[] | null;
-  shop: Shop | null;
-  album: Album | null;
-  createdAt?: Date;
-  updatedAt?: Date;
+  basic: EventBasic;
+  address: EventAddress;
+  schedule: EventSchedule[];
+  policy: EventPolicy;
+  rsvp: EventRsvp | null;
+  security: EventSecurity | null;
+  tickets: EventTicket[] | null;
+  coupons: EventCoupon[] | null;
+  shop: EventShop | null;
+  album: EventAlbum | null;
+  createdAt?: EventSchedule;
+  updatedAt?: EventSchedule;
 }
 
 const eventSchema = new Schema<Event>(
@@ -133,49 +142,55 @@ const eventSchema = new Schema<Event>(
     },
     basic: {
       _id: false,
-      type: basicSchema,
+      type: eventBasicSchema,
       required: [true, "Event Basic Details Must Be Provided"],
       index: true,
     },
     address: {
       _id: false,
-      type: addressSchema,
+      type: eventAddressSchema,
       required: [true, "Event Address Details Must Be Provided"],
       index: true,
     },
     schedule: {
       _id: false,
-      type: scheduleSchema,
-      required: [true, "Event Schedule Details Must Be Provided"],
+      type: [eventScheduleSchema],
+      required: [true, "Event Schedule Must Be Provided"],
       index: true,
+      validate: {
+        validator: (dates: EventSchedule[]) => {
+          return dates && dates.length >= 1 && dates.length <= 30;
+        },
+        message: "Event Schedule Can Have 1 To 30 Dates",
+      },
     },
     policy: {
       _id: false,
-      type: policySchema,
+      type: eventPolicySchema,
       required: [true, "Event Policy Details Must Be Provided"],
       index: true,
     },
     rsvp: {
       _id: false,
-      type: rsvpSchema,
+      type: eventRsvpSchema,
       required: false,
       index: true,
       default: null,
     },
     security: {
       _id: false,
-      type: securitySchema,
+      type: eventSecuritySchema,
       required: false,
       index: true,
       default: null,
     },
     tickets: {
       _id: false,
-      type: [ticketSchema],
+      type: [eventTicketSchema],
       required: false,
       index: true,
       validate: {
-        validator: (values: Ticket[]) => {
+        validator: (values: EventTicket[]) => {
           return !values || (values.length >= 1 && values.length <= 20);
         },
         message: "Only 1 To 20 Tickets Are Allowed For An Event",
@@ -184,11 +199,11 @@ const eventSchema = new Schema<Event>(
     },
     coupons: {
       _id: false,
-      type: [couponSchema],
+      type: [eventCouponSchema],
       required: false,
       index: true,
       validate: {
-        validator: (values: Coupon[]) => {
+        validator: (values: EventCoupon[]) => {
           return !values || (values.length >= 1 && values.length <= 10);
         },
         message: "Only 1 To 10 Coupons Are Allowed For An Event",
@@ -197,14 +212,14 @@ const eventSchema = new Schema<Event>(
     },
     shop: {
       _id: false,
-      type: shopSchema,
+      type: eventShopSchema,
       required: false,
       index: true,
       default: null,
     },
     album: {
       _id: false,
-      type: albumSchema,
+      type: eventAlbumSchema,
       required: false,
       index: true,
       default: null,

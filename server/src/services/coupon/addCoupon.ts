@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
 
-import { Schedule } from "@schemas/event/schedule.schema";
+import { EventSchedule } from "@schemas/event/schedule.schema";
 
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
@@ -13,6 +13,8 @@ import {
 } from "@services/event/helpers/redis";
 
 import { AddCouponValidatorSchema } from "@validators/coupon/addCoupon.validator";
+
+import { getCombinedDate } from "./helpers/date";
 
 import ApiError from "@utils/ApiError";
 
@@ -190,100 +192,43 @@ const addCoupon = async (
 };
 
 const validateSchedule = (
-  eventSchedule: Schedule,
+  eventSchedule: EventSchedule[],
   couponSchedule: AddCouponValidatorSchema["schedule"],
 ) => {
-  const couponStartDate = combine(
+  const ticketStartDate = getCombinedDate(
     new Date(couponSchedule.startDate),
     couponSchedule.startTime,
   );
 
-  const couponEndDate = combine(
+  const ticketEndDate = getCombinedDate(
     new Date(couponSchedule.endDate),
     couponSchedule.endTime,
   );
 
-  if (eventSchedule.type === "custom") {
-    const dates = eventSchedule.dates!;
-
-    const eventStartDate = new Date(dates[0]!);
-    const eventEndDate = new Date(dates[dates.length - 1]!);
-
-    if (couponStartDate > eventStartDate) {
-      throw new ApiError(
-        "Coupon Sales Start Date Must Be Set Before The Event Start Date",
-        "VALIDATION_ERROR",
-      );
-    }
-
-    if (couponEndDate > eventEndDate) {
-      throw new ApiError(
-        "Coupon Sales End Date Must Be Set Before The Event End Date",
-        "VALIDATION_ERROR",
-      );
-    }
-
-    return;
-  }
-
-  if (!eventSchedule.slots) {
-    const eventStartDate = combine(
-      eventSchedule.startDate!,
-      eventSchedule.startTime!,
-    );
-
-    const eventEndDate = combine(
-      eventSchedule.endDate!,
-      eventSchedule.endTime!,
-    );
-
-    if (couponStartDate > eventStartDate) {
-      throw new ApiError(
-        "Coupon Sales Start Date Must Be Set Before The Event Start Date",
-        "VALIDATION_ERROR",
-      );
-    }
-
-    if (couponEndDate > eventEndDate) {
-      throw new ApiError(
-        "Coupon Sales End Date Must Be Set Before The Event End Date",
-        "VALIDATION_ERROR",
-      );
-    }
-
-    return;
-  }
-
-  const eventStartDate = combine(
-    eventSchedule.startDate!,
-    eventSchedule.slots[0]!.startTime,
+  const eventStartDate = getCombinedDate(
+    new Date(eventSchedule[0]!.date),
+    eventSchedule[0]!.slots[0]!.startTime,
   );
 
-  const eventEndDate = combine(
-    eventSchedule.endDate!,
-    eventSchedule.slots[eventSchedule.slots.length - 1]!.endTime,
+  const eventEndDate = getCombinedDate(
+    new Date(eventSchedule[eventSchedule.length - 1]!.date),
+    eventSchedule[eventSchedule.length - 1]!.slots[eventSchedule.length - 1]!
+      .endTime,
   );
 
-  if (couponStartDate > eventStartDate) {
+  if (ticketStartDate > eventStartDate) {
     throw new ApiError(
-      "Coupon Sales Start Date Must Be Set Before The Event Start Date",
+      "Ticket Sales Start Date Must Be Set Before The Event Start Date",
       "VALIDATION_ERROR",
     );
   }
 
-  if (couponEndDate > eventEndDate) {
+  if (ticketEndDate > eventEndDate) {
     throw new ApiError(
-      "Coupon Sales End Date Must Be Set Before The Event End Date",
+      "Ticket Sales End Date Must Be Set Before The Event End Date",
       "VALIDATION_ERROR",
     );
   }
-};
-
-const combine = (date: Date, time: String) => {
-  const [h, m] = time.split(":").map(Number);
-  const d = new Date(date);
-  d.setHours(h!, m!, 0, 0);
-  return d;
 };
 
 export default addCoupon;
