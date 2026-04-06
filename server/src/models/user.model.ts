@@ -1,6 +1,8 @@
 import { Schema, model } from "mongoose";
 
-import preferenceSchema, { Preference } from "@schemas/user/preference.schema";
+import userPreferencesSchema, {
+  UserPreferences,
+} from "@schemas/user/preference.schema";
 
 /**
  * An interface that represents a user.
@@ -12,7 +14,7 @@ export interface User {
   email: string;
   mobile: number | null;
   password: string | null;
-  preference: Preference;
+  preferences: UserPreferences;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -64,9 +66,9 @@ const userSchema = new Schema<User>(
       trim: true,
       default: null,
     },
-    preference: {
+    preferences: {
       _id: false,
-      type: preferenceSchema,
+      type: userPreferencesSchema,
       required: false,
       default: {},
     },

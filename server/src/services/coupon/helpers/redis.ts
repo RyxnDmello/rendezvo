@@ -1,6 +1,6 @@
 import { client } from "@config/redis.config";
 
-import { Coupon } from "@schemas/event/coupon.schema";
+import { EventCoupon } from "@schemas/event/coupon.schema";
 
 /**
  * Expiry configuration for coupon cache.
@@ -94,7 +94,7 @@ export const getCachedCoupons = async (eventID: string, ownerID: string) => {
  * @param {string} id - The ID of the coupon.
  * @param {string} eventID - The ID of the event.
  * @param {string} ownerID - The ID of the organizer.
- * @param {Coupon} coupon - The coupon data to be cached.
+ * @param {EventCoupon} coupon - The coupon data to be cached.
  *
  * @returns True if the cache is successfully set, otherwise false.
  */
@@ -102,7 +102,7 @@ export const setCachedCoupon = async (
   id: string,
   eventID: string,
   ownerID: string,
-  coupon: Coupon,
+  coupon: EventCoupon,
 ) => {
   const key = couponCacheKey(id, eventID, ownerID);
 
@@ -122,14 +122,14 @@ export const setCachedCoupon = async (
  *
  * @param {string} eventID - The ID of the event.
  * @param {string} ownerID - The ID of the organizer.
- * @param {Coupon[]} coupons - The coupons data to be cached.
+ * @param {EventCoupon[]} coupons - The coupons data to be cached.
  *
  * @returns True if the cache is successfully set, otherwise false.
  */
 export const setCachedCoupons = async (
   eventID: string,
   ownerID: string,
-  coupons: Coupon[],
+  coupons: EventCoupon[],
 ) => {
   const key = couponsCacheKey(eventID, ownerID);
 

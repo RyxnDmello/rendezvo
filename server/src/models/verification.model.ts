@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 import { getDate } from "@helpers/date";
 
-export type Type = "auth" | "reset";
+export type VerificationType = "auth" | "reset";
 
 /**
  * An interface that represents a verification.
@@ -10,7 +10,7 @@ export type Type = "auth" | "reset";
 export interface Verification {
   id?: string;
   user?: string;
-  type: Type;
+  type: VerificationType;
   otp: string;
   expiredAt: Date;
   createdAt?: Date;

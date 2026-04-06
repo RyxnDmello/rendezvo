@@ -1,4 +1,4 @@
-import { Coupon } from "@schemas/event/coupon.schema";
+import { EventCoupon } from "@schemas/event/coupon.schema";
 
 import EventModel from "@models/event.model";
 import OrganizerModel from "@models/organizer.model";
@@ -29,7 +29,7 @@ const fetchCoupons = async (eventID: string, ownerID: string) => {
     (await getCachedCoupons(eventID, ownerID)) ??
     (await getCoupons(eventID, ownerID));
 
-  return coupons as Coupon[];
+  return coupons as EventCoupon[];
 };
 
 const getCoupons = async (eventID: string, ownerID: string) => {

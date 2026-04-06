@@ -16,6 +16,7 @@ export interface Session {
   token: string;
   expiredAt: Date;
   createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const sessionSchema = new Schema<Session>(
@@ -77,10 +78,7 @@ const sessionSchema = new Schema<Session>(
     },
   },
   {
-    timestamps: {
-      createdAt: true,
-      updatedAt: false,
-    },
+    timestamps: true,
   },
 );
 

@@ -29,10 +29,10 @@
     "paths": {
       "@controllers/*": ["./src/controllers/*"],
       "@middlewares/*": ["./src/middlewares/*"],
-      "@schemas/*": ["./src/models/schemas/*"],
       "@validators/*": ["./src/validators/*"],
       "@constants/*": ["./src/constants/*"],
       "@services/*": ["./src/services/*"],
+      "@schemas/*": ["./src/schemas/*"],
       "@helpers/*": ["./src/helpers/*"],
       "@routes/*": ["./src/routes/*"],
       "@models/*": ["./src/models/*"],
