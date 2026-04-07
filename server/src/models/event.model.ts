@@ -57,6 +57,7 @@ export type EventVisibility = "public" | "private";
  */
 export interface Event {
   id?: string;
+  _id?: Types.ObjectId;
   owner: Types.ObjectId;
   mode: EventMode;
   status: EventStatus;

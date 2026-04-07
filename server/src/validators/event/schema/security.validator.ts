@@ -62,7 +62,7 @@ export const eventSecurityValidatorSchema = z.strictObject(
       .refine((values) => {
         const codes = values.map((security) => security.code);
         return codes.length === new Set(codes).size;
-      }, "Security Codes Must Be Unique")
+      }, "Duplicate Security Codes Are Not Allowed")
       .min(1, "At Least 1 Security Code Must Be Provided")
       .max(10, "At Most 10 Security Codes Must Be Provided"),
   },

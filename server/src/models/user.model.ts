@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
 import userPreferencesSchema, {
   UserPreferences,
@@ -9,6 +9,7 @@ import userPreferencesSchema, {
  */
 export interface User {
   id?: string;
+  _id?: Types.ObjectId;
   verified: boolean;
   name: string;
   email: string;

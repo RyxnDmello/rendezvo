@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, Types, model } from "mongoose";
 
 import { getDate } from "@helpers/date";
 
@@ -9,6 +9,7 @@ export type VerificationType = "auth" | "reset";
  */
 export interface Verification {
   id?: string;
+  _id?: Types.ObjectId;
   user?: string;
   type: VerificationType;
   otp: string;

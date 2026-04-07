@@ -68,7 +68,7 @@ export const dateSchema = z.strictObject(
     slots: z
       .array(slotSchema, "Slots Must Be A Valid List Of Time Slots")
       .min(1, "At Least 1 Time Slot Must Be Provided")
-      .max(10, "At Most 10 Time Slots Must Be Provided"),
+      .max(10, "At Most 10 Time Slots Can Be Provided"),
   },
   "Only Event Date And Time Slots Must Be Provided",
 );
@@ -76,14 +76,14 @@ export const dateSchema = z.strictObject(
 export const eventScheduleValidatorSchema = z
   .array(dateSchema, "Event Schedule Must Be A List Of Valid Event Dates")
   .min(1, "At Least 1 Event Date Must Be Provided")
-  .max(30, "At Most 30 Event Dates Must Be Provided")
+  .max(30, "At Most 30 Event Dates Can Be Provided")
   .superRefine((values, ctx) => {
     const dates = values.map((value) => value.date);
 
     if (new Set(dates).size !== dates.length) {
       return ctx.addIssue({
         code: "custom",
-        message: "Event Dates Must Be Unique",
+        message: "Duplicate Event Dates Are Not Allowed",
       });
     }
 

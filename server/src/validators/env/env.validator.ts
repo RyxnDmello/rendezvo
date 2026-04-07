@@ -141,7 +141,7 @@ const envValidatorSchema = z
     if (secrets.length !== new Set(secrets).size) {
       return ctx.addIssue({
         code: "custom",
-        message: "Every Secret Must Be Unique",
+        message: "Duplicate Secrets Are Not Allowed",
       });
     }
   });

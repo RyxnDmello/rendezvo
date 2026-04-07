@@ -7,6 +7,7 @@ import { Role } from "@constants/user";
  */
 export interface Session {
   id?: string;
+  _id?: Types.ObjectId;
   user: Types.ObjectId;
   ip: string;
   di: string;

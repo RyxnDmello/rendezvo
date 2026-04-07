@@ -5,6 +5,7 @@ import notFound from "@middlewares/notFound.middleware";
 import initialize from "@middlewares/initialize.middleware";
 
 import eventRoutes from "@routes/event.routes";
+import orderRoutes from "@routes/order.routes";
 
 import userRoutes from "@routes/user.routes";
 import organizerRoutes from "@routes/organizer.routes";
@@ -20,6 +21,7 @@ app.onError(onError);
 app.notFound(notFound);
 
 app.route("/api/events", eventRoutes);
+app.route("/api/orders", orderRoutes);
 
 app.route("/api/users", userRoutes);
 app.route("/api/organizers", organizerRoutes);

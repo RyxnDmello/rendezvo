@@ -13,6 +13,7 @@ import organizerBillingSchema, {
  */
 export interface Organizer {
   id?: string;
+  _id?: Types.ObjectId;
   artist: Types.ObjectId;
   verified: boolean;
   name: string;

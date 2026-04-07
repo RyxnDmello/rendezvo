@@ -83,7 +83,7 @@ const fieldSchema = z
         .refine((options) => {
           const unique = new Set(options);
           return unique.size === options.length;
-        }, "Every Option In The Dropdown Must Be Unique")
+        }, "Duplicate Dropdown Options Are Not Allowed")
         .min(2, "At Least 2 Dropdown Options Must Be Provided")
         .max(10, "At Most 10 Dropdown Options Must Be Provided")
         .optional(),
@@ -200,7 +200,7 @@ export const eventRsvpValidatorSchema = z.strictObject(
       .refine((fields) => {
         const names = fields.map((field) => field.name);
         return names.length === new Set(names).size;
-      }, "Each Field Must Have A Unique Name")
+      }, "Duplicate Field Names Are Not Allowed")
       .min(1, "At Least 1 RSVP Field Must Be Provided")
       .max(5, "At Most 5 RSVP Field Must Be Provided"),
   },
