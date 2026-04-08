@@ -17,7 +17,7 @@ import {
   deleteSessionCookie as deleteOrganizerSessionCookie,
 } from "@services/organizer/helpers/cookie";
 
-import validateSession from "./helpers/validateSession";
+import validateSession from "./validators/validateSession";
 
 import ApiError from "@utils/ApiError";
 

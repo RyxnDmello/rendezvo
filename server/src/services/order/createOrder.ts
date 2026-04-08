@@ -10,6 +10,8 @@ import { OrderTicket } from "@schemas/order/ticket.schema";
 import { OrderCoupon } from "@schemas/order/coupon.schema";
 import { OrderPricing } from "@schemas/order/pricing.schema";
 
+import { clearCachedOrders } from "./helpers/redis";
+
 import { CreateOrderValidatorSchema } from "@validators/order/createOrder.validator";
 
 import validateSchedule from "./validators/validateSchedule";
@@ -125,6 +127,8 @@ const createOrder = async (
 
       await newOrder.save({ session });
     });
+
+    await clearCachedOrders(userID);
 
     return {
       success: true,

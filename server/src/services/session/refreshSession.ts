@@ -18,7 +18,7 @@ import {
 import { getSessionCookie as getUserSessionCookie } from "@services/user/helpers/cookie";
 import { getSessionCookie as getOrganizerSessionCookie } from "@services/organizer/helpers/cookie";
 
-import validateSession from "./helpers/validateSession";
+import validateSession from "./validators/validateSession";
 
 import ApiError from "@utils/ApiError";
 
